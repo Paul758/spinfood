@@ -10,7 +10,7 @@ import java.util.List;
 public class CSVReader {
 
     private static final String COMMA_DELIMITER = ",";
-    private static final String fileToRead = "C:\\Users\\corie\\Downloads\\teilnehmerliste.csv";
+    private static final String fileToRead = "src/Artifacts/teilnehmerliste.csv";
     public List<List<String>> readCSV() throws IOException {
         List<List<String>> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileToRead))) {
