@@ -27,11 +27,11 @@ public class Pair extends Participant {
 
     @Override
     public String toString() {
-        return "Pair("
+        return "Pair["
                 + "person1=" + person1
                 + ", person2=" + person2
-                + ", food preference=" + foodPreference
+                + ", foodPreference=" + foodPreference
                 + ", kitchen=" + kitchen
-                + ")";
+                + "]";
     }
 }

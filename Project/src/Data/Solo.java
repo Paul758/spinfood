@@ -24,10 +24,10 @@ public class Solo extends Participant {
 
     @Override
     public String toString() {
-        return "Solo("
+        return "Solo["
                 + "person=" + person
-                + ", food preference=" + foodPreference
+                + ", foodPreference=" + foodPreference
                 + ", kitchen=" + kitchen
-                + ")";
+                + "]";
     }
 }

@@ -18,6 +18,10 @@ public record Kitchen(KitchenType kitchenType, int kitchenStory, Coordinate coor
 
     @Override
     public String toString() {
-        return "Kitchen(" + kitchenType + ", " + kitchenStory + ", " + coordinate + ")";
+        return "("
+                + kitchenType
+                + ", " + kitchenStory
+                + ", " + coordinate
+                + ")";
     }
 }
