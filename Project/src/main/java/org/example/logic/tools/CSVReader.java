@@ -1,4 +1,4 @@
-package Logic.Tools;
+package org.example.logic.tools;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
