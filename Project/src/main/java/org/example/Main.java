@@ -1,7 +1,16 @@
 package org.example;
 
+import org.example.data.*;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+
+        DataManagement.getInstance().setUp();
+        DataManagement.getInstance().printParticipants();
+        System.out.println("Solo participants");
+        DataManagement.getInstance().printSoloParticipants();
+        System.out.println("Pair participants");
+        DataManagement.getInstance().printPairParticipants();
+
     }
 }
