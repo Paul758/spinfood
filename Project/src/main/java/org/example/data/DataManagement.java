@@ -27,8 +27,8 @@ public class DataManagement {
     public void setUp(){
         DataFactory dataFactory = new DataFactory();
 
-        CSVReader.getInstance().readValues();
-        List<List<String>> csvDataList = CSVReader.getInstance().getCsvDataList();
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        List<List<String>> csvDataList = CSVReader.readValues(fileToRead);
 
         for (List<String> valueLine: csvDataList) {
            EventParticipant participant = dataFactory.createDataFromLine(valueLine);

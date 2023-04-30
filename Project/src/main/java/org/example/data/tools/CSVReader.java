@@ -9,19 +9,14 @@ import java.util.List;
 
 public class CSVReader {
 
-    private static final CSVReader csvReader = new CSVReader();
-    public static CSVReader getInstance(){
-        return csvReader;
-    }
-
-    private final List<List<String>> csvDataList = new ArrayList<>();
     private static final String COMMA_DELIMITER = ",";
-    private static final String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
 
-    public void readValues() {
-        try (BufferedReader br = new BufferedReader(new FileReader(fileToRead))) {
+    public static List<List<String>> readValues(String path) {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            List<List<String>> rows = new ArrayList<>();
             skipLine(br);
             String line;
+
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
                 String[] readInValues = line.split(COMMA_DELIMITER, -1);
@@ -31,22 +26,20 @@ public class CSVReader {
                 data.remove(0);
                 System.out.println("data list :" + data);
 
-                csvDataList.add(data);
+                rows.add(data);
             }
+
+            return rows;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void skipLine(BufferedReader bufferedReader){
+    private static void skipLine(BufferedReader bufferedReader){
         try {
             bufferedReader.readLine();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public List<List<String>> getCsvDataList() {
-        return csvDataList;
     }
 }
