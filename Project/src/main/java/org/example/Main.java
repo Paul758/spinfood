@@ -5,11 +5,13 @@ import org.example.data.*;
 public class Main {
     public static void main(String[] args) {
 
-        DataManagement.getInstance().setUp();
-        DataManagement.getInstance().printParticipants();
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead);
+
+        dataManagement.printParticipants();
         System.out.println("Solo participants");
-        DataManagement.getInstance().printSoloParticipants();
+        dataManagement.printSoloParticipants();
         System.out.println("Pair participants");
-        DataManagement.getInstance().printPairParticipants();
+        dataManagement.printPairParticipants();
     }
 }
