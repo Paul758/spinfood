@@ -19,11 +19,10 @@ public class DataManagement {
     ArrayList<Pair> pairParticipants = new ArrayList<>();
 
     public DataManagement(String filePath) {
-        DataFactory dataFactory = new DataFactory();
         List<List<String>> csvDataList = CSVReader.readValues(filePath);
 
         for (List<String> valueLine : csvDataList) {
-            EventParticipant participant = dataFactory.createDataFromLine(valueLine);
+            EventParticipant participant = DataFactory.createDataFromLine(valueLine);
             participantList.add(participant);
 
             if (participant instanceof Solo){

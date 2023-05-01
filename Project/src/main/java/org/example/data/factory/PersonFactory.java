@@ -7,15 +7,9 @@ import org.example.data.enums.Sex;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class PersonFactory extends DataFactory {
+public class PersonFactory {
 
-    private static final PersonFactory personFactory = new PersonFactory();
-    public static PersonFactory getInstance(){
-        return personFactory;
-    }
-
-    @Override
-    public IData createDataObject(Collection<String> values) {
+    public static IData createDataObject(Collection<String> values) {
         ArrayList<String> data = new ArrayList<>(values);
 
         String id = data.get(0);

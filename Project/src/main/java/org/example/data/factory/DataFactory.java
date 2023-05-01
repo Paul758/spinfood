@@ -12,7 +12,7 @@ import java.util.List;
 
 public class DataFactory {
 
-    public EventParticipant createDataFromLine(Collection<String> values) {
+    public static EventParticipant createDataFromLine(Collection<String> values) {
         ArrayList<String> data = new ArrayList<>(values);
 
         String foodPreferenceValue = data.get(2);
@@ -23,23 +23,21 @@ public class DataFactory {
         Collection<String> kitchenValues = data.subList(4, 8);
         Collection<String> secondPersonValues = data.subList(8, 12);
 
-
-        IData person = PersonFactory.getInstance().createDataObject(firstPersonValues);
-        IData kitchen = KitchenFactory.getInstance().createDataObject(kitchenValues);
+        IData person = PersonFactory.createDataObject(firstPersonValues);
+        IData kitchen = KitchenFactory.createDataObject(kitchenValues);
 
         EventParticipant participant;
         if (isPairRegistration(data)){
-            IData secondPerson = PersonFactory.getInstance().createDataObject(secondPersonValues);
+            IData secondPerson = PersonFactory.createDataObject(secondPersonValues);
             participant = new Pair(person, secondPerson, foodPreference, kitchen);
         } else {
             participant = new Solo(person, foodPreference, kitchen);
         }
 
-
         return participant;
     }
 
-    private boolean isPairRegistration(ArrayList<String> data) {
+    private static boolean isPairRegistration(ArrayList<String> data) {
         return !data.get(8).equals("");
     }
 
