@@ -1,6 +1,14 @@
-package Data;
+package org.example.data;
 
-public record Coordinate(float longitude, float latitude) {
+public class Coordinate {
+
+    public float longitude;
+    public float latitude;
+
+    public Coordinate(float longitude, float latitude){
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -18,6 +26,6 @@ public record Coordinate(float longitude, float latitude) {
 
     @Override
     public String toString() {
-        return "(" + longitude + ", " + latitude + ")";
+        return "(" + "longitude =" + longitude + ", latitude = " + latitude + ")";
     }
 }

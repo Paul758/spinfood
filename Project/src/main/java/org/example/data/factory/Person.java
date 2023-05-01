@@ -1,6 +1,8 @@
-package Data;
+package org.example.data.factory;
 
-public record Person(String id, String name, int age, Sex sex) {
+import org.example.data.enums.Sex;
+
+public record Person(String id, String name, int age, Sex sex) implements IData {
 
     @Override
     public boolean equals(Object obj) {
@@ -18,6 +20,11 @@ public record Person(String id, String name, int age, Sex sex) {
 
     @Override
     public String toString() {
-        return "(" + name + ", " + age + ", " + sex + ")";
+        return "[" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", sex=" + sex +
+                "] ";
     }
 }
