@@ -1,17 +1,16 @@
 package org.example.data.enums;
 
+import org.example.data.tools.Keywords;
+
 public enum KitchenType {
     NO, YES, MAYBE;
 
-    public static KitchenType parseKitchenType(String data){
-        switch (data) {
-            case "yes":
-                return YES;
-            case "no":
-                return NO;
-            case "maybe":
-                return MAYBE;
-        }
-        throw new RuntimeException("Tried to parse an unexpected KitchenType: " + data + "Maybe there is an error in the .csv");
+    public static KitchenType parseKitchenType(String data) {
+        return switch (data) {
+            case Keywords.yesKitchen -> YES;
+            case Keywords.noKitchen -> NO;
+            case Keywords.maybeKitchen -> MAYBE;
+            default -> throw new IllegalStateException("Unexpected value: " + data);
+        };
     }
 }

@@ -11,6 +11,6 @@ public abstract class EventParticipant {
 
     @Override
     public String toString() {
-        return "foodPreference = " + foodPreference + kitchen;
+        return "foodPreference = " + foodPreference + " " + kitchen;
     }
 }

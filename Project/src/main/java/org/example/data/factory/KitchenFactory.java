@@ -1,19 +1,18 @@
 package org.example.data.factory;
 
 import org.example.data.enums.KitchenType;
+import org.example.data.tools.CSVReader;
+import org.example.data.tools.Keywords;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class KitchenFactory extends DataFactory{
+/** Class to create the kitchen data objects
+ *
+ */
+public class KitchenFactory{
 
-    private static final KitchenFactory kitchenFactory = new KitchenFactory();
-    public static KitchenFactory getInstance(){
-        return kitchenFactory;
-    }
-
-    @Override
-    public IData createDataObject(Collection<String> values) {
+    public static Kitchen createKitchen(Collection<String> values) {
         ArrayList<String> data = new ArrayList<>(values);
 
         int story;
@@ -21,22 +20,22 @@ public class KitchenFactory extends DataFactory{
         float latitude;
 
         //KitchenType
-        KitchenType kitchenType = KitchenType.parseKitchenType(data.get(0));
+        KitchenType kitchenType = KitchenType.parseKitchenType(data.get(CSVReader.keyWordMap.get(Keywords.kitchen)));
 
         //story
-        if(data.get(1).equals("")){
+        if(data.get(CSVReader.keyWordMap.get(Keywords.kitchenStory)).equals("")){
             story = 0;
         } else {
-            story = Math.round(Float.parseFloat(data.get(1)));
+            story = Math.round(Float.parseFloat(data.get(CSVReader.keyWordMap.get(Keywords.kitchenStory))));
         }
 
         //coordinates
         if(kitchenType == KitchenType.NO){
             longitude = 0;
             latitude = 0;
-        } else{
-            longitude = Float.parseFloat(data.get(2));
-            latitude = Float.parseFloat(data.get(3));
+        } else {
+            longitude = Float.parseFloat(data.get(CSVReader.keyWordMap.get(Keywords.kitchenLongitude)));
+            latitude = Float.parseFloat(data.get(CSVReader.keyWordMap.get(Keywords.kitchenLatitude)));
         }
 
         return new Kitchen(kitchenType, story, longitude, latitude);
