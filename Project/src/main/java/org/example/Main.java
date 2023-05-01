@@ -1,17 +1,25 @@
+
 package org.example;
 
-import org.example.data.*;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
-public class Main {
+public class Main extends Application {
+
     public static void main(String[] args) {
+        launch();
+    }
 
-        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        DataManagement dataManagement = new DataManagement(fileToRead);
-
-        dataManagement.printParticipants();
-        System.out.println("Solo participants");
-        dataManagement.printSoloParticipants();
-        System.out.println("Pair participants");
-        dataManagement.printPairParticipants();
+    @Override
+    public void start(Stage stage) {
+        String javaVersion = System.getProperty("java.version");
+        String javafxVersion = System.getProperty("javafx.version");
+        Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
+        Scene scene = new Scene(new StackPane(l), 640, 480);
+        stage.setScene(scene);
+        stage.show();
     }
 }
