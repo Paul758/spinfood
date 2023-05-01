@@ -7,13 +7,10 @@ import java.util.*;
 public class CSVReader {
 
     private static final String COMMA_DELIMITER = ",";
-    public static Map<String, Integer> keyWordMap;
 
     public static List<List<String>> readValues(String path) {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String line = br.readLine();
-            String[] keyWords = line.split(COMMA_DELIMITER, -1);
-            keyWordMap = createKeyWordMap(keyWords);
+            String line;
 
             List<List<String>> rows = new ArrayList<>();
             while ((line = br.readLine()) != null) {
@@ -27,10 +24,10 @@ public class CSVReader {
         }
     }
 
-    private static Map<String, Integer> createKeyWordMap(String[] line) {
-        keyWordMap = new HashMap<>();
-        for (int i = 0; i < line.length; i++) {
-            keyWordMap.put(line[i], i);
+    public static Map<String, Integer> createKeyWordMap(List<String> line) {
+        Map<String, Integer> keyWordMap = new HashMap<>();
+        for (int i = 0; i < line.size(); i++) {
+            keyWordMap.put(line.get(i), i);
         }
         return keyWordMap;
     }

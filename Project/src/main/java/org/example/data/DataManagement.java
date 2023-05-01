@@ -9,6 +9,7 @@ import org.example.data.tools.CSVReader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 // Gateway für Logic Schicht
@@ -20,9 +21,12 @@ public class DataManagement {
 
     public DataManagement(String filePath) {
         List<List<String>> csvDataList = CSVReader.readValues(filePath);
+        List<String> csvHeader = csvDataList.get(0);
+        Map<String, Integer> keywordMap = CSVReader.createKeyWordMap(csvHeader);
+        csvDataList.remove(0);
 
         for (List<String> valueLine : csvDataList) {
-            EventParticipant participant = DataFactory.createDataFromLine(valueLine);
+            EventParticipant participant = DataFactory.createDataFromLine(valueLine, keywordMap);
             participantList.add(participant);
 
             if (participant instanceof Solo){

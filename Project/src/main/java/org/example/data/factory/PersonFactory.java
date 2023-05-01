@@ -8,6 +8,7 @@ import org.example.data.tools.Keywords;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 
 /** Class to create the kitchen data objects
@@ -15,24 +16,24 @@ import java.util.Collection;
  */
 public class PersonFactory {
 
-    public static Person createPerson(Collection<String> values) {
+    public static Person createPerson(Collection<String> values, Map<String, Integer> keyWordMap) {
         ArrayList<String> data = new ArrayList<>(values);
 
-        String id = data.get(CSVReader.keyWordMap.get(Keywords.id));
-        String name = data.get(CSVReader.keyWordMap.get(Keywords.name));
-        int age = Math.round(Float.parseFloat(data.get(CSVReader.keyWordMap.get(Keywords.age))));
-        Sex sex = Sex.parseSex(data.get(CSVReader.keyWordMap.get(Keywords.sex)));
+        String id = data.get(keyWordMap.get(Keywords.id));
+        String name = data.get(keyWordMap.get(Keywords.name));
+        int age = Math.round(Float.parseFloat(data.get(keyWordMap.get(Keywords.age))));
+        Sex sex = Sex.parseSex(data.get(keyWordMap.get(Keywords.sex)));
 
         return new Person(id, name, age, sex);
     }
 
-    public static Person createPartner(Collection<String> values) {
+    public static Person createPartner(Collection<String> values, Map<String, Integer> keyWordMap) {
         ArrayList<String> data = new ArrayList<>(values);
 
-        String id = data.get(CSVReader.keyWordMap.get(Keywords.idPartner));
-        String name = data.get(CSVReader.keyWordMap.get(Keywords.namePartner));
-        int age = Math.round(Float.parseFloat(data.get(CSVReader.keyWordMap.get(Keywords.agePartner))));
-        Sex sex = Sex.parseSex(data.get(CSVReader.keyWordMap.get(Keywords.sexPartner)));
+        String id = data.get(keyWordMap.get(Keywords.idPartner));
+        String name = data.get(keyWordMap.get(Keywords.namePartner));
+        int age = Math.round(Float.parseFloat(data.get(keyWordMap.get(Keywords.agePartner))));
+        Sex sex = Sex.parseSex(data.get(keyWordMap.get(Keywords.sexPartner)));
 
         return new Person(id, name, age, sex);
     }

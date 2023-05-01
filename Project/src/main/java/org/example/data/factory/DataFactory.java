@@ -10,6 +10,7 @@ import org.example.data.tools.Keywords;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Creates the event participant objects and wraps them in a higher instance class.
@@ -21,19 +22,19 @@ public class DataFactory {
      * @param values A Collection of values from a single row of the .csv file.
      * @return EventParticipant object that is either a single unmatched person or a pair
      */
-    public static EventParticipant createDataFromLine(final Collection<String> values) {
+    public static EventParticipant createDataFromLine(final Collection<String> values, Map<String, Integer> keyWordMap) {
         ArrayList<String> data = new ArrayList<>(values);
 
-        String foodPreferenceValue = data.get(CSVReader.keyWordMap.get(Keywords.foodPreference));
+        String foodPreferenceValue = data.get(keyWordMap.get(Keywords.foodPreference));
         FoodPreference foodPreference = FoodPreference.parseFoodPreference(foodPreferenceValue);
 
-        Person person = PersonFactory.createPerson(data);
-        Kitchen kitchen = KitchenFactory.createKitchen(data);
+        Person person = PersonFactory.createPerson(data, keyWordMap);
+        Kitchen kitchen = KitchenFactory.createKitchen(data, keyWordMap);
 
         EventParticipant participant;
 
-        if (isPairRegistration(data)) {
-            Person secondPerson = PersonFactory.createPartner(data);
+        if (isPairRegistration(data, keyWordMap)) {
+            Person secondPerson = PersonFactory.createPartner(data, keyWordMap);
             participant = new Pair(person, secondPerson, foodPreference, kitchen);
         } else {
             participant = new Solo(person, foodPreference, kitchen);
@@ -42,10 +43,10 @@ public class DataFactory {
         return participant;
     }
 
-    private static boolean isPairRegistration(final ArrayList<String> data) {
-        return !(data.get(CSVReader.keyWordMap.get(Keywords.idPartner)).equals("")
-                || data.get(CSVReader.keyWordMap.get(Keywords.namePartner)).equals("")
-                || data.get(CSVReader.keyWordMap.get(Keywords.agePartner)).equals("")
-                || data.get(CSVReader.keyWordMap.get(Keywords.sexPartner)).equals(""));
+    private static boolean isPairRegistration(final ArrayList<String> data, Map<String, Integer> keyWordMap) {
+        return !(data.get(keyWordMap.get(Keywords.idPartner)).equals("")
+                || data.get(keyWordMap.get(Keywords.namePartner)).equals("")
+                || data.get(keyWordMap.get(Keywords.agePartner)).equals("")
+                || data.get(keyWordMap.get(Keywords.sexPartner)).equals(""));
     }
 }
