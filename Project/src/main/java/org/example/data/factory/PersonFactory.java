@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public class PersonFactory {
 
-    public static IData createDataObject(Collection<String> values) {
+    public static Person createDataObject(Collection<String> values) {
         ArrayList<String> data = new ArrayList<>(values);
 
         String id = data.get(0);

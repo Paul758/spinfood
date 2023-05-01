@@ -2,7 +2,7 @@ package org.example.data.factory;
 
 import org.example.data.enums.Sex;
 
-public record Person(String id, String name, int age, Sex sex) implements IData {
+public record Person(String id, String name, int age, Sex sex) {
 
     @Override
     public boolean equals(Object obj) {

@@ -2,7 +2,7 @@ package org.example.data.factory;
 import org.example.data.Coordinate;
 import org.example.data.enums.KitchenType;
 
-public class Kitchen implements IData {
+public class Kitchen {
 
     public final KitchenType kitchenType;
     public final int story;

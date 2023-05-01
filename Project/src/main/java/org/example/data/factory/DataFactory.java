@@ -8,7 +8,6 @@ import org.example.data.structures.Solo;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class DataFactory {
 
@@ -23,12 +22,12 @@ public class DataFactory {
         Collection<String> kitchenValues = data.subList(4, 8);
         Collection<String> secondPersonValues = data.subList(8, 12);
 
-        IData person = PersonFactory.createDataObject(firstPersonValues);
-        IData kitchen = KitchenFactory.createDataObject(kitchenValues);
+        Person person = PersonFactory.createDataObject(firstPersonValues);
+        Kitchen kitchen = KitchenFactory.createDataObject(kitchenValues);
 
         EventParticipant participant;
         if (isPairRegistration(data)){
-            IData secondPerson = PersonFactory.createDataObject(secondPersonValues);
+            Person secondPerson = PersonFactory.createDataObject(secondPersonValues);
             participant = new Pair(person, secondPerson, foodPreference, kitchen);
         } else {
             participant = new Solo(person, foodPreference, kitchen);
@@ -39,9 +38,5 @@ public class DataFactory {
 
     private static boolean isPairRegistration(ArrayList<String> data) {
         return !data.get(8).equals("");
-    }
-
-    public IData createDataObject(Collection<String> data){
-        throw new RuntimeException("this method shouldn't be called");
     }
 }

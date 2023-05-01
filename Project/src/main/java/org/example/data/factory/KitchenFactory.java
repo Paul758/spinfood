@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class KitchenFactory {
 
-    public static IData createDataObject(Collection<String> values) {
+    public static Kitchen createDataObject(Collection<String> values) {
         ArrayList<String> data = new ArrayList<>(values);
 
         int story;
