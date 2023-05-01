@@ -16,13 +16,12 @@ import java.util.Collection;
  */
 public class DataFactory {
 
-
     /**
      * Creates a person, kitchen, and (if it exists) a partner person from the input values.
      * @param values A Collection of values from a single row of the .csv file.
      * @return EventParticipant object that is either a single unmatched person or a pair
      */
-    public EventParticipant createDataFromLine(final Collection<String> values) {
+    public static EventParticipant createDataFromLine(final Collection<String> values) {
         ArrayList<String> data = new ArrayList<>(values);
 
         String foodPreferenceValue = data.get(CSVReader.keyWordMap.get(Keywords.foodPreference));
@@ -43,7 +42,7 @@ public class DataFactory {
         return participant;
     }
 
-    private boolean isPairRegistration(final ArrayList<String> data) {
+    private static boolean isPairRegistration(final ArrayList<String> data) {
         return !(data.get(CSVReader.keyWordMap.get(Keywords.idPartner)).equals("")
                 || data.get(CSVReader.keyWordMap.get(Keywords.namePartner)).equals("")
                 || data.get(CSVReader.keyWordMap.get(Keywords.agePartner)).equals("")

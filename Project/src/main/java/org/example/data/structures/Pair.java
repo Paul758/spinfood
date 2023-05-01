@@ -18,6 +18,21 @@ public class Pair extends EventParticipant{
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Pair pair = (Pair) obj;
+        return this.personA.equals(pair.personA) && this.personB.equals(pair.personB)
+                || this.personA.equals(pair.personB) && this.personB.equals(pair.personA);
+    }
+
+    @Override
     public String toString() {
         return  "Pair first person information: " + personA.toString() + ", second person information: " + personB.toString() + super.toString();
     }

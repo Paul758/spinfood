@@ -7,6 +7,7 @@ import org.example.data.tools.Keywords;
 import java.util.ArrayList;
 import java.util.Collection;
 
+
 /** Class to create the kitchen data objects
  *
  */
@@ -30,7 +31,7 @@ public class KitchenFactory{
         }
 
         //coordinates
-        if(kitchenType == KitchenType.NO){
+        if (kitchenType == KitchenType.NO) {
             longitude = 0;
             latitude = 0;
         } else {

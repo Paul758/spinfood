@@ -14,31 +14,22 @@ import java.util.List;
 // Gateway für Logic Schicht
 public class DataManagement {
 
-    private final static DataManagement instance = new DataManagement();
-
-    public static DataManagement getInstance(){
-        return instance;
-    }
-
     ArrayList<EventParticipant> participantList = new ArrayList<>();
     ArrayList<Solo> soloParticipants = new ArrayList<>();
     ArrayList<Pair> pairParticipants = new ArrayList<>();
 
-    public void setUp(){
-        DataFactory dataFactory = new DataFactory();
+    public DataManagement(String filePath) {
+        List<List<String>> csvDataList = CSVReader.readValues(filePath);
 
-        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        List<List<String>> csvDataList = CSVReader.readValues(fileToRead);
+        for (List<String> valueLine : csvDataList) {
+            EventParticipant participant = DataFactory.createDataFromLine(valueLine);
+            participantList.add(participant);
 
-        for (List<String> valueLine: csvDataList) {
-           EventParticipant participant = dataFactory.createDataFromLine(valueLine);
-           participantList.add(participant);
-
-           if(participant instanceof Solo){
-               soloParticipants.add((Solo) participant);
-           } else if(participant instanceof Pair){
-               pairParticipants.add((Pair) participant);
-           }
+            if (participant instanceof Solo){
+                soloParticipants.add((Solo) participant);
+            } else if (participant instanceof Pair){
+                pairParticipants.add((Pair) participant);
+            }
         }
     }
 

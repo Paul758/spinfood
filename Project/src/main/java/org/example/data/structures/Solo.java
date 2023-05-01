@@ -16,6 +16,20 @@ public class Solo extends EventParticipant{
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Solo solo = (Solo) obj;
+        return this.person.equals(solo.person);
+    }
+
+    @Override
     public String toString() {
         return "Solo " + person.toString() + super.toString();
     }
