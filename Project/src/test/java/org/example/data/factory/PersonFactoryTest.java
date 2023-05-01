@@ -2,44 +2,55 @@ package org.example.data.factory;
 
 import org.example.data.enums.Sex;
 import org.example.data.tools.CSVReader;
+import org.example.data.tools.Keywords;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersonFactoryTest {
 
+    static Map<String, Integer> keywordMap = new HashMap<>();
+    @BeforeAll
+    public static void Setup() {
+        keywordMap.put(Keywords.id, 0);
+        keywordMap.put(Keywords.name, 1);
+        keywordMap.put(Keywords.age, 2);
+        keywordMap.put(Keywords.sex, 3);
+
+        keywordMap.put(Keywords.idPartner, 4);
+        keywordMap.put(Keywords.namePartner, 5);
+        keywordMap.put(Keywords.agePartner, 6);
+        keywordMap.put(Keywords.sexPartner, 7);
+    }
+
     @Test
     void createPerson() {
-        List<List<String>> valueLists = CSVReader.readValues("src/main/java/org/example/artifacts/testTeilnehmerListe.csv");
-        List<String> firstEntry = valueLists.get(0);
+        String expectedID = "001";
+        String expectedName = "name";
+        String expectedAge = "21";
+        String expectedSex = "male";
+        List<String> values = Arrays.asList(expectedID, expectedName, expectedAge, expectedSex);
 
-        String expectedID = "004670cb-47f5-40a4-87d8-5276c18616ec";
-        String expectedName = "Person1";
-        int expectedAge = 21;
-        Sex expectedSex = Sex.MALE;
-
-        Person expectedPerson = new Person(expectedID, expectedName, expectedAge , expectedSex);
-        Person actualPerson = PersonFactory.createPerson(firstEntry);
+        Person expectedPerson = new Person("001", "name", 21, Sex.MALE);
+        Person actualPerson = PersonFactory.createPerson(values, keywordMap);
 
         Assertions.assertEquals(expectedPerson, actualPerson);
     }
 
     @Test
     void createPartner() {
-        List<List<String>> valueLists = CSVReader.readValues("src/main/java/org/example/artifacts/testTeilnehmerListe.csv");
-        List<String> firstEntry = valueLists.get(1);
+        String expectedID = "001";
+        String expectedName = "name";
+        String expectedAge = "21";
+        String expectedSex = "male";
+        List<String> values = Arrays.asList("", "", "", "", expectedID, expectedName, expectedAge, expectedSex);
 
-        String expectedID = "117ee996-14d3-44e8-8bcb-eb2d29fddda5";
-        String expectedName = "Personx1";
-        int expectedAge = 25;
-        Sex expectedSex = Sex.MALE;
-
-        Person expectedPerson = new Person(expectedID, expectedName, expectedAge , expectedSex);
-        Person actualPerson = PersonFactory.createPartner(firstEntry);
+        Person expectedPerson = new Person("001", "name", 21, Sex.MALE);
+        Person actualPerson = PersonFactory.createPartner(values, keywordMap);
 
         Assertions.assertEquals(expectedPerson, actualPerson);
     }

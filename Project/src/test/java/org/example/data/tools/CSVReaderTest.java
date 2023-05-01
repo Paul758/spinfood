@@ -11,7 +11,7 @@ class CSVReaderTest {
     @Test
     void testSingleRegistration(){
         List<List<String>> valueLists = CSVReader.readValues("src/main/java/org/example/artifacts/teilnehmerliste.csv");
-        List<String> firstEntry = valueLists.get(0);
+        List<String> firstEntry = valueLists.get(1);
 
         String expectedID = "004670cb-47f5-40a4-87d8-5276c18616ec";
         String expectedName = "Person1";
@@ -37,7 +37,7 @@ class CSVReaderTest {
     @Test
     void testPairRegistration(){
         List<List<String>> valueLists = CSVReader.readValues("src/main/java/org/example/artifacts/teilnehmerliste.csv");
-        List<String> firstEntry = valueLists.get(2);
+        List<String> firstEntry = valueLists.get(3);
 
         String expectedID = "01be5c1f-4aa1-458d-a530-b1c109ffbb55";
         String expectedName = "Person3";
