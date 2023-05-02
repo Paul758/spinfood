@@ -2,12 +2,15 @@ package org.example.data.factory;
 import org.example.data.Coordinate;
 import org.example.data.enums.KitchenType;
 
+/** Data class to hold the kitchen values from the .csv file
+ *
+ */
 public class Kitchen {
     public final KitchenType kitchenType;
     public final int story;
     public final Coordinate coordinate;
 
-    public Kitchen(KitchenType kitchenType, int story, float longitude, float latitude) {
+    public Kitchen(KitchenType kitchenType, int story, double longitude, double latitude) {
         this.kitchenType = kitchenType;
         this.story = story;
         this.coordinate = new Coordinate(longitude, latitude);

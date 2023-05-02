@@ -23,7 +23,7 @@ class CSVReaderTest {
         String expectedKitchenLongitude = "8.673368271555807";
         String expectedKitchenLatitude = "50.5941282715558";
 
-        Assertions.assertEquals(expectedID,firstEntry.get(1));
+        Assertions.assertEquals(expectedID, firstEntry.get(1));
         Assertions.assertEquals(expectedName, firstEntry.get(2));
         Assertions.assertEquals(expectedFoodPreference, firstEntry.get(3));
         Assertions.assertEquals(expectedAge, firstEntry.get(4));

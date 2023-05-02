@@ -20,6 +20,7 @@ public class DataFactory {
     /**
      * Creates a person, kitchen, and (if it exists) a partner person from the input values.
      * @param values A Collection of values from a single row of the .csv file.
+     * @param keyWordMap maps the column header keywords of the .csv file to integer indices. Is used to read the values
      * @return EventParticipant object that is either a single unmatched person or a pair
      */
     public static EventParticipant createDataFromLine(final Collection<String> values, Map<String, Integer> keyWordMap) {
@@ -43,6 +44,12 @@ public class DataFactory {
         return participant;
     }
 
+    /**
+     * Checks if the current data row of the .csv file is a pair registration
+     * @param data A Collection of values from a single row of the .csv file.
+     * @param keyWordMap maps the column header keywords of the .csv file to integer indices. Is used to read the values
+     * @return returns true if it is a pair registration, else it returns false
+     */
     private static boolean isPairRegistration(final ArrayList<String> data, Map<String, Integer> keyWordMap) {
         return !(data.get(keyWordMap.get(Keywords.idPartner)).equals("")
                 || data.get(keyWordMap.get(Keywords.namePartner)).equals("")

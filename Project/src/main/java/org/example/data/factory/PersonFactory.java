@@ -11,11 +11,16 @@ import java.util.Collection;
 import java.util.Map;
 
 
-/** Class to create the kitchen data objects
+/** Class to create the person data objects
  *
  */
 public class PersonFactory {
 
+    /**
+     * @param values Collection of values that are written in a single row in the .csv file
+     * @param keyWordMap maps the column header keywords of the .csv file to integer indices. Is used to read the values
+     * @return Returns a record that holds the values of a person
+     */
     public static Person createPerson(Collection<String> values, Map<String, Integer> keyWordMap) {
         ArrayList<String> data = new ArrayList<>(values);
 
@@ -27,6 +32,11 @@ public class PersonFactory {
         return new Person(id, name, age, sex);
     }
 
+    /**
+     * @param values Collection of values that are written in a single row in the .csv file
+     * @param keyWordMap maps the column header keywords of the .csv file to integer indices. Is used to read the values
+     * @return Returns a record that holds the values of a partner
+     */
     public static Person createPartner(Collection<String> values, Map<String, Integer> keyWordMap) {
         ArrayList<String> data = new ArrayList<>(values);
 

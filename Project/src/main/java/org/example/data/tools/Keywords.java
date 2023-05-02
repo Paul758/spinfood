@@ -21,7 +21,7 @@ public class Keywords {
     public static final String sexPartner = "Sex_2";
 
 
-    //CSV Header column keywords
+    //CSV enum keywords
     public static final String meat = "meat";
     public static final String veggie = "veggie";
     public static final String vegan = "vegan";

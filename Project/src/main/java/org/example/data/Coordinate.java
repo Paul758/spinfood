@@ -2,10 +2,10 @@ package org.example.data;
 
 public class Coordinate {
 
-    public float longitude;
-    public float latitude;
+    public double longitude;
+    public double latitude;
 
-    public Coordinate(float longitude, float latitude){
+    public Coordinate(double longitude, double latitude){
         this.longitude = longitude;
         this.latitude = latitude;
     }
