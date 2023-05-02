@@ -34,4 +34,11 @@ class FoodPreferenceTest {
         String none = Keywords.none;
         Assertions.assertEquals(FoodPreference.NONE, FoodPreference.parseFoodPreference(none));
     }
+
+    @Test
+    void parseFoodPreferenceInvalidTest() {
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            FoodPreference.parseFoodPreference("Unexpected Value");
+        });
+    }
 }

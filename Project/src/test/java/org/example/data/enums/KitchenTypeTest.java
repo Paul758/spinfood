@@ -28,5 +28,11 @@ class KitchenTypeTest {
         Assertions.assertEquals(KitchenType.MAYBE, KitchenType.parseKitchenType(maybe));
     }
 
+    @Test
+    void parseKitchenTypeInvalidTest() {
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            KitchenType.parseKitchenType("Unexpected Value");
+        });
+    }
 
 }

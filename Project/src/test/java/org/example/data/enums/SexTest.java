@@ -27,4 +27,12 @@ class SexTest {
         String other = Keywords.other;
         Assertions.assertEquals(Sex.OTHER, Sex.parseSex(other));
     }
+
+    @Test
+    void parseSexInvalidTest() {
+        assertThrows(IllegalStateException.class, () -> {
+            Sex.parseSex("Unexpected Value");
+        });
+    }
+
 }
