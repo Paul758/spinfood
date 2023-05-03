@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="579.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Main">
+   <children>
+      <Text fx:id="fileName" layoutX="100.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="no file open" wrappingWidth="114.13671875" />
+      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#openFile" text="Open File" />
+      <ListView fx:id="listView" layoutX="14.0" layoutY="48.0" prefHeight="342.0" prefWidth="574.0" />
+      <PieChart fx:id="pieChart" layoutX="14.0" layoutY="404.0" prefHeight="192.0" prefWidth="261.0" />
+      <BarChart fx:id="barChart" barGap="0.0" categoryGap="0.0" layoutX="270.0" layoutY="404.0" prefHeight="257.0" prefWidth="318.0">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </BarChart>
+   </children>
+</AnchorPane>
