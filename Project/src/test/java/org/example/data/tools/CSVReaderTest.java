@@ -67,4 +67,11 @@ class CSVReaderTest {
         Assertions.assertEquals(expectedPartnerAge, firstEntry.get(12));
         Assertions.assertEquals(expectedPartnerSex, firstEntry.get(13));
     }
+
+    @Test
+    void testInvalidFilePath() {
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            CSVReader.readValues("invalid.csv");
+        });
+    }
 }
