@@ -17,6 +17,7 @@ import java.util.Map;
 public class PersonFactory {
 
     /**
+     * @author Felix Groß
      * @param values Collection of values that are written in a single row in the .csv file
      * @param keyWordMap maps the column header keywords of the .csv file to integer indices. Is used to read the values
      * @return Returns a record that holds the values of a person

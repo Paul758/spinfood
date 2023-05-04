@@ -1,5 +1,11 @@
 package org.example.data;
 
+/**
+ * This class represents a coordinate with longitude and latitude.
+ * Contains a constructor, equals and toString method.
+ * @version 1.0
+ *
+ */
 public class Coordinate {
 
     public double longitude;

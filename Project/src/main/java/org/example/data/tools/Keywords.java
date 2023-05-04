@@ -1,7 +1,11 @@
 package org.example.data.tools;
 
-/** Data holding class for keywords that appear in the csv file. Contains the column header keywords and keywords for the enums FoodPreference, KitchenType, Sex
- *
+/**
+ * Data holding class for keywords that appear in the csv file. Contains the column header keywords and keywords for the enums FoodPreference, KitchenType, Sex
+ * @author Paul Groß
+ * @see org.example.data.enums.FoodPreference
+ * @see org.example.data.enums.KitchenType
+ * @see org.example.data.enums.Sex
  */
 public class Keywords {
 

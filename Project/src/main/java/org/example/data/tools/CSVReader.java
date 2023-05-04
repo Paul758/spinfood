@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.*;
 
+/**
+ * This class reads in a csv file and returns a list of lists of strings.
+ * Can be used to read all sorts of csv-files, not only given one, however filepath should be changed.
+ * @author David Riemer
+ */
 public class CSVReader {
 
     private static final String COMMA_DELIMITER = ",";
