@@ -19,6 +19,7 @@ public class DataFactory {
 
     /**
      * Creates a person, kitchen, and (if it exists) a partner person from the input values.
+     * @author Felix Groß
      * @param values A Collection of values from a single row of the .csv file.
      * @param keyWordMap maps the column header keywords of the .csv file to integer indices. Is used to read the values
      * @return EventParticipant object that is either a single unmatched person or a pair
