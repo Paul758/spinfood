@@ -22,4 +22,14 @@ public enum FoodPreference {
             default -> throw new IllegalStateException("Unexpected value: " + data);
         };
     }
+
+    public static FoodPreference parseFoodPreference(int data) {
+        return switch (data) {
+            case 0 -> NONE;
+            case 1 -> MEAT;
+            case 2 -> VEGGIE;
+            case 3 -> VEGAN;
+            default -> throw new IllegalStateException("Unexpected value: " + data);
+        };
+    }
 }
