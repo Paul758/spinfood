@@ -16,7 +16,7 @@ import java.util.Map;
 public class DataManagement {
 
     ArrayList<EventParticipant> participantList = new ArrayList<>();
-    ArrayList<Solo> soloParticipants = new ArrayList<>();
+    public ArrayList<Solo> soloParticipants = new ArrayList<>();
     ArrayList<Pair> pairParticipants = new ArrayList<>();
 
     public DataManagement(String filePath) {

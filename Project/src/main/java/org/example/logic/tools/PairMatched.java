@@ -14,16 +14,15 @@ public class PairMatched extends Match {
 
     boolean prematched;
 
-    public PairMatched(Solo soloA, Solo soloB, FoodPreference foodPreference, boolean prematched){
+    public PairMatched(Solo soloA, Solo soloB){
         this.soloA = soloA;
         this.soloB = soloB;
-        this.foodPreference = foodPreference;
+        //this.foodPreference = foodPreference;
 
         int foodValueA = MatchingTools.getFoodPreference(soloA.foodPreference);
         int foodValueB = MatchingTools.getFoodPreference(soloB.foodPreference);
         foodPreferenceDeviation = Math.abs(foodValueA - foodValueB);
-
-        this.prematched = prematched;
+        //this.prematched = prematched;
     }
 
     @Override
@@ -73,4 +72,8 @@ public class PairMatched extends Match {
         return  Math.abs(ageValueA - ageValueB);
     }
 
+    @Override
+    public String toString() {
+        return soloA.toString() + "\n" + soloB.toString();
+    }
 }
