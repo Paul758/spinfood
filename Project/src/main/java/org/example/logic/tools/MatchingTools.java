@@ -1,6 +1,7 @@
 package org.example.logic.tools;
 
 import org.example.data.enums.FoodPreference;
+import org.example.data.enums.Sex;
 
 public class MatchingTools {
 
@@ -36,18 +37,18 @@ public class MatchingTools {
 
 
     public static int getFoodPreference(FoodPreference foodPreference){
-        if(foodPreference.equals(FoodPreference.NONE)){
-            return 0;
-        }
-        else if(foodPreference.equals(FoodPreference.MEAT)){
-            return 0;
-        }
-        else if(foodPreference.equals(FoodPreference.VEGGIE)){
-            return 1;
-        }
-        else if(foodPreference.equals(FoodPreference.VEGAN)){
-            return 2;
-        }
-        throw new IllegalStateException("Unknonw foodPreference: " + foodPreference);
+        return switch (foodPreference) {
+            case NONE, MEAT -> 0;
+            case VEGGIE -> 1;
+            case VEGAN -> 2;
+        };
+    }
+
+    public static int getSexValue(Sex sex) {
+        return switch (sex) {
+            case MALE -> 0;
+            case FEMALE -> 1;
+            case OTHER -> 3;
+        };
     }
 }

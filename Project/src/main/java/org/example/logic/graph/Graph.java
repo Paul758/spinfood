@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Graph {
-    HashMap<Solo, List<Edge>> map = new HashMap<>();
+    HashMap<Solo, List<Edge>> adjacencyList = new HashMap<>();
 
     public void addVertex(Solo solo) {
-        if (!map.containsKey(solo)) {
-            map.put(solo, new ArrayList<>());
+        if (!adjacencyList.containsKey(solo)) {
+            adjacencyList.put(solo, new ArrayList<>());
         }
     }
 
@@ -22,30 +22,28 @@ public class Graph {
         Edge edgeA = new Edge(soloB, weight);
         Edge edgeB = new Edge(soloA, weight);
 
-        map.get(soloA).add(edgeA);
-        map.get(soloB).add(edgeB);
+        edgeA.linkedEdge = edgeB;
+        edgeB.linkedEdge = edgeA;
+
+        adjacencyList.get(soloA).add(edgeA);
+        adjacencyList.get(soloB).add(edgeB);
     }
     
     public void removeVertex(Solo solo) {
-        map.remove(solo);
-
-        for (Solo mapSolo : map.keySet()) {
-            List<Edge> edges = new ArrayList<>();
-            for (Edge edge : map.get(mapSolo)) {
-                if (!edge.solo.equals(solo)) {
-                    edges.add(edge);
-                }
-            }
-            map.put(mapSolo, edges);
+        List<Edge> edges = adjacencyList.get(solo);
+        for (Edge edge : edges) {
+            Edge linkedEdge = edge.linkedEdge;
+            adjacencyList.get(edge.solo).remove(linkedEdge);
         }
+        adjacencyList.remove(solo);
     }
 
     public Solo getVertexWithLeastEdges() {
         int minCount = Integer.MAX_VALUE;
         Solo minSolo = null;
 
-        for (Solo solo : map.keySet()) {
-            int count = map.get(solo).size();
+        for (Solo solo : adjacencyList.keySet()) {
+            int count = adjacencyList.get(solo).size();
             if (count < minCount) {
                 minCount = count;
                 minSolo = solo;
@@ -55,31 +53,18 @@ public class Graph {
         return minSolo;
     }
 
-    public Solo getVertexWithMostEdges() {
-        int maxValue = Integer.MIN_VALUE;
-        Solo maxSolo = null;
-
-        for (Solo solo : map.keySet()) {
-            int count = map.get(solo).size();
-            if (count > maxValue) {
-                maxValue = count;
-                maxSolo = solo;
-            }
-        }
-
-        return maxSolo;
-    }
-    
     public Edge getEdgeWithLeastWeight(Solo solo) {
-        float minWeight = Float.MAX_VALUE;
+        List<Edge> edges = adjacencyList.get(solo);
         Edge minEdge = null;
+        float minWeight = Float.MAX_VALUE;
 
-        for (Edge edge : map.get(solo)) {
+        for (Edge edge : edges) {
             if (edge.weight < minWeight) {
-                minWeight = edge.weight;
                 minEdge = edge;
+                minWeight = edge.weight;
             }
         }
+
         return minEdge;
     }
 }

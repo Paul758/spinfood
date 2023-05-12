@@ -1,5 +1,6 @@
 package org.example.logic.tools;
 
+import org.example.Main;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.Sex;
 import org.example.data.structures.Solo;
@@ -9,20 +10,27 @@ import java.util.Map;
 
 public class Benchmark {
 
-    public static void matchedPairsBenchmark(List<PairMatched> pairMatchedList, List<Solo> solos) {
-        int pairSize = pairMatchedList.size() * 2;
+    public static void matchedPairsBenchmark(List<PairMatched> pairs, List<Solo> solos) {
+        int pairSize = pairs.size() * 2;
         int soloSize = solos.size();
+        int notMatchedSize = calcIsMatched(pairs, solos);
 
-        float countValue = calcCount(pairMatchedList.size(), solos.size());
-        float ageDifference = calcAgeDifference(pairMatchedList);
-        float genderDiversity = calcGenderDiversity(pairMatchedList);
-        float foodPreference = calcFoodPreference(pairMatchedList);
+        boolean isCorrect = isCorrect(pairs, solos);
 
-        System.out.println("Pairs: " + pairSize + ", Remaining: " + (soloSize - pairSize));
+        float countValue = calcCount(pairs.size(), solos.size());
+        float ageDifference = calcAgeDifference(pairs);
+        float genderDiversity = calcGenderDiversity(pairs);
+        float foodPreference = calcFoodPreference(pairs);
+        float sum = (ageDifference + genderDiversity + foodPreference) / 3;
+
+        System.out.println("Is correct: " + isCorrect);
+        System.out.println("Total: " + soloSize + ", in pairs: " + pairSize + ", Not Matched: " + notMatchedSize + ", Remaining: " + (soloSize - pairSize));
         System.out.println("Count:              " + percentAndRound(countValue) + "%");
         System.out.println("Age:                " + percentAndRound(ageDifference) + "%");
         System.out.println("Gender Diversity:   " + percentAndRound(genderDiversity) + "%");
         System.out.println("FoodPreference:     " + percentAndRound(foodPreference) + "%");
+        System.out.println("Sum:                " + percentAndRound(sum) + "%");
+
     }
 
     private static float calcCount(int pairCount, int soloCount) {
@@ -47,7 +55,7 @@ public class Benchmark {
         for (PairMatched pairMatched : pairMatchedList) {
             Sex sexA = pairMatched.soloA.person.sex();
             Sex sexB = pairMatched.soloB.person.sex();
-            if (sexA.equals(sexB)) {
+            if (!sexA.equals(Sex.OTHER) && sexA.equals(sexB)) {
                 sum++;
             }
         }
@@ -63,17 +71,52 @@ public class Benchmark {
             FoodPreference fA = pairMatched.soloA.foodPreference;
             FoodPreference fB = pairMatched.soloB.foodPreference;
 
-            if(!(fA.equals(FoodPreference.NONE) || fB.equals(FoodPreference.NONE))) {
-                int valueA = MatchingTools.getFoodPreference(fA);
-                int valueB = MatchingTools.getFoodPreference(fB);
-                sum += Math.abs(valueA - valueB);
-            }
-        }
+            int fAvalue = MatchingTools.getFoodPreference(fA);
+            int fBvalue = MatchingTools.getFoodPreference(fB);
 
+            sum += Math.abs(fAvalue - fBvalue);
+        }
         return 1f - sum / maxValue;
     }
 
     private static float percentAndRound(float value) {
         return ((float) Math.round(value * 10000)) / 100;
+    }
+
+    private static int calcIsMatched(List<PairMatched> pairs, List<Solo> solos) {
+        int counter = 0;
+        for (Solo solo : solos) {
+            boolean isMatched = false;
+            for (PairMatched pair : pairs) {
+               if (pair.soloA.equals(solo) || pair.soloB.equals(solo)) {
+                   isMatched = true;
+                   break;
+               }
+            }
+            if (!isMatched) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+    private static boolean isCorrect(List<PairMatched> pairMatchedList, List<Solo> solos) {
+        boolean isCorrect = true;
+        for (Solo solo : solos) {
+            int counter = 0;
+            for (PairMatched pair : pairMatchedList) {
+                if (pair.soloA.equals(solo)) {
+                    counter++;
+                }
+                if (pair.soloB.equals(solo)) {
+                    counter++;
+                }
+            }
+            if (counter > 1) {
+                isCorrect = false;
+                break;
+            }
+        }
+        return isCorrect;
     }
 }
