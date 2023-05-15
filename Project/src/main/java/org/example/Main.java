@@ -1,6 +1,8 @@
 package org.example;
 
 import org.example.data.*;
+import org.example.data.enums.KitchenType;
+import org.example.data.structures.EventParticipant;
 import org.example.logic.tools.Benchmark;
 import org.example.logic.tools.CostCoefficients;
 import org.example.logic.tools.PairMatched;

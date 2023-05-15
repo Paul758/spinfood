@@ -15,7 +15,7 @@ import java.util.Map;
 // Gateway für Logic Schicht
 public class DataManagement {
 
-    ArrayList<EventParticipant> participantList = new ArrayList<>();
+    public ArrayList<EventParticipant> participantList = new ArrayList<>();
     public ArrayList<Solo> soloParticipants = new ArrayList<>();
     ArrayList<Pair> pairParticipants = new ArrayList<>();
 
