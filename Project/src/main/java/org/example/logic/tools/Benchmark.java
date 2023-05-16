@@ -1,12 +1,9 @@
 package org.example.logic.tools;
 
-import org.example.Main;
-import org.example.data.enums.FoodPreference;
 import org.example.data.enums.Sex;
 import org.example.data.structures.Solo;
 
 import java.util.List;
-import java.util.Map;
 
 public class Benchmark {
 
@@ -15,7 +12,7 @@ public class Benchmark {
         int soloSize = solos.size();
         int notMatchedSize = calcIsMatched(pairs, solos);
 
-        boolean isCorrect = isCorrect(pairs, solos);
+        boolean isCorrect = isCorrect(pairs);
 
         float countValue = calcCount(pairs.size(), solos.size());
         float ageDifference = calcAgeDifference(pairs);
@@ -53,8 +50,8 @@ public class Benchmark {
         float sum = 0;
 
         for (PairMatched pairMatched : pairMatchedList) {
-            Sex sexA = pairMatched.soloA.person.sex();
-            Sex sexB = pairMatched.soloB.person.sex();
+            Sex sexA = pairMatched.getPersonA().sex();
+            Sex sexB = pairMatched.getPersonB().sex();
             if (!sexA.equals(Sex.OTHER) && sexA.equals(sexB)) {
                 sum++;
             }
@@ -68,14 +65,9 @@ public class Benchmark {
         float sum = 0;
 
         for (PairMatched pairMatched : pairMatchedList) {
-            FoodPreference fA = pairMatched.soloA.foodPreference;
-            FoodPreference fB = pairMatched.soloB.foodPreference;
-
-            int fAvalue = MatchingTools.getFoodPreference(fA);
-            int fBvalue = MatchingTools.getFoodPreference(fB);
-
-            sum += Math.abs(fAvalue - fBvalue);
+            sum += pairMatched.calculateFoodPreferenceDeviation();
         }
+
         return 1f - sum / maxValue;
     }
 
@@ -88,7 +80,7 @@ public class Benchmark {
         for (Solo solo : solos) {
             boolean isMatched = false;
             for (PairMatched pair : pairs) {
-               if (pair.soloA.equals(solo) || pair.soloB.equals(solo)) {
+               if (pair.containsPerson(solo.person)) {
                    isMatched = true;
                    break;
                }
@@ -100,23 +92,11 @@ public class Benchmark {
         return counter;
     }
 
-    private static boolean isCorrect(List<PairMatched> pairMatchedList, List<Solo> solos) {
+    private static boolean isCorrect(List<PairMatched> pairMatchedList) {
         boolean isCorrect = true;
-        for (Solo solo : solos) {
-            int counter = 0;
             for (PairMatched pair : pairMatchedList) {
-                if (pair.soloA.equals(solo)) {
-                    counter++;
-                }
-                if (pair.soloB.equals(solo)) {
-                    counter++;
-                }
+                isCorrect &= pair.isValid();
             }
-            if (counter > 1) {
-                isCorrect = false;
-                break;
-            }
-        }
         return isCorrect;
     }
 }

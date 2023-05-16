@@ -17,12 +17,20 @@ public class MatchingTools {
         else return 8;
     }
 
-
     public static int getFoodPreference(FoodPreference foodPreference){
         return switch (foodPreference) {
             case NONE, MEAT -> 0;
             case VEGGIE -> 1;
             case VEGAN -> 2;
+        };
+    }
+
+    public static FoodPreference mapIntToFoodPreference(int value) {
+        return switch (value) {
+            case 0 -> FoodPreference.MEAT;
+            case 1 -> FoodPreference.VEGGIE;
+            case 3 -> FoodPreference.VEGAN;
+            default -> throw new IllegalArgumentException("int " + value + "cant be mapped to food preference");
         };
     }
 }

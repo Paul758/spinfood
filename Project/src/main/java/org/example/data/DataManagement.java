@@ -17,7 +17,7 @@ public class DataManagement {
 
     public ArrayList<EventParticipant> participantList = new ArrayList<>();
     public ArrayList<Solo> soloParticipants = new ArrayList<>();
-    ArrayList<Pair> pairParticipants = new ArrayList<>();
+    public ArrayList<Pair> pairParticipants = new ArrayList<>();
 
     public DataManagement(String filePath) {
         List<List<String>> csvDataList = CSVReader.readValues(filePath);

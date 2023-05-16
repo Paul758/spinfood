@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Graph {
+public class UndirectedGraph {
     HashMap<Solo, List<Edge>> adjacencyList = new HashMap<>();
 
     public void addVertex(Solo solo) {

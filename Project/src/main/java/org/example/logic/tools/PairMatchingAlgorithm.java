@@ -4,7 +4,7 @@ import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.enums.Sex;
 import org.example.data.structures.Solo;
-import org.example.logic.graph.Graph;
+import org.example.logic.graph.UndirectedGraph;
 
 
 import java.util.ArrayList;
@@ -32,17 +32,17 @@ public class PairMatchingAlgorithm {
 
     public static List<PairMatched> match(List<Solo> solos, CostCoefficients coefficients, float limitMultiplier) {
         List<PairMatched> pairMatched = new ArrayList<>();
-        Graph graph = createGraph(solos, coefficients, limitMultiplier);
+        UndirectedGraph undirectedGraph = createGraph(solos, coefficients, limitMultiplier);
 
         for (int i = 0 ; i < solos.size() / 2; i++) {
             try {
-                Solo soloA = graph.getVertexWithLeastEdges();
-                Solo soloB = graph.getEdgeWithLeastWeight(soloA).solo;
+                Solo soloA = undirectedGraph.getVertexWithLeastEdges();
+                Solo soloB = undirectedGraph.getEdgeWithLeastWeight(soloA).solo;
 
                 pairMatched.add(new PairMatched(soloA, soloB));
 
-                graph.removeVertex(soloA);
-                graph.removeVertex(soloB);
+                undirectedGraph.removeVertex(soloA);
+                undirectedGraph.removeVertex(soloB);
             } catch (NullPointerException e) {
                 break;
             }
@@ -51,8 +51,8 @@ public class PairMatchingAlgorithm {
         return pairMatched;
     }
 
-    private static Graph createGraph(List<Solo> solos, CostCoefficients coefficients, float limitMultiplier) {
-        Graph graph = new Graph();
+    private static UndirectedGraph createGraph(List<Solo> solos, CostCoefficients coefficients, float limitMultiplier) {
+        UndirectedGraph undirectedGraph = new UndirectedGraph();
         float maxCosts = calcMaxCost(coefficients);
 
         for (int i = 0; i < solos.size(); i++) {
@@ -63,12 +63,12 @@ public class PairMatchingAlgorithm {
                 if (fulfillsHardCriteria(soloA, soloB)) {
                     float weight = calcValue(soloA, soloB, coefficients);
                     if (weight <= maxCosts * limitMultiplier) {
-                        graph.addEdge(soloA, soloB, weight);
+                        undirectedGraph.addEdge(soloA, soloB, weight);
                     }
                 }
             }
         }
-        return graph;
+        return undirectedGraph;
     }
 
     private static boolean fulfillsHardCriteria(Solo solo1, Solo solo2) {

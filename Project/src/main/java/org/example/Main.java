@@ -1,20 +1,45 @@
 package org.example;
 
 import org.example.data.*;
-import org.example.data.enums.KitchenType;
-import org.example.data.structures.EventParticipant;
-import org.example.logic.tools.Benchmark;
-import org.example.logic.tools.CostCoefficients;
-import org.example.logic.tools.PairMatched;
-import org.example.logic.tools.PairMatchingAlgorithm;
+import org.example.data.structures.Pair;
+import org.example.logic.groupmatching.GroupMatchingAlgorithm;
+import org.example.logic.tools.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        test1();
+        test4();
     }
 
+    private static void test4() {
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead);
+        List<PairMatched> pairMatchedList = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
+        List<Match> pairs = new ArrayList<>(pairMatchedList);
+        for (Pair pair : dataManagement.pairParticipants) {
+            pairs.add(new PairRegistered(pair));
+        }
+
+        Coordinate partyLocation = new Coordinate(8.6746166676233,50.5909317660173);
+        int counter = 0;
+        for (Match pair : pairs) {
+            counter++;
+            pair.setDistanceToPartyLocation(partyLocation);
+            System.out.println(pair.getDistanceToPartyLocation());
+        }
+        System.out.println("Solo: " + dataManagement.soloParticipants.size());
+        System.out.println("Pair: " + dataManagement.pairParticipants.size());
+        System.out.println(counter);
+
+        pairs.sort(Comparator.naturalOrder());
+        pairs.forEach(p -> System.out.println(p.getDistanceToPartyLocation()));
+
+        GroupMatchingAlgorithm.match(pairs);
+    }
 
 
     private static void test1() {
