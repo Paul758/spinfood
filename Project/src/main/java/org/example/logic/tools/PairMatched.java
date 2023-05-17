@@ -1,18 +1,25 @@
 package org.example.logic.tools;
 
 import org.example.data.enums.FoodPreference;
+import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 public class PairMatched extends Match {
 
     Solo soloA;
     Solo soloB;
-
     FoodPreference foodPreference;
 
     int foodPreferenceDeviation;
     int ageRangeDeviation;
 
     boolean prematched;
+
+    public PairMatched(Pair pair){
+        this(   new Solo(pair.personA, pair.foodPreference, pair.kitchen),
+                new Solo(pair.personB, pair.foodPreference, pair.kitchen));
+
+        prematched = true;
+    }
 
     public PairMatched(Solo soloA, Solo soloB){
         this.soloA = soloA;
