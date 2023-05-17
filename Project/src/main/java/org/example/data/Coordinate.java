@@ -16,6 +16,10 @@ public class Coordinate {
         this.latitude = latitude;
     }
 
+    public static double getDistance(Coordinate c1, Coordinate c2) {
+        return Math.sqrt(Math.pow(c2.longitude - c1.longitude, 2) + Math.pow(c2.latitude - c1.latitude, 2));
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {

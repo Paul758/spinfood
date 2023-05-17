@@ -1,6 +1,8 @@
 package org.example.logic.tools;
 
 import org.example.data.enums.FoodPreference;
+import org.example.data.enums.KitchenType;
+import org.example.data.factory.Kitchen;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 public class PairMatched extends Match {
@@ -77,6 +79,15 @@ public class PairMatched extends Match {
         int ageValueA = MatchingTools.getAgeRange(soloA.person.age());
         int ageValueB = MatchingTools.getAgeRange(soloB.person.age());
         return  Math.abs(ageValueA - ageValueB);
+    }
+
+    public Kitchen getKitchen(){
+        if(!soloA.kitchen.kitchenType.equals(KitchenType.NO)){
+            return soloA.kitchen;
+        } else {
+            return soloB.kitchen;
+        }
+
     }
 
     @Override
