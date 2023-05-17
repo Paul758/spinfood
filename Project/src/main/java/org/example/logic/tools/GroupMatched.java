@@ -8,6 +8,13 @@ public class GroupMatched extends Match {
     PairMatched pairB;
     PairMatched pairC;
 
+    public GroupMatched(PairMatched pairA, PairMatched pairB, PairMatched pairC) {
+        this.pairA = pairA;
+        this.pairB = pairB;
+        this.pairC = pairC;
+    }
+
+
     @Override
     protected FoodPreference calculateFoodPreference() {
         //Calculate here
@@ -22,5 +29,14 @@ public class GroupMatched extends Match {
     @Override
     protected int calculateAgeRangeDeviation() {
         return pairA.ageRangeDeviation + pairB.ageRangeDeviation + pairC.ageRangeDeviation;
+    }
+
+    @Override
+    public String toString() {
+        return "GroupMatched{" +
+                "pairA=" + pairA +
+                ", pairB=" + pairB +
+                ", pairC=" + pairC +
+                '}';
     }
 }

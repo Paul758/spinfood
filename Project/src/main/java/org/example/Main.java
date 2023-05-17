@@ -4,10 +4,7 @@ import org.example.data.*;
 import org.example.data.enums.KitchenType;
 import org.example.data.structures.EventParticipant;
 import org.example.data.structures.Pair;
-import org.example.logic.tools.Benchmark;
-import org.example.logic.tools.CostCoefficients;
-import org.example.logic.tools.PairMatched;
-import org.example.logic.tools.PairMatchingAlgorithm;
+import org.example.logic.tools.*;
 
 import java.util.List;
 
@@ -19,7 +16,7 @@ public class Main {
 
 
     private static void test1() {
-        String fileToRead = "src/main/java/org/example/artifacts/solo-2000.csv";
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
         String partyLocation = "src/main/java/org/example/artifacts/partylocation.csv";
         DataManagement dataManagement = new DataManagement(fileToRead, partyLocation);
 
@@ -35,8 +32,21 @@ public class Main {
         for(Pair pair : dataManagement.pairParticipants) {
             pairMatchedList.add(new PairMatched(pair));
         }
-
         System.out.println(dataManagement.partyLocation);
+
+
+
+        GroupMatchingAlgorithm groupMatchingAlgorithm = new GroupMatchingAlgorithm(pairMatchedList, dataManagement.partyLocation);
+
+        List<List<GroupMatched>> groupsMatched = groupMatchingAlgorithm.match();
+        List<GroupMatched> starterGroups = groupsMatched.get(0);
+        List<GroupMatched> mainCourseGroups = groupsMatched.get(1);
+        List<GroupMatched> dessertCourseGroups = groupsMatched.get(2);
+        starterGroups.forEach(System.out::println);
+        System.out.println("The amount of pairs is: " + pairMatchedList.size());
+        System.out.println("The amount of starter groups is: " + starterGroups.size());
+        System.out.println("The amount of main groups is: " + mainCourseGroups.size());
+        System.out.println("The amount of dessert groups is: " + dessertCourseGroups.size());
     }
 
     private static void test2() {
