@@ -41,37 +41,6 @@ public class PairMatched extends Match {
         int foodValueB = MatchingTools.getFoodPreference(soloB.foodPreference);
 
         return FoodPreference.parseFoodPreference(Math.max(foodValueA, foodValueB));
-
-       // FoodPreference foodPreferenceA = soloA.foodPreference;
-       // FoodPreference foodPreferenceB = soloB.foodPreference;
-
-
-       /* if(foodPreferenceA.equals(FoodPreference.NONE)){
-            return foodPreferenceB;
-        }
-        if(foodPreferenceB.equals(FoodPreference.NONE)){
-            return foodPreferenceA;
-        }
-        if(foodPreferenceA.equals(FoodPreference.MEAT)){
-            return foodPreferenceA;
-        }
-        if(foodPreferenceB.equals(FoodPreference.MEAT)){
-            return foodPreferenceB;
-        }
-        if(foodPreferenceA.equals(FoodPreference.VEGGIE) && foodPreferenceB.equals(FoodPreference.VEGGIE)){
-            return FoodPreference.VEGGIE;
-        }
-        if(foodPreferenceA.equals(FoodPreference.VEGGIE) && foodPreferenceB.equals(FoodPreference.VEGAN)){
-            return FoodPreference.VEGAN;
-        }
-        if(foodPreferenceB.equals(FoodPreference.VEGGIE) && foodPreferenceA.equals(FoodPreference.VEGAN)){
-            return FoodPreference.VEGAN;
-        }
-        if(foodPreferenceA.equals(FoodPreference.VEGAN) && foodPreferenceB.equals(FoodPreference.VEGAN)){
-            return FoodPreference.VEGAN;
-        }*/
-
-       // throw new IllegalStateException("no food preference found");
     }
 
     @Override
@@ -79,6 +48,21 @@ public class PairMatched extends Match {
         int ageValueA = MatchingTools.getAgeRange(soloA.person.age());
         int ageValueB = MatchingTools.getAgeRange(soloB.person.age());
         return  Math.abs(ageValueA - ageValueB);
+    }
+
+    @Override
+    protected float calculateSexDeviation() {
+        if(soloA.person.sex().equals(soloB.person.sex())){
+            return 0f;
+        } else {
+            return 0.5f;
+        }
+    }
+
+    @Override
+    protected int calculateFoodPreferenceDeviation() {
+        return Math.abs(MatchingTools.getFoodPreference(this.foodPreference) - MatchingTools.getFoodPreference(soloA.foodPreference))
+                + Math.abs(MatchingTools.getFoodPreference(this.foodPreference) - MatchingTools.getFoodPreference(soloA.foodPreference));
     }
 
     public Kitchen getKitchen(){

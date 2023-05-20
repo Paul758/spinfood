@@ -66,6 +66,7 @@ public class GroupMatchingAlgorithm {
            List<PairMatched> groupOfNine = new ArrayList<>();
 
            if(starterPairs.size() == 0){
+               System.out.println("There is no starter pair left");
                break;
            }
 
@@ -90,9 +91,10 @@ public class GroupMatchingAlgorithm {
            dessPairs.removeAll(addPairsListDessert);
            System.out.println("The size of dessert now is " + dessPairs.size());
            groupOfNine.addAll(addPairsListDessert);
-         
+
 
            if(groupOfNine.size() < 9){
+               System.out.println("There are not enough people to form a group of nine");
                break;
            }
 
@@ -112,19 +114,19 @@ public class GroupMatchingAlgorithm {
 
            //convert to single groups
            //starters groups
-           GroupMatched starterGroupA = new GroupMatched(pairA, pairD, pairG);
-           GroupMatched starterGroupB = new GroupMatched(pairB, pairE, pairH);
-           GroupMatched starterGroupC = new GroupMatched(pairC, pairF, pairI);
+           GroupMatched starterGroupA = new GroupMatched(pairA, pairD, pairG, pairA);
+           GroupMatched starterGroupB = new GroupMatched(pairB, pairE, pairH, pairB);
+           GroupMatched starterGroupC = new GroupMatched(pairC, pairF, pairI, pairC);
            startersGroups.addAll(List.of(starterGroupA, starterGroupB, starterGroupC));
            //main course groups
-           GroupMatched mainCourseGroupA = new GroupMatched(pairA, pairF, pairH);
-           GroupMatched mainCourseGroupB = new GroupMatched(pairB, pairD, pairI);
-           GroupMatched mainCourseGroupC = new GroupMatched(pairC, pairE, pairG);
+           GroupMatched mainCourseGroupA = new GroupMatched(pairA, pairF, pairH, pairF);
+           GroupMatched mainCourseGroupB = new GroupMatched(pairB, pairD, pairI, pairD);
+           GroupMatched mainCourseGroupC = new GroupMatched(pairC, pairE, pairG, pairE);
            mainCourseGroups.addAll(List.of(mainCourseGroupA, mainCourseGroupB, mainCourseGroupC));
            //dessert groups
-           GroupMatched dessertGroupA = new GroupMatched(pairA, pairE, pairI);
-           GroupMatched dessertGroupB = new GroupMatched(pairB, pairF, pairG);
-           GroupMatched dessertGroupC = new GroupMatched(pairC, pairD, pairH);
+           GroupMatched dessertGroupA = new GroupMatched(pairA, pairE, pairI, pairI);
+           GroupMatched dessertGroupB = new GroupMatched(pairB, pairF, pairG, pairG);
+           GroupMatched dessertGroupC = new GroupMatched(pairC, pairD, pairH, pairH);
            dessertGroups.addAll(List.of(dessertGroupA, dessertGroupB, dessertGroupC));
 
        }

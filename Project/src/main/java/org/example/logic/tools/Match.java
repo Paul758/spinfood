@@ -6,8 +6,12 @@ import org.example.data.structures.Solo;
 
 public abstract class Match {
 
-     protected abstract FoodPreference calculateFoodPreference();
+    protected abstract FoodPreference calculateFoodPreference();
 
     protected abstract int calculateAgeRangeDeviation();
+
+    protected abstract float calculateSexDeviation();
+
+    protected abstract int calculateFoodPreferenceDeviation();
 
 }
