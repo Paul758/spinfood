@@ -40,4 +40,8 @@ public class Keywords {
     public static final String yesKitchen = "yes";
     public static final String maybeKitchen = "maybe";
 
+
+    //Party Location Keywords
+    public static final String longitude = "Longitude";
+    public static final String latitude = "Latitude";
 }

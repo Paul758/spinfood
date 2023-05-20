@@ -2,31 +2,34 @@ package org.example;
 
 import org.example.data.*;
 import org.example.data.structures.Pair;
-import org.example.logic.groupmatching.GroupMatchingAlgorithm;
+import org.example.logic.groupmatching.HungarianGroupMatching;
 import org.example.logic.tools.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        test1();
+        test2();
+        test3();
         test4();
     }
 
     private static void test4() {
         String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        DataManagement dataManagement = new DataManagement(fileToRead);
+        String partyLocationPath = "src/main/java/org/example/artifacts/partylocation.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead, partyLocationPath);
         List<PairMatched> pairMatchedList = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
-        List<Match> pairs = new ArrayList<>(pairMatchedList);
+        List<PairMatched> pairs = new ArrayList<>(pairMatchedList);
         for (Pair pair : dataManagement.pairParticipants) {
-            pairs.add(new PairRegistered(pair));
+            pairs.add(new PairMatched(pair));
         }
 
-        Coordinate partyLocation = new Coordinate(8.6746166676233,50.5909317660173);
+        Coordinate partyLocation = dataManagement.partyLocation;
         int counter = 0;
-        for (Match pair : pairs) {
+        for (PairMatched pair : pairs) {
             counter++;
             pair.setDistanceToPartyLocation(partyLocation);
             System.out.println(pair.getDistanceToPartyLocation());
@@ -38,13 +41,14 @@ public class Main {
         pairs.sort(Comparator.naturalOrder());
         pairs.forEach(p -> System.out.println(p.getDistanceToPartyLocation()));
 
-        GroupMatchingAlgorithm.match(pairs);
+        HungarianGroupMatching.match(pairs);
     }
 
 
     private static void test1() {
-        String fileToRead = "src/main/java/org/example/artifacts/solo-2000.csv";
-        DataManagement dataManagement = new DataManagement(fileToRead);
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        String partyLocation = "src/main/java/org/example/artifacts/partylocation.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead, partyLocation);
 
         System.out.println("Start matching");
         List<PairMatched> pairMatchedList = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
@@ -53,11 +57,32 @@ public class Main {
         System.out.println("Priority: high count");
         Benchmark.matchedPairsBenchmark(pairMatchedList, dataManagement.soloParticipants);
         System.out.println();
+
+
+        for(Pair pair : dataManagement.pairParticipants) {
+            pairMatchedList.add(new PairMatched(pair));
+        }
+        System.out.println(dataManagement.partyLocation);
+
+
+
+        GroupMatchingAlgorithm groupMatchingAlgorithm = new GroupMatchingAlgorithm(pairMatchedList, dataManagement.partyLocation);
+
+        List<List<GroupMatched>> groupsMatched = groupMatchingAlgorithm.match();
+        List<GroupMatched> starterGroups = groupsMatched.get(0);
+        List<GroupMatched> mainCourseGroups = groupsMatched.get(1);
+        List<GroupMatched> dessertCourseGroups = groupsMatched.get(2);
+        starterGroups.forEach(System.out::println);
+        System.out.println("The amount of pairs is: " + pairMatchedList.size());
+        System.out.println("The amount of starter groups is: " + starterGroups.size());
+        System.out.println("The amount of main groups is: " + mainCourseGroups.size());
+        System.out.println("The amount of dessert groups is: " + dessertCourseGroups.size());
     }
 
     private static void test2() {
         String fileToRead = "src/main/java/org/example/artifacts/solo-10.csv";
-        DataManagement dataManagement = new DataManagement(fileToRead);
+        String partyLocation = "src/main/java/org/example/artifacts/partylocation.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead, partyLocation);
 
         List<PairMatched> pairMatchedList = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
 
@@ -74,7 +99,8 @@ public class Main {
 
     private static void test3() {
         String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        DataManagement dataManagement = new DataManagement(fileToRead);
+        String partyLocation = "src/main/java/org/example/artifacts/partylocation.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead, partyLocation);
         List<PairMatched> pairMatchedList = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
 
         System.out.println("None");

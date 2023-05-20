@@ -1,6 +1,7 @@
 package org.example.data;
 
 import org.example.data.*;
+import org.example.data.factory.CoordinateFactory;
 import org.example.data.factory.DataFactory;
 import org.example.data.structures.EventParticipant;
 import org.example.data.structures.Pair;
@@ -19,8 +20,11 @@ public class DataManagement {
     public ArrayList<Solo> soloParticipants = new ArrayList<>();
     public ArrayList<Pair> pairParticipants = new ArrayList<>();
 
-    public DataManagement(String filePath) {
-        List<List<String>> csvDataList = CSVReader.readValues(filePath);
+    public Coordinate partyLocation;
+
+
+    public DataManagement(String filePathParticipants, String filePathLocation) {
+        List<List<String>> csvDataList = CSVReader.readValues(filePathParticipants);
         List<String> csvHeader = csvDataList.get(0);
         Map<String, Integer> keywordMap = CSVReader.createKeyWordMap(csvHeader);
         csvDataList.remove(0);
@@ -35,6 +39,14 @@ public class DataManagement {
                 pairParticipants.add((Pair) participant);
             }
         }
+
+
+        List<List<String>> partyLocationData = CSVReader.readValues(filePathLocation);
+        List<String> csvHeaderLocation = partyLocationData.get(0);
+        Map<String, Integer> keywordMapLocation = CSVReader.createKeyWordMap(csvHeaderLocation);
+        partyLocationData.remove(0);
+        partyLocation = CoordinateFactory.createCoordinate(partyLocationData.get(0), keywordMapLocation);
+
     }
 
     public void printParticipants(){

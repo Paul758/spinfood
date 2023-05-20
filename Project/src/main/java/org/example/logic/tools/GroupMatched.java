@@ -8,6 +8,12 @@ public class GroupMatched {
     PairMatched pairB;
     PairMatched pairC;
 
+    public GroupMatched(PairMatched pairA, PairMatched pairB, PairMatched pairC) {
+        this.pairA = pairA;
+        this.pairB = pairB;
+        this.pairC = pairC;
+    }
+
     protected FoodPreference calculateFoodPreference() {
         //Calculate here
         int foodPreferencePairA = MatchingTools.getFoodPreference(pairA.getFoodPreference());
@@ -20,5 +26,14 @@ public class GroupMatched {
 
     protected int calculateAgeRangeDeviation() {
         return pairA.ageRangeDeviation + pairB.ageRangeDeviation + pairC.ageRangeDeviation;
+    }
+
+    @Override
+    public String toString() {
+        return "GroupMatched{" +
+                "pairA=" + pairA +
+                ", pairB=" + pairB +
+                ", pairC=" + pairC +
+                '}';
     }
 }

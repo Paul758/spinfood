@@ -4,19 +4,20 @@ import org.example.data.Coordinate;
 import org.example.logic.tools.GroupMatched;
 import org.example.logic.tools.HungarianAlgorithm;
 import org.example.logic.tools.Match;
+import org.example.logic.tools.PairMatched;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class GroupMatchingAlgorithm {
-    public static List<GroupMatched> match(List<Match> matchList) {
-        List<Match> cutList = cutList(matchList);
+public class HungarianGroupMatching {
+    public static List<GroupMatched> match(List<PairMatched> matchList) {
+        List<PairMatched> cutList = cutList(matchList);
         cutList.sort(Comparator.naturalOrder());
 
         int value = cutList.size() / 3;
-        List<Match> starterList = cutList.subList(0, value);
-        List<Match> mainList = cutList.subList(value, value * 2);
-        List<Match> dessertList = cutList.subList(value * 2, cutList.size());
+        List<PairMatched> starterList = cutList.subList(0, value);
+        List<PairMatched> mainList = cutList.subList(value, value * 2);
+        List<PairMatched> dessertList = cutList.subList(value * 2, cutList.size());
 
         System.out.println(cutList.size());
         System.out.println(starterList.size());
@@ -34,7 +35,7 @@ public class GroupMatchingAlgorithm {
         return null;
     }
 
-    private static double[][] calculateCost(List<Match> worker, List<Match> task, int length) {
+    private static double[][] calculateCost(List<PairMatched> worker, List<PairMatched> task, int length) {
         double[][] costs = new double[length][length];
         for (int i = 0; i < length; i++) {
             for (int j = 0; i < length; i++) {
@@ -46,7 +47,7 @@ public class GroupMatchingAlgorithm {
         return costs;
     }
 
-    private static List<Match> cutList(List<Match> list) {
+    private static List<PairMatched> cutList(List<PairMatched> list) {
         int newSize = list.size() - (list.size() % 9);
         return list.subList(0, newSize);
     }

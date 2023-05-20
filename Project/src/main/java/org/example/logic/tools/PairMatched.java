@@ -1,59 +1,72 @@
 package org.example.logic.tools;
 
+import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.factory.Kitchen;
 import org.example.data.factory.Person;
+import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
-public class PairMatched extends Match {
 
-    private final Solo soloA;
-    private final Solo soloB;
-    private final FoodPreference foodPreference;
-    private final Kitchen kitchen;
+public class PairMatched implements Comparable<PairMatched> {
 
+    private final Person personA;
+    private final Person personB;
+    private final  FoodPreference foodPreference;
+    private final   Kitchen kitchen;
+    private Double distanceToPartyLocation;
     int foodPreferenceDeviation;
     int ageRangeDeviation;
+    boolean prematched;
+
+    public PairMatched(Pair pair){
+        this.personA = pair.personA;
+        this.personB = pair.personB;
+        this.foodPreference = pair.foodPreference;
+        this.kitchen = pair.kitchen;
+
+        this.foodPreferenceDeviation = 0;
+        this.prematched = true;
+    }
 
     public PairMatched(Solo soloA, Solo soloB){
-        this.soloA = soloA;
-        this.soloB = soloB;
-        this.foodPreference = calculateFoodPreference();
-        this.kitchen = calculateKitchen();
+        this.personA = soloA.person;
+        this.personB = soloB.person;
+        this.foodPreference = calculateFoodPreference(soloA, soloB);
+        this.kitchen = calculateKitchen(soloA, soloB);
+
+        this.foodPreferenceDeviation = MatchingTools.calculateFoodPreferenceDeviation(soloA.foodPreference, soloB.foodPreference);
+        this.prematched = false;
     }
 
-    @Override
+
     public Person getPersonA() {
-        return soloA.person;
+        return personA;
     }
 
-    @Override
     public Person getPersonB() {
-        return soloB.person;
+        return personB;
     }
 
-    @Override
     public FoodPreference getFoodPreference() {
         return foodPreference;
     }
 
-    @Override
     public Kitchen getKitchen() {
         return kitchen;
     }
 
-    @Override
     public boolean isValid() {
-        return !soloA.person.equals(soloB.person);
+        return !personA.equals(personB);
     }
 
-    protected FoodPreference calculateFoodPreference() {
+    private FoodPreference calculateFoodPreference(Solo soloA, Solo soloB) {
         int foodValueA = MatchingTools.getFoodPreference(soloA.foodPreference);
         int foodValueB = MatchingTools.getFoodPreference(soloB.foodPreference);
         return FoodPreference.parseFoodPreference(Math.max(foodValueA, foodValueB));
     }
 
-    private Kitchen calculateKitchen() {
+    private Kitchen calculateKitchen(Solo soloA, Solo soloB) {
         Kitchen kitchenA = soloA.kitchen;
         Kitchen kitchenB = soloB.kitchen;
 
@@ -64,23 +77,31 @@ public class PairMatched extends Match {
         else throw new IllegalStateException(this + " has no kitchen");
     }
 
-    public int calculateFoodPreferenceDeviation() {
-        int foodValueA = MatchingTools.getFoodPreference(soloA.foodPreference);
-        int foodValueB = MatchingTools.getFoodPreference(soloB.foodPreference);
-        return Math.abs(foodValueA - foodValueB);
+    public void setDistanceToPartyLocation(Coordinate partyLocation) {
+        distanceToPartyLocation = Coordinate.getDistance(getKitchen().coordinate, partyLocation);
     }
 
+    public double getDistanceToPartyLocation() {
+        if (distanceToPartyLocation == null) {
+            throw new IllegalStateException("Distance to party location isn't set");
+        }
+        return distanceToPartyLocation;
+    }
 
+    public boolean containsPerson(Person person) {
+        return getPersonA().equals(person) || getPersonB().equals(person);
+    }
 
-
-    protected int calculateAgeRangeDeviation() {
-        int ageValueA = MatchingTools.getAgeRange(soloA.person.age());
-        int ageValueB = MatchingTools.getAgeRange(soloB.person.age());
-        return  Math.abs(ageValueA - ageValueB);
+    @Override
+    public int compareTo(PairMatched o) {
+        return Double.compare(this.getDistanceToPartyLocation(), o.getDistanceToPartyLocation());
     }
 
     @Override
     public String toString() {
-        return soloA.toString() + "\n" + soloB.toString();
+        return getPersonA() + "\n" +
+                getPersonB() + "\n" +
+                getFoodPreference() +
+                getKitchen();
     }
 }

@@ -1,6 +1,7 @@
 package org.example.logic.tools;
 
 import org.example.data.enums.FoodPreference;
+import org.example.data.factory.Person;
 
 public class MatchingTools {
 
@@ -32,5 +33,17 @@ public class MatchingTools {
             case 3 -> FoodPreference.VEGAN;
             default -> throw new IllegalArgumentException("int " + value + "cant be mapped to food preference");
         };
+    }
+
+    public static int calculateFoodPreferenceDeviation(FoodPreference foodPreferenceA, FoodPreference foodPreferenceB) {
+        int foodValueA = MatchingTools.getFoodPreference(foodPreferenceA);
+        int foodValueB = MatchingTools.getFoodPreference(foodPreferenceB);
+        return Math.abs(foodValueA - foodValueB);
+    }
+
+    public static int calculateAgeRangeDeviation(Person personA, Person personB) {
+        int ageValueA = MatchingTools.getAgeRange(personA.age());
+        int ageValueB = MatchingTools.getAgeRange(personB.age());
+        return  Math.abs(ageValueA - ageValueB);
     }
 }
