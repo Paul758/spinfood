@@ -6,31 +6,18 @@ import java.util.*;
 
 public class GroupMatchingAlgorithm {
 
-    List<PairMatched> pairs;
-    Coordinate partyLocation;
+    static Coordinate partyLocation;
     List<PairMatched> startersPairs;
     List<PairMatched> mainCoursePairs;
     List<PairMatched> dessertPairs;
 
-    public GroupMatchingAlgorithm(List<PairMatched> pairs, Coordinate partyLocation){
-        this.pairs = pairs;
-        this.partyLocation = partyLocation;
+
+    public static void setPartyLocation(Coordinate partyLocation){
+        GroupMatchingAlgorithm.partyLocation = partyLocation;
     }
 
-    private double calculateMaxDistance(List<PairMatched> pairs) {
-        double maxDistance = Double.MIN_VALUE;
-
-        for (PairMatched pair : pairs) {
-
-           double distance = Coordinate.getDistance(partyLocation, pair.getKitchen().coordinate);
-           if(distance > maxDistance) {
-               maxDistance = distance;
-           }
-        }
-        return maxDistance;
-    }
-
-    public void sortPairListByDistance(){
+    public static List<PairMatched> sortPairListByDistance(List<PairMatched> pairs){
+        System.out.println("matched pair list: " + pairs);
         pairs.sort((pairA, pairB) -> {
             double distanceA = Coordinate.getDistance(partyLocation, pairA.getKitchen().coordinate);
             double distanceB = Coordinate.getDistance(partyLocation, pairB.getKitchen().coordinate);
@@ -38,29 +25,34 @@ public class GroupMatchingAlgorithm {
         });
 
         pairs.forEach(System.out::println);
+        return pairs;
     }
 
 
-   public void sliceDistanceList(List<PairMatched> sortedPairMatchedList){
-        int listLength = sortedPairMatchedList.size();
-        int third = listLength / 3;
+   public static List<List<PairMatched>> sliceDistanceList(List<PairMatched> sortedPairMatchedList){
+       List<List<PairMatched>> cookingList = new ArrayList<>();
+       int listLength = sortedPairMatchedList.size();
+       int third = listLength / 3;
 
-        startersPairs = sortedPairMatchedList.subList(0, third);
-        mainCoursePairs = sortedPairMatchedList.subList(third + 1, 2 * third);
-        dessertPairs = sortedPairMatchedList.subList(2 * third + 1, sortedPairMatchedList.size() - 1);
+       cookingList.add(sortedPairMatchedList.subList(0, third));
+       cookingList.add(sortedPairMatchedList.subList(third + 1, 2 * third));
+       cookingList.add(sortedPairMatchedList.subList(2 * third + 1, sortedPairMatchedList.size() - 1));
+       return cookingList;
    }
 
 
-   public List<List<GroupMatched>> match(){
-       sortPairListByDistance();
-       sliceDistanceList(pairs);
+   public static List<List<GroupMatched>> match(List<PairMatched> matchedPairsList){
+       System.out.println("matched pair list: " + matchedPairsList);
+
+       List<PairMatched> sortedPairsList = sortPairListByDistance(matchedPairsList);
+       List<List<PairMatched>> cookingList = sliceDistanceList(sortedPairsList);
        List<GroupMatched> startersGroups = new ArrayList<>();
        List<GroupMatched> mainCourseGroups = new ArrayList<>();
        List<GroupMatched> dessertGroups = new ArrayList<>();
 
-       ArrayList<PairMatched> starterPairs = new ArrayList<>(startersPairs);
-       ArrayList<PairMatched> mainPairs = new ArrayList<>(mainCoursePairs);
-       ArrayList<PairMatched> dessPairs = new ArrayList<>(dessertPairs);
+       ArrayList<PairMatched> starterPairs = new ArrayList<>(cookingList.get(0));
+       ArrayList<PairMatched> mainPairs = new ArrayList<>(cookingList.get(1));
+       ArrayList<PairMatched> dessertPairs = new ArrayList<>(cookingList.get(2));
 
        while(true){
            List<PairMatched> groupOfNine = new ArrayList<>();
@@ -87,9 +79,9 @@ public class GroupMatchingAlgorithm {
            groupOfNine.addAll(addPairsListMain);
 
 
-           ArrayList<PairMatched> addPairsListDessert = addPairs(dessPairs.listIterator(), starterPair, 3);
-           dessPairs.removeAll(addPairsListDessert);
-           System.out.println("The size of dessert now is " + dessPairs.size());
+           ArrayList<PairMatched> addPairsListDessert = addPairs(dessertPairs.listIterator(), starterPair, 3);
+           dessertPairs.removeAll(addPairsListDessert);
+           System.out.println("The size of dessert now is " + dessertPairs.size());
            groupOfNine.addAll(addPairsListDessert);
 
 
@@ -138,26 +130,20 @@ public class GroupMatchingAlgorithm {
        return groups;
    }
 
-   public ArrayList<PairMatched> addPairs(Iterator<PairMatched> foodListIterator, PairMatched starterPair, int counterLimit){
+   public static ArrayList<PairMatched> addPairs(Iterator<PairMatched> foodListIterator, PairMatched starterPair, int counterLimit){
 
        int counter = 0;
        ArrayList<PairMatched> addList = new ArrayList<>();
-       //System.out.println("location of starter pair is " + starterPair.getKitchen().coordinate);
-       //System.out.println("party location is" + partyLocation);
-        double distanceToPartyLocation = Coordinate.getDistance(starterPair.getKitchen().coordinate, partyLocation);
-       //System.out.println("The foodList size is " + foodList.size());
+
+       double distanceToPartyLocation = Coordinate.getDistance(starterPair.getKitchen().coordinate, partyLocation);
 
        while(foodListIterator.hasNext()){
-           //System.out.println("Called once");
            PairMatched possiblePair = foodListIterator.next();
            double distanceToPair = Coordinate.getDistance(starterPair.getKitchen().coordinate, possiblePair.getKitchen().coordinate);
-           //System.out.println("The distance is " + distanceToPair);
-           //System.out.println("The distance to location is " + distanceToPartyLocation);
+
            if(distanceToPair <= distanceToPartyLocation){
-               //System.out.println("Adding to list");
                counter++;
                addList.add(possiblePair);
-
                if(counter >= counterLimit){
                    break;
                }
@@ -165,4 +151,23 @@ public class GroupMatchingAlgorithm {
        }
        return addList;
    }
+
+
+
+
+
+
+
+    private double calculateMaxDistance(List<PairMatched> pairs) {
+        double maxDistance = Double.MIN_VALUE;
+
+        for (PairMatched pair : pairs) {
+
+            double distance = Coordinate.getDistance(partyLocation, pair.getKitchen().coordinate);
+            if(distance > maxDistance) {
+                maxDistance = distance;
+            }
+        }
+        return maxDistance;
+    }
 }

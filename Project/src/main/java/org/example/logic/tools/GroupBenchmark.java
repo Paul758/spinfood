@@ -22,7 +22,7 @@ public class GroupBenchmark {
         Coordinate positionPairB = group.pairB.getKitchen().coordinate;
         Coordinate positionPairC = group.pairC.getKitchen().coordinate;
         Coordinate positionPairCook = group.cook.getKitchen().coordinate;
-        
+
         return Coordinate.getDistance(positionPairA, positionPairCook) +
                 Coordinate.getDistance(positionPairB, positionPairCook) +
                 Coordinate.getDistance(positionPairC, positionPairCook);

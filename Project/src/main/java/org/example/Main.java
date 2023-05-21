@@ -35,10 +35,8 @@ public class Main {
         System.out.println(dataManagement.partyLocation);
 
 
-
-        GroupMatchingAlgorithm groupMatchingAlgorithm = new GroupMatchingAlgorithm(pairMatchedList, dataManagement.partyLocation);
-
-        List<List<GroupMatched>> groupsMatched = groupMatchingAlgorithm.match();
+        GroupMatchingAlgorithm.setPartyLocation(dataManagement.partyLocation);
+        List<List<GroupMatched>> groupsMatched = GroupMatchingAlgorithm.match(pairMatchedList);
         List<GroupMatched> starterGroups = groupsMatched.get(0);
         List<GroupMatched> mainCourseGroups = groupsMatched.get(1);
         List<GroupMatched> dessertCourseGroups = groupsMatched.get(2);
