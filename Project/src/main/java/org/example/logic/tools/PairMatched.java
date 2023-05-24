@@ -3,21 +3,30 @@ package org.example.logic.tools;
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
+import org.example.data.enums.Sex;
 import org.example.data.factory.Kitchen;
 import org.example.data.factory.Person;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 
-public class PairMatched implements Comparable<PairMatched> {
+public class PairMatched implements Comparable<PairMatched>, Metricable {
 
     private final Person personA;
     private final Person personB;
-    private final  FoodPreference foodPreference;
-    private final   Kitchen kitchen;
+    private final FoodPreference foodPreference;
+    private final Kitchen kitchen;
+    public final boolean preMatched;
+
+    private Coordinate partyLocation;
     private Double distanceToPartyLocation;
-    int foodPreferenceDeviation;
-    int ageRangeDeviation;
-    boolean prematched;
+    public MealType cooksMealType;
+    private GroupMatched starterGroup;
+    private GroupMatched mainGroup;
+    private GroupMatched dessertGroup;
+
+
+    private final int foodPreferenceDeviation;
+    private final int ageRangeDeviation;
 
     public PairMatched(Pair pair){
         this.personA = pair.personA;
@@ -26,7 +35,8 @@ public class PairMatched implements Comparable<PairMatched> {
         this.kitchen = pair.kitchen;
 
         this.foodPreferenceDeviation = 0;
-        this.prematched = true;
+        this.ageRangeDeviation = MatchingTools.calculateAgeRangeDeviation(personA, personB);
+        this.preMatched = true;
     }
 
     public PairMatched(Solo soloA, Solo soloB){
@@ -36,7 +46,8 @@ public class PairMatched implements Comparable<PairMatched> {
         this.kitchen = calculateKitchen(soloA, soloB);
 
         this.foodPreferenceDeviation = MatchingTools.calculateFoodPreferenceDeviation(soloA.foodPreference, soloB.foodPreference);
-        this.prematched = false;
+        this.ageRangeDeviation = MatchingTools.calculateAgeRangeDeviation(personA, personB);
+        this.preMatched = false;
     }
 
 
@@ -56,8 +67,53 @@ public class PairMatched implements Comparable<PairMatched> {
         return kitchen;
     }
 
+    @Override
+    public double getPathLength() {
+        Coordinate starter = starterGroup.getKitchenCoordinate();
+        Coordinate main = mainGroup.getKitchenCoordinate();
+        Coordinate dessert = dessertGroup.getKitchenCoordinate();
+
+        double distanceStarterToMain = Coordinate.getDistance(starter, main);
+        double distanceMainToDessert = Coordinate.getDistance(main, dessert);
+        double distanceDessertToParty = Coordinate.getDistance(dessert, partyLocation);
+
+        return  distanceStarterToMain + distanceMainToDessert + distanceDessertToParty;
+    }
+
+    @Override
+    public double getGenderDeviation() {
+        double countFemale = 0;
+        if (personA.sex().equals(Sex.FEMALE)) countFemale++;
+        if (personB.sex().equals(Sex.FEMALE)) countFemale++;
+        return countFemale / 2;
+    }
+
+    @Override
+    public double getAgeRangeDeviation() {
+        return ageRangeDeviation;
+    }
+
+    @Override
+    public double getFoodPreferenceDeviation() {
+        return foodPreferenceDeviation;
+    }
+
+    @Override
     public boolean isValid() {
         return !personA.equals(personB);
+    }
+
+    public void addGroup(GroupMatched groupMatched) {
+        switch (groupMatched.mealType) {
+            case NONE -> throw new IllegalArgumentException();
+            case STARTER -> starterGroup = groupMatched;
+            case MAIN ->  mainGroup = groupMatched;
+            case DESSERT -> dessertGroup = groupMatched;
+        }
+    }
+
+    public boolean isNotInGroup() {
+        return starterGroup == null && mainGroup == null && dessertGroup == null;
     }
 
     private FoodPreference calculateFoodPreference(Solo soloA, Solo soloB) {
@@ -78,7 +134,8 @@ public class PairMatched implements Comparable<PairMatched> {
     }
 
     public void setDistanceToPartyLocation(Coordinate partyLocation) {
-        distanceToPartyLocation = Coordinate.getDistance(getKitchen().coordinate, partyLocation);
+        this.partyLocation = partyLocation;
+        this.distanceToPartyLocation = Coordinate.getDistance(getKitchen().coordinate, partyLocation);
     }
 
     public double getDistanceToPartyLocation() {
@@ -99,9 +156,6 @@ public class PairMatched implements Comparable<PairMatched> {
 
     @Override
     public String toString() {
-        return getPersonA() + "\n" +
-                getPersonB() + "\n" +
-                getFoodPreference() +
-                getKitchen();
+        return getPersonA().name() + ", " + getPersonB().name() + ", " + getFoodPreference();
     }
 }

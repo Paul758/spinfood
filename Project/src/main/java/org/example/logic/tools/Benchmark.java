@@ -39,7 +39,7 @@ public class Benchmark {
         float maxValue = pairMatchedList.size() * 2 * 8;
         float sumAgeDifference = 0;
         for (PairMatched pairMatched : pairMatchedList) {
-            sumAgeDifference += pairMatched.ageRangeDeviation;
+            sumAgeDifference += pairMatched.getAgeRangeDeviation();
         }
 
         return 1f - sumAgeDifference / maxValue;
@@ -65,7 +65,7 @@ public class Benchmark {
         float sum = 0;
 
         for (PairMatched pairMatched : pairMatchedList) {
-            sum += pairMatched.foodPreferenceDeviation;
+            sum += pairMatched.getFoodPreferenceDeviation();
         }
 
         return 1f - sum / maxValue;

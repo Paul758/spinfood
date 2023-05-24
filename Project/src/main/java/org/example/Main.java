@@ -3,6 +3,7 @@ package org.example;
 import org.example.data.*;
 import org.example.data.structures.Pair;
 import org.example.logic.groupmatching.HungarianGroupMatching;
+import org.example.logic.groupmatching.RandomGroupMatching;
 import org.example.logic.tools.*;
 
 import java.util.ArrayList;
@@ -11,10 +12,26 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        test1();
-        test2();
-        test3();
-        test4();
+        test5();
+    }
+
+    private static void test5() {
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        String partyLocationPath = "src/main/java/org/example/artifacts/partylocation.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead, partyLocationPath);
+
+        List<PairMatched> pairMatchedList = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
+        List<PairMatched> pairs = new ArrayList<>(pairMatchedList);
+        for (Pair pair : dataManagement.pairParticipants) {
+            pairs.add(new PairMatched(pair));
+        }
+        pairs.forEach(p -> p.setDistanceToPartyLocation(dataManagement.partyLocation));
+
+        GroupMatchedList groupMatchedList = new GroupMatchedList(new ArrayList<>(pairs), AlgorithmType.RANDOM);
+        groupMatchedList.print();
+
+        groupMatchedList.removePair(pairs.get(0));
+        groupMatchedList.print();
     }
 
     private static void test4() {
