@@ -26,10 +26,12 @@ public class PairMatched extends Match {
     public PairMatched(Solo soloA, Solo soloB){
         this.soloA = soloA;
         this.soloB = soloB;
+        this.foodPreference = calculateFoodPreference();
         //this.foodPreference = foodPreference;
 
         int foodValueA = MatchingTools.getFoodPreference(soloA.foodPreference);
         int foodValueB = MatchingTools.getFoodPreference(soloB.foodPreference);
+
         foodPreferenceDeviation = Math.abs(foodValueA - foodValueB);
         //this.prematched = prematched;
     }

@@ -1,6 +1,7 @@
 package org.example.logic.tools;
 
 import org.example.data.Coordinate;
+import org.example.data.enums.FoodPreference;
 
 import java.util.*;
 
@@ -11,6 +12,7 @@ public class GroupMatchingAlgorithm {
     List<PairMatched> mainCoursePairs;
     List<PairMatched> dessertPairs;
 
+    public static List<PairMatched> successors = new ArrayList<>();
 
     public static void setPartyLocation(Coordinate partyLocation){
         GroupMatchingAlgorithm.partyLocation = partyLocation;
@@ -87,9 +89,12 @@ public class GroupMatchingAlgorithm {
 
            if(groupOfNine.size() < 9){
                System.out.println("There are not enough people to form a group of nine");
+               System.out.println("The size of groupOfNine is " + groupOfNine.size());
+               successors.addAll(groupOfNine);
+               successors.forEach(System.out::println);
+               System.out.println("break");
                break;
            }
-
 
            //starters pairs
            PairMatched pairA = groupOfNine.get(0);
@@ -127,12 +132,26 @@ public class GroupMatchingAlgorithm {
        groups.add(startersGroups);
        groups.add(mainCourseGroups);
        groups.add(dessertGroups);
+
+       successors = getSuccessors(starterPairs, mainPairs, dessertPairs);
+
        return groups;
    }
 
-   public static ArrayList<PairMatched> addPairs(Iterator<PairMatched> foodListIterator, PairMatched starterPair, int counterLimit){
+    private static List<PairMatched> getSuccessors(List<PairMatched> startersPairs, List<PairMatched> mainCoursePairs, List<PairMatched> dessertPairs) {
+        List<PairMatched> successors = new ArrayList<>();
+
+        successors.addAll(startersPairs);
+        successors.addAll(mainCoursePairs);
+        successors.addAll(dessertPairs);
+
+        return successors;
+    }
+
+    public static ArrayList<PairMatched> addPairs(Iterator<PairMatched> foodListIterator, PairMatched starterPair, int counterLimit){
 
        int counter = 0;
+       int meatNoneCounter = 0;
        ArrayList<PairMatched> addList = new ArrayList<>();
 
        double distanceToPartyLocation = Coordinate.getDistance(starterPair.getKitchen().coordinate, partyLocation);
@@ -142,7 +161,15 @@ public class GroupMatchingAlgorithm {
            double distanceToPair = Coordinate.getDistance(starterPair.getKitchen().coordinate, possiblePair.getKitchen().coordinate);
 
            if(distanceToPair <= distanceToPartyLocation){
+               System.out.println(possiblePair);
+               if(possiblePair.foodPreference.equals(FoodPreference.MEAT) || possiblePair.foodPreference.equals(FoodPreference.NONE)){
+
+                   if(meatNoneCounter >= 1){
+                       continue;
+                   }
+               }
                counter++;
+               meatNoneCounter++;
                addList.add(possiblePair);
                if(counter >= counterLimit){
                    break;
@@ -153,10 +180,9 @@ public class GroupMatchingAlgorithm {
    }
 
 
-
-
-
-
+   public static List<PairMatched> getSuccessorList(){
+        return successors;
+   }
 
     private double calculateMaxDistance(List<PairMatched> pairs) {
         double maxDistance = Double.MIN_VALUE;

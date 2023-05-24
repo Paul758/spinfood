@@ -45,6 +45,10 @@ public class Main {
         System.out.println("The amount of starter groups is: " + starterGroups.size());
         System.out.println("The amount of main groups is: " + mainCourseGroups.size());
         System.out.println("The amount of dessert groups is: " + dessertCourseGroups.size());
+
+        System.out.println("successors:");
+        System.out.println("Size of successor list: " + GroupMatchingAlgorithm.getSuccessorList().size());
+        GroupMatchingAlgorithm.getSuccessorList().forEach(System.out::println);
     }
 
     private static void test2() {
