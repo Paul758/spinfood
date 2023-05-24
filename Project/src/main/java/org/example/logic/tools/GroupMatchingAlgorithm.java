@@ -43,7 +43,7 @@ public class GroupMatchingAlgorithm {
    }
 
 
-   public static List<List<GroupMatched>> match(List<PairMatched> matchedPairsList){
+   public static Collection<Collection<GroupMatched>> match(List<PairMatched> matchedPairsList){
        System.out.println("matched pair list: " + matchedPairsList);
 
        List<PairMatched> sortedPairsList = sortPairListByDistance(matchedPairsList);
@@ -128,7 +128,7 @@ public class GroupMatchingAlgorithm {
 
        }
 
-       ArrayList<List<GroupMatched>> groups = new ArrayList<>();
+       Collection<Collection<GroupMatched>> groups = new ArrayList<>();
        groups.add(startersGroups);
        groups.add(mainCourseGroups);
        groups.add(dessertGroups);
@@ -180,10 +180,10 @@ public class GroupMatchingAlgorithm {
    }
 
 
+
    public static List<PairMatched> getSuccessorList(){
         return successors;
    }
-
     private double calculateMaxDistance(List<PairMatched> pairs) {
         double maxDistance = Double.MIN_VALUE;
 

@@ -6,6 +6,7 @@ import org.example.data.structures.EventParticipant;
 import org.example.data.structures.Pair;
 import org.example.logic.tools.*;
 
+import java.util.Collection;
 import java.util.List;
 
 public class Main {
@@ -36,8 +37,8 @@ public class Main {
 
 
         GroupMatchingAlgorithm.setPartyLocation(dataManagement.partyLocation);
-        List<List<GroupMatched>> groupsMatched = GroupMatchingAlgorithm.match(pairMatchedList);
-        List<GroupMatched> starterGroups = groupsMatched.get(0);
+        Collection<Collection<GroupMatched>> groupsMatched = GroupMatchingAlgorithm.match(pairMatchedList);
+        /*List<GroupMatched> starterGroups = groupsMatched.get(0);
         List<GroupMatched> mainCourseGroups = groupsMatched.get(1);
         List<GroupMatched> dessertCourseGroups = groupsMatched.get(2);
         starterGroups.forEach(System.out::println);
@@ -49,6 +50,9 @@ public class Main {
         System.out.println("successors:");
         System.out.println("Size of successor list: " + GroupMatchingAlgorithm.getSuccessorList().size());
         GroupMatchingAlgorithm.getSuccessorList().forEach(System.out::println);
+
+        System.out.println("The amount of dessert groups is: " + dessertCourseGroups.size());*/
+
     }
 
     private static void test2() {
