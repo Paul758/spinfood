@@ -1,19 +1,56 @@
 package org.example;
 
 import org.example.data.*;
-import org.example.data.enums.KitchenType;
-import org.example.data.structures.EventParticipant;
 import org.example.data.structures.Pair;
+import org.example.data.structures.Solo;
+import org.example.logic.repository.MatchingRepository;
+import org.example.logic.structures.GroupMatched;
+import org.example.logic.structures.PairMatched;
 import org.example.logic.tools.*;
+import org.example.logic.tools.algorithms.CostCoefficients;
+import org.example.logic.tools.algorithms.PairMatchingAlgorithm;
+import org.example.logic.tools.benchmarks.BenchmarkSystem;
+import org.example.logic.tools.benchmarks.PairBenchmark;
 
 import java.util.Collection;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        test1();
+        //test1();
+        //test2();
+        testMatch();
     }
 
+    private static void testMatch() {
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        String partyLocation = "src/main/java/org/example/artifacts/partylocation.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead, partyLocation);
+        MatchingRepository matchingRepository = new MatchingRepository(dataManagement);
+        Collection<PairMatched> matchedPairs = MatchingSystem.matchPairs((List<Solo>) matchingRepository.getSoloDataCollection());
+        matchingRepository.addMatchedPairsCollection(matchedPairs);
+        Collection<GroupMatched> matchedGroups = MatchingSystem.matchGroups((List<PairMatched>) matchingRepository.getMatchedPairsCollection());
+        matchingRepository.addMatchedGroupsCollection(matchedGroups);
+
+        //print results
+        //pairs
+        System.out.println("pair count");
+        System.out.println(matchingRepository.getMatchedPairsCollection().size());
+
+        //groups
+        System.out.println("groups count");
+        System.out.println(matchingRepository.getMatchedGroupsCollection().size());
+
+        //unmatched pairs
+        System.out.println("unmatched pairs size");
+        matchingRepository.calculateUnmatchedPairs();
+        System.out.println(matchingRepository.pairSuccessors.size());
+        //Benchmarks
+        BenchmarkSystem benchmarkSystem = new BenchmarkSystem(matchingRepository);
+        benchmarkSystem.runBenchmarkOnPairs();
+
+
+    }
 
 
     private static void test1() {
@@ -26,7 +63,7 @@ public class Main {
 
         System.out.println("Start benchmark");
         System.out.println("Priority: high count");
-        Benchmark.matchedPairsBenchmark(pairMatchedList, dataManagement.soloParticipants);
+        PairBenchmark.matchedPairsBenchmark(pairMatchedList, dataManagement.soloParticipants);
         System.out.println();
 
 
@@ -36,8 +73,6 @@ public class Main {
         System.out.println(dataManagement.partyLocation);
 
 
-        GroupMatchingAlgorithm.setPartyLocation(dataManagement.partyLocation);
-        Collection<Collection<GroupMatched>> groupsMatched = GroupMatchingAlgorithm.match(pairMatchedList);
         /*List<GroupMatched> starterGroups = groupsMatched.get(0);
         List<GroupMatched> mainCourseGroups = groupsMatched.get(1);
         List<GroupMatched> dessertCourseGroups = groupsMatched.get(2);
@@ -68,7 +103,7 @@ public class Main {
         }
 
         System.out.println("Priority: high count");
-        Benchmark.matchedPairsBenchmark(pairMatchedList, dataManagement.soloParticipants);
+        PairBenchmark.matchedPairsBenchmark(pairMatchedList, dataManagement.soloParticipants);
         System.out.println();
     }
 
@@ -80,7 +115,7 @@ public class Main {
         List<PairMatched> pairMatchedList = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
 
         System.out.println("None");
-        Benchmark.matchedPairsBenchmark(pairMatchedList, dataManagement.soloParticipants);
+        PairBenchmark.matchedPairsBenchmark(pairMatchedList, dataManagement.soloParticipants);
         System.out.println();
 
         CostCoefficients coefficients = new CostCoefficients(10,1,1,1);
@@ -88,19 +123,19 @@ public class Main {
 
         System.out.println("Priority: age");
 
-        Benchmark.matchedPairsBenchmark(pairMatchedList2, dataManagement.soloParticipants);
+        PairBenchmark.matchedPairsBenchmark(pairMatchedList2, dataManagement.soloParticipants);
         System.out.println();
 
         List<PairMatched> pairMatchedList3 = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
 
         System.out.println("Priority: low count");
-        Benchmark.matchedPairsBenchmark(pairMatchedList3, dataManagement.soloParticipants);
+        PairBenchmark.matchedPairsBenchmark(pairMatchedList3, dataManagement.soloParticipants);
         System.out.println();
 
         List<PairMatched> pairMatchedList4 = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
 
         System.out.println("Priority: low count, age");
-        Benchmark.matchedPairsBenchmark(pairMatchedList4, dataManagement.soloParticipants);
+        PairBenchmark.matchedPairsBenchmark(pairMatchedList4, dataManagement.soloParticipants);
         System.out.println();
     }
 }

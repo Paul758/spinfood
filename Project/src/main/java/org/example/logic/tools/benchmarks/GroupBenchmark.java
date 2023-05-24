@@ -1,9 +1,20 @@
-package org.example.logic.tools;
+package org.example.logic.tools.benchmarks;
 
 import org.example.data.Coordinate;
+import org.example.logic.structures.GroupMatched;
+import org.example.logic.structures.PairMatched;
+
+import java.util.Collection;
 
 public class GroupBenchmark {
 
+
+    public void matchedGroupsBenchmark(Collection<GroupMatched> matchedGroups, Collection<PairMatched> matchedPairs) {
+
+
+
+
+    }
 
     public int calculateAgeDifference(GroupMatched group) {
         return group.calculateAgeRangeDeviation();

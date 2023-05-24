@@ -1,20 +1,23 @@
-package org.example.logic.tools;
+package org.example.logic.structures;
 
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.factory.Kitchen;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
+import org.example.logic.structures.Match;
+import org.example.logic.tools.MatchingTools;
+
 public class PairMatched extends Match {
 
-    Solo soloA;
-    Solo soloB;
-    FoodPreference foodPreference;
+    public Solo soloA;
+    public Solo soloB;
+    public FoodPreference foodPreference;
 
-    int foodPreferenceDeviation;
-    int ageRangeDeviation;
+    public int foodPreferenceDeviation;
+    public int ageRangeDeviation;
 
-    boolean prematched;
+    public boolean prematched;
 
     public PairMatched(Pair pair){
         this(   new Solo(pair.personA, pair.foodPreference, pair.kitchen),
@@ -37,7 +40,7 @@ public class PairMatched extends Match {
     }
 
     @Override
-    protected FoodPreference calculateFoodPreference() {
+    public FoodPreference calculateFoodPreference() {
 
         int foodValueA = MatchingTools.getFoodPreference(soloA.foodPreference);
         int foodValueB = MatchingTools.getFoodPreference(soloB.foodPreference);
@@ -46,14 +49,14 @@ public class PairMatched extends Match {
     }
 
     @Override
-    protected int calculateAgeRangeDeviation() {
+    public int calculateAgeRangeDeviation() {
         int ageValueA = MatchingTools.getAgeRange(soloA.person.age());
         int ageValueB = MatchingTools.getAgeRange(soloB.person.age());
         return  Math.abs(ageValueA - ageValueB);
     }
 
     @Override
-    protected float calculateSexDeviation() {
+    public float calculateSexDeviation() {
         if(soloA.person.sex().equals(soloB.person.sex())){
             return 0f;
         } else {
@@ -62,7 +65,7 @@ public class PairMatched extends Match {
     }
 
     @Override
-    protected int calculateFoodPreferenceDeviation() {
+    public int calculateFoodPreferenceDeviation() {
         return Math.abs(MatchingTools.getFoodPreference(this.foodPreference) - MatchingTools.getFoodPreference(soloA.foodPreference))
                 + Math.abs(MatchingTools.getFoodPreference(this.foodPreference) - MatchingTools.getFoodPreference(soloA.foodPreference));
     }

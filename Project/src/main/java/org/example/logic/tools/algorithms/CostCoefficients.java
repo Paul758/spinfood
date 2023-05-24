@@ -1,4 +1,4 @@
-package org.example.logic.tools;
+package org.example.logic.tools.algorithms;
 
 public record CostCoefficients(float ageWeight, float foodPreferenceWeight, float genderWeight, float kitchenWeight) {
     static CostCoefficients getDefault() {

@@ -1,28 +1,27 @@
-package org.example.logic.tools;
+package org.example.logic.tools.algorithms;
 
 import org.example.data.Coordinate;
-import org.example.data.enums.FoodPreference;
+import org.example.data.DataManagement;
+import org.example.logic.enums.MealType;
+import org.example.logic.structures.GroupMatched;
+import org.example.logic.structures.PairMatched;
 
 import java.util.*;
 
 public class GroupMatchingAlgorithm {
 
-    static Coordinate partyLocation;
-    List<PairMatched> startersPairs;
-    List<PairMatched> mainCoursePairs;
-    List<PairMatched> dessertPairs;
+    Coordinate partyLocation;
 
-    public static List<PairMatched> successors = new ArrayList<>();
 
-    public static void setPartyLocation(Coordinate partyLocation){
-        GroupMatchingAlgorithm.partyLocation = partyLocation;
+    public GroupMatchingAlgorithm(Coordinate partyLocation){
+        this.partyLocation = partyLocation;
     }
 
     public static List<PairMatched> sortPairListByDistance(List<PairMatched> pairs){
         System.out.println("matched pair list: " + pairs);
         pairs.sort((pairA, pairB) -> {
-            double distanceA = Coordinate.getDistance(partyLocation, pairA.getKitchen().coordinate);
-            double distanceB = Coordinate.getDistance(partyLocation, pairB.getKitchen().coordinate);
+            double distanceA = Coordinate.getDistance(DataManagement.partyLocation, pairA.getKitchen().coordinate);
+            double distanceB = Coordinate.getDistance(DataManagement.partyLocation, pairB.getKitchen().coordinate);
             return Double.compare(distanceB, distanceA);
         });
 
@@ -43,15 +42,15 @@ public class GroupMatchingAlgorithm {
    }
 
 
-   public static Collection<Collection<GroupMatched>> match(List<PairMatched> matchedPairsList){
-       System.out.println("matched pair list: " + matchedPairsList);
+   public static Collection<GroupMatched> match(List<PairMatched> matchedPairsList){
 
        List<PairMatched> sortedPairsList = sortPairListByDistance(matchedPairsList);
-       List<List<PairMatched>> cookingList = sliceDistanceList(sortedPairsList);
+
        List<GroupMatched> startersGroups = new ArrayList<>();
        List<GroupMatched> mainCourseGroups = new ArrayList<>();
        List<GroupMatched> dessertGroups = new ArrayList<>();
 
+       List<List<PairMatched>> cookingList = sliceDistanceList(sortedPairsList);
        ArrayList<PairMatched> starterPairs = new ArrayList<>(cookingList.get(0));
        ArrayList<PairMatched> mainPairs = new ArrayList<>(cookingList.get(1));
        ArrayList<PairMatched> dessertPairs = new ArrayList<>(cookingList.get(2));
@@ -71,28 +70,21 @@ public class GroupMatchingAlgorithm {
            //Get 2 more starter pairs
            ArrayList<PairMatched> addPairsListStarter = addPairs(starterPairs.listIterator(), starterPair, 2);
            starterPairs.removeAll(addPairsListStarter);
-           System.out.println("The size  of starters now is " + starterPairs.size());
            groupOfNine.addAll(addPairsListStarter);
 
-
+            //Get 3 main pairs
            ArrayList<PairMatched> addPairsListMain = addPairs(mainPairs.listIterator(), starterPair, 3);
            mainPairs.removeAll(addPairsListMain);
-           System.out.println("The size of main now is " + mainPairs.size());
            groupOfNine.addAll(addPairsListMain);
 
-
+           //Get 3 dessert pairs
            ArrayList<PairMatched> addPairsListDessert = addPairs(dessertPairs.listIterator(), starterPair, 3);
            dessertPairs.removeAll(addPairsListDessert);
-           System.out.println("The size of dessert now is " + dessertPairs.size());
            groupOfNine.addAll(addPairsListDessert);
 
 
            if(groupOfNine.size() < 9){
                System.out.println("There are not enough people to form a group of nine");
-               System.out.println("The size of groupOfNine is " + groupOfNine.size());
-               successors.addAll(groupOfNine);
-               successors.forEach(System.out::println);
-               System.out.println("break");
                break;
            }
 
@@ -110,51 +102,40 @@ public class GroupMatchingAlgorithm {
            PairMatched pairI = groupOfNine.get(8);
 
            //convert to single groups
+
+
            //starters groups
-           GroupMatched starterGroupA = new GroupMatched(pairA, pairD, pairG, pairA);
-           GroupMatched starterGroupB = new GroupMatched(pairB, pairE, pairH, pairB);
-           GroupMatched starterGroupC = new GroupMatched(pairC, pairF, pairI, pairC);
+           GroupMatched starterGroupA = new GroupMatched(pairA, pairD, pairG, pairA, MealType.STARTER);
+           GroupMatched starterGroupB = new GroupMatched(pairB, pairE, pairH, pairB, MealType.STARTER);
+           GroupMatched starterGroupC = new GroupMatched(pairC, pairF, pairI, pairC, MealType.STARTER);
            startersGroups.addAll(List.of(starterGroupA, starterGroupB, starterGroupC));
            //main course groups
-           GroupMatched mainCourseGroupA = new GroupMatched(pairA, pairF, pairH, pairF);
-           GroupMatched mainCourseGroupB = new GroupMatched(pairB, pairD, pairI, pairD);
-           GroupMatched mainCourseGroupC = new GroupMatched(pairC, pairE, pairG, pairE);
+           GroupMatched mainCourseGroupA = new GroupMatched(pairA, pairF, pairH, pairF, MealType.MAIN);
+           GroupMatched mainCourseGroupB = new GroupMatched(pairB, pairD, pairI, pairD, MealType.MAIN);
+           GroupMatched mainCourseGroupC = new GroupMatched(pairC, pairE, pairG, pairE, MealType.MAIN);
            mainCourseGroups.addAll(List.of(mainCourseGroupA, mainCourseGroupB, mainCourseGroupC));
            //dessert groups
-           GroupMatched dessertGroupA = new GroupMatched(pairA, pairE, pairI, pairI);
-           GroupMatched dessertGroupB = new GroupMatched(pairB, pairF, pairG, pairG);
-           GroupMatched dessertGroupC = new GroupMatched(pairC, pairD, pairH, pairH);
+           GroupMatched dessertGroupA = new GroupMatched(pairA, pairE, pairI, pairI, MealType.DESSERT);
+           GroupMatched dessertGroupB = new GroupMatched(pairB, pairF, pairG, pairG, MealType.DESSERT);
+           GroupMatched dessertGroupC = new GroupMatched(pairC, pairD, pairH, pairH, MealType.DESSERT);
            dessertGroups.addAll(List.of(dessertGroupA, dessertGroupB, dessertGroupC));
 
        }
 
-       Collection<Collection<GroupMatched>> groups = new ArrayList<>();
-       groups.add(startersGroups);
-       groups.add(mainCourseGroups);
-       groups.add(dessertGroups);
-
-       successors = getSuccessors(starterPairs, mainPairs, dessertPairs);
+       Collection<GroupMatched> groups = new ArrayList<>();
+       groups.addAll(startersGroups);
+       groups.addAll(mainCourseGroups);
+       groups.addAll(dessertGroups);
 
        return groups;
    }
 
-    private static List<PairMatched> getSuccessors(List<PairMatched> startersPairs, List<PairMatched> mainCoursePairs, List<PairMatched> dessertPairs) {
-        List<PairMatched> successors = new ArrayList<>();
-
-        successors.addAll(startersPairs);
-        successors.addAll(mainCoursePairs);
-        successors.addAll(dessertPairs);
-
-        return successors;
-    }
-
     public static ArrayList<PairMatched> addPairs(Iterator<PairMatched> foodListIterator, PairMatched starterPair, int counterLimit){
 
        int counter = 0;
-       int meatNoneCounter = 0;
        ArrayList<PairMatched> addList = new ArrayList<>();
 
-       double distanceToPartyLocation = Coordinate.getDistance(starterPair.getKitchen().coordinate, partyLocation);
+       double distanceToPartyLocation = Coordinate.getDistance(starterPair.getKitchen().coordinate, DataManagement.partyLocation);
 
        while(foodListIterator.hasNext()){
            PairMatched possiblePair = foodListIterator.next();
@@ -162,14 +143,7 @@ public class GroupMatchingAlgorithm {
 
            if(distanceToPair <= distanceToPartyLocation){
                System.out.println(possiblePair);
-               if(possiblePair.foodPreference.equals(FoodPreference.MEAT) || possiblePair.foodPreference.equals(FoodPreference.NONE)){
-
-                   if(meatNoneCounter >= 1){
-                       continue;
-                   }
-               }
                counter++;
-               meatNoneCounter++;
                addList.add(possiblePair);
                if(counter >= counterLimit){
                    break;
@@ -179,21 +153,4 @@ public class GroupMatchingAlgorithm {
        return addList;
    }
 
-
-
-   public static List<PairMatched> getSuccessorList(){
-        return successors;
-   }
-    private double calculateMaxDistance(List<PairMatched> pairs) {
-        double maxDistance = Double.MIN_VALUE;
-
-        for (PairMatched pair : pairs) {
-
-            double distance = Coordinate.getDistance(partyLocation, pair.getKitchen().coordinate);
-            if(distance > maxDistance) {
-                maxDistance = distance;
-            }
-        }
-        return maxDistance;
-    }
 }

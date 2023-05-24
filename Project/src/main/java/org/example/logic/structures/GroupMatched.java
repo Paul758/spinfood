@@ -1,8 +1,9 @@
-package org.example.logic.tools;
+package org.example.logic.structures;
 
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.Sex;
-import org.example.data.structures.Solo;
+import org.example.logic.tools.MatchingTools;
+import org.example.logic.enums.MealType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,32 +17,33 @@ public class GroupMatched extends Match {
 
     public FoodPreference foodPreference;
 
-    public GroupMatched(PairMatched pairA, PairMatched pairB, PairMatched pairC, PairMatched cook) {
+    public MealType mealType;
+
+    public GroupMatched(PairMatched pairA, PairMatched pairB, PairMatched pairC, PairMatched cook, MealType mealType) {
         this.pairA = pairA;
         this.pairB = pairB;
         this.pairC = pairC;
         this.cook = cook;
+        this.mealType = mealType;
     }
 
-
     @Override
-    protected FoodPreference calculateFoodPreference() {
+    public FoodPreference calculateFoodPreference() {
         //Calculate here
         int foodPreferencePairA = MatchingTools.getFoodPreference(pairA.foodPreference);
         int foodPreferencePairB = MatchingTools.getFoodPreference(pairB.foodPreference);
         int foodPreferencePairC = MatchingTools.getFoodPreference(pairC.foodPreference);
         return FoodPreference.parseFoodPreference(Math.max(foodPreferencePairA, Math.max(foodPreferencePairB, foodPreferencePairC)));
 
-        //throw new IllegalStateException("not implemented yet");
     }
 
     @Override
-    protected int calculateAgeRangeDeviation() {
+    public int calculateAgeRangeDeviation() {
         return pairA.ageRangeDeviation + pairB.ageRangeDeviation + pairC.ageRangeDeviation;
     }
 
     @Override
-    protected float calculateSexDeviation(){
+    public float calculateSexDeviation(){
         int male = 0;
         int female = 0;
         int other = 0;
@@ -71,7 +73,7 @@ public class GroupMatched extends Match {
     }
 
     @Override
-    protected int calculateFoodPreferenceDeviation() {
+    public int calculateFoodPreferenceDeviation() {
         return Math.abs(MatchingTools.getFoodPreference(this.foodPreference) - MatchingTools.getFoodPreference(pairA.foodPreference))
                + Math.abs(MatchingTools.getFoodPreference(this.foodPreference) - MatchingTools.getFoodPreference(pairB.foodPreference))
                + Math.abs(MatchingTools.getFoodPreference(this.foodPreference) - MatchingTools.getFoodPreference(pairC.foodPreference));
@@ -79,6 +81,10 @@ public class GroupMatched extends Match {
 
     public ArrayList<PairMatched> getPairList(){
         return new ArrayList<>(List.of(pairA, pairB, pairC));
+    }
+
+    public boolean contains(PairMatched pair){
+        return pair.equals(pairA) || pair.equals(pairB) || pair.equals(pairC);
     }
 
     @Override

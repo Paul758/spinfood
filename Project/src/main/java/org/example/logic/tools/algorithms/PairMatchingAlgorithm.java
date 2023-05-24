@@ -1,10 +1,12 @@
-package org.example.logic.tools;
+package org.example.logic.tools.algorithms;
 
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.enums.Sex;
 import org.example.data.structures.Solo;
 import org.example.logic.graph.Graph;
+import org.example.logic.structures.PairMatched;
+import org.example.logic.tools.MatchingTools;
 
 
 import java.util.ArrayList;

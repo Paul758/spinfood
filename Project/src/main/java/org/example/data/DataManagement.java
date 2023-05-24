@@ -20,7 +20,7 @@ public class DataManagement {
     public ArrayList<Solo> soloParticipants = new ArrayList<>();
     public ArrayList<Pair> pairParticipants = new ArrayList<>();
 
-    public Coordinate partyLocation;
+    public static Coordinate partyLocation;
 
 
     public DataManagement(String filePathParticipants, String filePathLocation) {

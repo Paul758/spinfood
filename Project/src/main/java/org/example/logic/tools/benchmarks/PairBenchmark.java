@@ -1,14 +1,15 @@
-package org.example.logic.tools;
+package org.example.logic.tools.benchmarks;
 
-import org.example.Main;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.Sex;
 import org.example.data.structures.Solo;
+import org.example.logic.structures.PairMatched;
+import org.example.logic.tools.MatchingTools;
 
 import java.util.List;
-import java.util.Map;
 
-public class Benchmark {
+public class PairBenchmark
+{
 
     public static void matchedPairsBenchmark(List<PairMatched> pairs, List<Solo> solos) {
         int pairSize = pairs.size() * 2;
