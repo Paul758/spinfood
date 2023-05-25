@@ -19,12 +19,7 @@ public class GroupMatchingAlgorithm {
 
     public static List<PairMatched> sortPairListByDistance(List<PairMatched> pairs){
         System.out.println("matched pair list: " + pairs);
-        pairs.sort((pairA, pairB) -> {
-            double distanceA = Coordinate.getDistance(DataManagement.partyLocation, pairA.getKitchen().coordinate);
-            double distanceB = Coordinate.getDistance(DataManagement.partyLocation, pairB.getKitchen().coordinate);
-            return Double.compare(distanceB, distanceA);
-        });
-
+        pairs.sort((pairA, pairB) -> Double.compare(pairB.distanceToPartyLocation, pairA.distanceToPartyLocation));
         pairs.forEach(System.out::println);
         return pairs;
     }
@@ -135,7 +130,7 @@ public class GroupMatchingAlgorithm {
        int counter = 0;
        ArrayList<PairMatched> addList = new ArrayList<>();
 
-       double distanceToPartyLocation = Coordinate.getDistance(starterPair.getKitchen().coordinate, DataManagement.partyLocation);
+       double distanceToPartyLocation = starterPair.distanceToPartyLocation;
 
        while(foodListIterator.hasNext()){
            PairMatched possiblePair = foodListIterator.next();

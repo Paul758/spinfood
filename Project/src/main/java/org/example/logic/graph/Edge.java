@@ -4,13 +4,13 @@ import org.example.data.structures.Solo;
 
 import java.util.Comparator;
 
-public class Edge {
-    public Solo solo;
+public class Edge <T>{
+    public T participant;
     public float weight;
-    Edge linkedEdge;
+    Edge<T> linkedEdge;
 
-    public Edge(Solo solo, float weight) {
-        this.solo = solo;
+    public Edge(T participant, float weight) {
+        this.participant = participant;
         this.weight = weight;
     }
 }

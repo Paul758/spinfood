@@ -1,5 +1,6 @@
 package org.example.logic.structures;
 
+import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.factory.Kitchen;
@@ -13,6 +14,7 @@ public class PairMatched extends Match {
     public Solo soloA;
     public Solo soloB;
     public FoodPreference foodPreference;
+    public double distanceToPartyLocation;
 
     public int foodPreferenceDeviation;
     public int ageRangeDeviation;
@@ -77,6 +79,10 @@ public class PairMatched extends Match {
             return soloB.kitchen;
         }
 
+    }
+
+    public void setDistanceToPartyLocation(Coordinate partyLocation) {
+        this.distanceToPartyLocation = Coordinate.getDistance(partyLocation, getKitchen().coordinate);
     }
 
     @Override

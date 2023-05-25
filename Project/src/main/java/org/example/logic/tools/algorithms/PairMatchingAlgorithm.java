@@ -3,6 +3,7 @@ package org.example.logic.tools.algorithms;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.enums.Sex;
+import org.example.data.structures.EventParticipant;
 import org.example.data.structures.Solo;
 import org.example.logic.graph.Graph;
 import org.example.logic.structures.PairMatched;
@@ -38,13 +39,13 @@ public class PairMatchingAlgorithm {
 
         for (int i = 0 ; i < solos.size() / 2; i++) {
             try {
-                Solo soloA = graph.getVertexWithLeastEdges();
-                Solo soloB = graph.getEdgeWithLeastWeight(soloA).solo;
+                EventParticipant participantA = (EventParticipant) graph.getVertexWithLeastEdges();
+                EventParticipant participantB = (EventParticipant) graph.getEdgeWithLeastWeight(participantA).participant;
 
-                pairMatched.add(new PairMatched(soloA, soloB));
+                pairMatched.add(new PairMatched((Solo) participantA, (Solo) participantB));
 
-                graph.removeVertex(soloA);
-                graph.removeVertex(soloB);
+                graph.removeVertex(participantA);
+                graph.removeVertex(participantB);
             } catch (NullPointerException e) {
                 break;
             }

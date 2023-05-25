@@ -93,4 +93,12 @@ public class MatchingRepository {
         }
         pairSuccessors = unmatchedPairs;
     }
+
+    public void setDistanceToPartyLocationForPairs(){
+        Collection<PairMatched> pairs = getMatchedPairsCollection();
+
+        for (PairMatched pair : pairs){
+            pair.setDistanceToPartyLocation(dataManagement.partyLocation);
+        }
+    }
 }

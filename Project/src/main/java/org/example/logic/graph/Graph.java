@@ -1,70 +1,68 @@
 package org.example.logic.graph;
 
-import org.example.data.structures.Solo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Graph {
-    HashMap<Solo, List<Edge>> adjacencyList = new HashMap<>();
+public class Graph <T> {
+    HashMap<T, List<Edge<T>>> adjacencyList = new HashMap<>();
 
-    public void addVertex(Solo solo) {
-        if (!adjacencyList.containsKey(solo)) {
-            adjacencyList.put(solo, new ArrayList<>());
+    public void addVertex(T participant) {
+        if (!adjacencyList.containsKey(participant)) {
+            adjacencyList.put(participant, new ArrayList<>());
         }
     }
 
-    public void addEdge(Solo soloA, Solo soloB, float weight) {
-        addVertex(soloA);
-        addVertex(soloB);
+    public void addEdge(T participantA, T participantB, float weight) {
+        addVertex(participantA);
+        addVertex(participantB);
 
-        Edge edgeA = new Edge(soloB, weight);
-        Edge edgeB = new Edge(soloA, weight);
+        Edge<T> edgeA = new Edge<>(participantB, weight);
+        Edge<T> edgeB = new Edge<>(participantA, weight);
 
         edgeA.linkedEdge = edgeB;
         edgeB.linkedEdge = edgeA;
 
-        adjacencyList.get(soloA).add(edgeA);
-        adjacencyList.get(soloB).add(edgeB);
+        adjacencyList.get(participantA).add(edgeA);
+        adjacencyList.get(participantB).add(edgeB);
     }
-    
-    public void removeVertex(Solo solo) {
-        List<Edge> edges = adjacencyList.get(solo);
-        for (Edge edge : edges) {
-            Edge linkedEdge = edge.linkedEdge;
-            adjacencyList.get(edge.solo).remove(linkedEdge);
+
+    public void removeVertex(T participant) {
+        List<Edge<T>> edges = adjacencyList.get(participant);
+        for (Edge<T> edge : edges) {
+            Edge<T> linkedEdge = edge.linkedEdge;
+            adjacencyList.get(edge.participant).remove(linkedEdge);
         }
-        adjacencyList.remove(solo);
+        adjacencyList.remove(participant);
     }
 
-    public Solo getVertexWithLeastEdges() {
+    public T getVertexWithLeastEdges() {
         int minCount = Integer.MAX_VALUE;
-        Solo minSolo = null;
+        T minParticipant = null;
 
-        for (Solo solo : adjacencyList.keySet()) {
-            int count = adjacencyList.get(solo).size();
+        for (T participant : adjacencyList.keySet()) {
+            int count = adjacencyList.get(participant).size();
             if (count < minCount) {
                 minCount = count;
-                minSolo = solo;
+                minParticipant = participant;
             }
         }
-        
-        return minSolo;
+
+        return minParticipant;
     }
 
-    public Edge getEdgeWithLeastWeight(Solo solo) {
-        List<Edge> edges = adjacencyList.get(solo);
-        Edge minEdge = null;
+    public Edge<T> getEdgeWithLeastWeight(T participant) {
+        List<Edge<T>> edges = adjacencyList.get(participant);
+        Edge<T> minEdge = null;
         float minWeight = Float.MAX_VALUE;
 
-        for (Edge edge : edges) {
+        for (Edge<T> edge : edges) {
             if (edge.weight < minWeight) {
                 minEdge = edge;
                 minWeight = edge.weight;
             }
         }
-
         return minEdge;
     }
 }
