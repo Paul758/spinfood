@@ -25,6 +25,7 @@ public class GroupMatched extends Match {
         this.pairC = pairC;
         this.cook = cook;
         this.mealType = mealType;
+        this.foodPreference = calculateFoodPreference();
     }
 
     @Override

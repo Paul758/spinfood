@@ -25,7 +25,7 @@ public class BenchmarkSystem {
 
     public void runBenchmarkOnGroups(){
         Collection<GroupMatched> matchedGroups = matchingRepository.getMatchedGroupsCollection();
-
+        GroupBenchmark.matchedGroupsBenchmark(matchedGroups);
     }
 
 

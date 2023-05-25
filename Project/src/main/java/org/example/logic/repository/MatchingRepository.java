@@ -5,9 +5,11 @@ import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
+import org.example.logic.tools.MatchingSystem;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class MatchingRepository {
 
@@ -27,6 +29,12 @@ public class MatchingRepository {
         System.out.println("pairDataCollection");
         System.out.println(pairDataCollection);
         createAndAddPrematchedPairs();
+
+        Collection<PairMatched> matchedPairs = MatchingSystem.matchPairs((List<Solo>) this.getSoloDataCollection());
+        this.addMatchedPairsCollection(matchedPairs);
+        Collection<GroupMatched> matchedGroups = MatchingSystem.matchGroups((List<PairMatched>) this.getMatchedPairsCollection());
+        this.addMatchedGroupsCollection(matchedGroups);
+
     }
 
     public void createAndAddPrematchedPairs() {
@@ -43,7 +51,7 @@ public class MatchingRepository {
         this.matchedPairsCollection = matchedPairsCollection;
     }
 
-    public void setMatchedGroupsCollection(Collection<GroupMatched> matchedGroupsCollection){
+    public void setMatchedGroupsCollection(Collection<GroupMatched> matchedGroupsCollection) {
         this.matchedGroupsCollection = matchedGroupsCollection;
     }
 
@@ -51,7 +59,7 @@ public class MatchingRepository {
         this.matchedPairsCollection.addAll(matchedPairsCollection);
     }
 
-    public void addMatchedGroupsCollection(Collection<GroupMatched> matchedGroupsCollection){
+    public void addMatchedGroupsCollection(Collection<GroupMatched> matchedGroupsCollection) {
         this.matchedGroupsCollection.addAll(matchedGroupsCollection);
     }
 
@@ -84,6 +92,5 @@ public class MatchingRepository {
             }
         }
         pairSuccessors = unmatchedPairs;
-
     }
 }

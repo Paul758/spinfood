@@ -27,10 +27,6 @@ public class Main {
         String partyLocation = "src/main/java/org/example/artifacts/partylocation.csv";
         DataManagement dataManagement = new DataManagement(fileToRead, partyLocation);
         MatchingRepository matchingRepository = new MatchingRepository(dataManagement);
-        Collection<PairMatched> matchedPairs = MatchingSystem.matchPairs((List<Solo>) matchingRepository.getSoloDataCollection());
-        matchingRepository.addMatchedPairsCollection(matchedPairs);
-        Collection<GroupMatched> matchedGroups = MatchingSystem.matchGroups((List<PairMatched>) matchingRepository.getMatchedPairsCollection());
-        matchingRepository.addMatchedGroupsCollection(matchedGroups);
 
         //print results
         //pairs
@@ -48,7 +44,7 @@ public class Main {
         //Benchmarks
         BenchmarkSystem benchmarkSystem = new BenchmarkSystem(matchingRepository);
         benchmarkSystem.runBenchmarkOnPairs();
-
+        benchmarkSystem.runBenchmarkOnGroups();
 
     }
 
