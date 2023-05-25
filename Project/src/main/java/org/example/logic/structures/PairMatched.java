@@ -22,13 +22,15 @@ public class PairMatched extends Match {
     public boolean prematched;
 
     public PairMatched(Pair pair){
+
         this(   new Solo(pair.personA, pair.foodPreference, pair.kitchen),
                 new Solo(pair.personB, pair.foodPreference, pair.kitchen));
-
+        System.out.println("This constructor is called");
         prematched = true;
     }
 
     public PairMatched(Solo soloA, Solo soloB){
+        System.out.println("This constructor is called");
         this.soloA = soloA;
         this.soloB = soloB;
         this.foodPreference = calculateFoodPreference();
@@ -46,7 +48,7 @@ public class PairMatched extends Match {
 
         int foodValueA = MatchingTools.getFoodPreference(soloA.foodPreference);
         int foodValueB = MatchingTools.getFoodPreference(soloB.foodPreference);
-
+        System.out.println("Setting foodPreference of pair to " + FoodPreference.parseFoodPreference(Math.max(foodValueA, foodValueB)));
         return FoodPreference.parseFoodPreference(Math.max(foodValueA, foodValueB));
     }
 
@@ -82,6 +84,7 @@ public class PairMatched extends Match {
     }
 
     public void setDistanceToPartyLocation(Coordinate partyLocation) {
+        System.out.println("party Location " + partyLocation);
         this.distanceToPartyLocation = Coordinate.getDistance(partyLocation, getKitchen().coordinate);
     }
 

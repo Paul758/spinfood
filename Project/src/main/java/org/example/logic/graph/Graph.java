@@ -52,6 +52,23 @@ public class Graph <T> {
         return minParticipant;
     }
 
+    public T getVertexWithLeastEdges(int limit) {
+        int minCount = Integer.MAX_VALUE;
+        T minParticipant = null;
+
+        for (T participant : adjacencyList.keySet()) {
+            int count = adjacencyList.get(participant).size();
+            if (count < minCount && count >= limit) {
+                minCount = count;
+                minParticipant = participant;
+            }
+        }
+
+        return minParticipant;
+    }
+
+
+
     public Edge<T> getEdgeWithLeastWeight(T participant) {
         List<Edge<T>> edges = adjacencyList.get(participant);
         Edge<T> minEdge = null;

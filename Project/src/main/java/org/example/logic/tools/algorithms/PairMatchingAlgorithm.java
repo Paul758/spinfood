@@ -35,14 +35,14 @@ public class PairMatchingAlgorithm {
 
     public static List<PairMatched> match(List<Solo> solos, CostCoefficients coefficients, float limitMultiplier) {
         List<PairMatched> pairMatched = new ArrayList<>();
-        Graph graph = createGraph(solos, coefficients, limitMultiplier);
+        Graph<Solo> graph = createGraph(solos, coefficients, limitMultiplier);
 
         for (int i = 0 ; i < solos.size() / 2; i++) {
             try {
-                EventParticipant participantA = (EventParticipant) graph.getVertexWithLeastEdges();
-                EventParticipant participantB = (EventParticipant) graph.getEdgeWithLeastWeight(participantA).participant;
+                Solo participantA = graph.getVertexWithLeastEdges();
+                Solo participantB = graph.getEdgeWithLeastWeight(participantA).participant;
 
-                pairMatched.add(new PairMatched((Solo) participantA, (Solo) participantB));
+                pairMatched.add(new PairMatched( participantA, participantB));
 
                 graph.removeVertex(participantA);
                 graph.removeVertex(participantB);
@@ -54,8 +54,8 @@ public class PairMatchingAlgorithm {
         return pairMatched;
     }
 
-    private static Graph createGraph(List<Solo> solos, CostCoefficients coefficients, float limitMultiplier) {
-        Graph graph = new Graph();
+    private static Graph<Solo> createGraph(List<Solo> solos, CostCoefficients coefficients, float limitMultiplier) {
+        Graph<Solo> graph = new Graph<>();
         float maxCosts = calcMaxCost(coefficients);
 
         for (int i = 0; i < solos.size(); i++) {

@@ -46,6 +46,8 @@ public class Main {
         benchmarkSystem.runBenchmarkOnPairs();
         benchmarkSystem.runBenchmarkOnGroups();
 
+
+        matchingRepository.printFoodPreferencesOfPairs();
     }
 
 

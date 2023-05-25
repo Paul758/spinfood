@@ -24,16 +24,19 @@ public class MatchingRepository {
     public Collection<PairMatched> pairSuccessors = new ArrayList<>();
 
     public MatchingRepository(DataManagement dataManagement){
+        this.dataManagement = dataManagement;
         soloDataCollection = dataManagement.soloParticipants;
         pairDataCollection = dataManagement.pairParticipants;
         System.out.println("pairDataCollection");
         System.out.println(pairDataCollection);
         createAndAddPrematchedPairs();
-
+        setDistanceToPartyLocationForPairs();
         Collection<PairMatched> matchedPairs = MatchingSystem.matchPairs((List<Solo>) this.getSoloDataCollection());
         this.addMatchedPairsCollection(matchedPairs);
         Collection<GroupMatched> matchedGroups = MatchingSystem.matchGroups((List<PairMatched>) this.getMatchedPairsCollection());
         this.addMatchedGroupsCollection(matchedGroups);
+
+
 
     }
 
@@ -98,7 +101,16 @@ public class MatchingRepository {
         Collection<PairMatched> pairs = getMatchedPairsCollection();
 
         for (PairMatched pair : pairs){
-            pair.setDistanceToPartyLocation(dataManagement.partyLocation);
+            pair.setDistanceToPartyLocation(this.dataManagement.partyLocation);
+        }
+    }
+
+
+    public void printFoodPreferencesOfPairs(){
+        System.out.println("now printing foodPreferences of matched pairs");
+        for (PairMatched pair :
+                getMatchedPairsCollection()) {
+            System.out.println(pair.foodPreference);
         }
     }
 }

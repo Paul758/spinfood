@@ -20,9 +20,10 @@ public class MatchingTools {
 
     public static int getFoodPreference(FoodPreference foodPreference){
         return switch (foodPreference) {
-            case NONE, MEAT -> 0;
-            case VEGGIE -> 1;
-            case VEGAN -> 2;
+            case NONE -> 0;
+            case MEAT -> 1;
+            case VEGGIE -> 2;
+            case VEGAN -> 3;
         };
     }
 }
