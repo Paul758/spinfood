@@ -1,15 +1,13 @@
 package org.example.logic.tools.algorithms;
 
 import org.example.data.Coordinate;
-import org.example.data.DataManagement;
 import org.example.data.enums.FoodPreference;
-import org.example.logic.graph.Edge;
+import org.example.logic.enums.MealType;
 import org.example.logic.graph.Graph;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class GroupMatchingGraph {
@@ -34,6 +32,13 @@ public class GroupMatchingGraph {
         System.out.println("The superGroups are");
         System.out.println(superGroups.toString());
         System.out.println("the superGroups size is: " + superGroups.size());
+
+        List<GroupMatched> groupMatchedList = createDinnerGroupsFromSuperGroups(superGroups);
+
+        System.out.println("The groupMatchedList size is: " + groupMatchedList.size());
+
+        System.out.println("Printing groupMatchedList: ");
+        groupMatchedList.forEach(System.out::println);
 
         return new ArrayList<>();
     }
@@ -66,11 +71,53 @@ public class GroupMatchingGraph {
         }
 
         for (List<PairMatched> pairMatchedList: superGroups) {
-            isSuperGroupFeasible(pairMatchedList);
+            if(isSuperGroupFeasible(pairMatchedList)){
+                System.out.println("is feasible group");
+            } else {
+                System.out.println("is not a feasible group");
+            }
         }
 
 
+
+
         return superGroups;
+    }
+
+    private static List<GroupMatched> createDinnerGroupsFromSuperGroups(List<List<PairMatched>> superGroups) {
+        List<GroupMatched> dinnerGroups = new ArrayList<>();
+        for (List<PairMatched> superGroup : superGroups){
+            PairMatched pairA = superGroup.get(0);
+            PairMatched pairB = superGroup.get(1);
+            PairMatched pairC = superGroup.get(2);
+            PairMatched pairD = superGroup.get(3);
+            PairMatched pairE = superGroup.get(4);
+            PairMatched pairF = superGroup.get(5);
+            PairMatched pairG = superGroup.get(6);
+            PairMatched pairH = superGroup.get(7);
+            PairMatched pairI = superGroup.get(8);
+
+            //starters groups
+            GroupMatched starterGroupA = new GroupMatched(pairA, pairD, pairG, pairA, MealType.STARTER);
+            GroupMatched starterGroupB = new GroupMatched(pairB, pairE, pairH, pairB, MealType.STARTER);
+            GroupMatched starterGroupC = new GroupMatched(pairC, pairF, pairI, pairC, MealType.STARTER);
+
+            //main course groups
+            GroupMatched mainCourseGroupA = new GroupMatched(pairA, pairF, pairH, pairF, MealType.MAIN);
+            GroupMatched mainCourseGroupB = new GroupMatched(pairB, pairD, pairI, pairD, MealType.MAIN);
+            GroupMatched mainCourseGroupC = new GroupMatched(pairC, pairE, pairG, pairE, MealType.MAIN);
+
+            //dessert groups
+            GroupMatched dessertGroupA = new GroupMatched(pairA, pairE, pairI, pairI, MealType.DESSERT);
+            GroupMatched dessertGroupB = new GroupMatched(pairB, pairF, pairG, pairG, MealType.DESSERT);
+            GroupMatched dessertGroupC = new GroupMatched(pairC, pairD, pairH, pairH, MealType.DESSERT);
+
+            dinnerGroups.addAll(List.of(
+                    starterGroupA, starterGroupB, starterGroupC,
+                    mainCourseGroupA, mainCourseGroupB, mainCourseGroupC,
+                    dessertGroupA, dessertGroupB, dessertGroupC));
+        }
+        return dinnerGroups;
     }
 
     private static List<PairMatched> getVeggieVeganPairs(List<PairMatched> matchedPairs) {
@@ -108,11 +155,11 @@ public class GroupMatchingGraph {
                 PairMatched pairA = matchedPairs.get(i);
                 PairMatched pairB = matchedPairs.get(j);
 
-                //if(fullfillsHardCriteria(pairA,pairB)){
+                if(fullfillsHardCriteria(pairA,pairB)){
                    double costs = calcMatchingCosts(pairA, pairB, maxDistanceToPartyLocation);
                   // System.out.println("cost: " + costs);
                    graph.addEdge(pairA, pairB, (float) costs);
-                //}
+                }
             }
         }
 
@@ -127,15 +174,26 @@ public class GroupMatchingGraph {
     }
 
     private static boolean fullfillsHardCriteria(PairMatched pairA, PairMatched pairB) {
-        if (pairA.foodPreference.equals(FoodPreference.MEAT) || pairA.foodPreference.equals(FoodPreference.NONE)
-                && pairB.foodPreference.equals(FoodPreference.VEGAN) || pairB.foodPreference.equals(FoodPreference.VEGGIE)) {
+        System.out.println("Pair A foodPreference is " + pairA.foodPreference);
+        System.out.println("Pair B foodPreference is " + pairB.foodPreference);
+
+        //foodPreference TODO review this code
+        /*if (pairA.foodPreference.equals(FoodPreference.MEAT) || pairA.foodPreference.equals(FoodPreference.NONE)
+                && (pairB.foodPreference.equals(FoodPreference.VEGAN) || pairB.foodPreference.equals(FoodPreference.VEGGIE))) {
+            System.out.println("cant match");
             return false;
         } else if (pairB.foodPreference.equals(FoodPreference.MEAT) || pairB.foodPreference.equals(FoodPreference.NONE)
-                && pairA.foodPreference.equals(FoodPreference.VEGAN) || pairA.foodPreference.equals(FoodPreference.VEGGIE)) {
+                && (pairA.foodPreference.equals(FoodPreference.VEGAN) || pairA.foodPreference.equals(FoodPreference.VEGGIE))) {
+            System.out.println("cant match");
             return false;
         } else {
+            System.out.println("is matchable");
             return true;
-        }
+        }*/
+
+        //don't match pairs in the same WG
+        return !pairA.getKitchen().coordinate.equals(pairB.getKitchen().coordinate);
+
 
     }
 
