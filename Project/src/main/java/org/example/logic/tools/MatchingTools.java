@@ -18,7 +18,7 @@ public class MatchingTools {
         else return 8;
     }
 
-    public static int getFoodPreference(FoodPreference foodPreference){
+    public static int getIntValueFoodPreference(FoodPreference foodPreference){
         return switch (foodPreference) {
             case NONE -> 0;
             case MEAT -> 1;
@@ -37,8 +37,8 @@ public class MatchingTools {
     }
 
     public static int calculateFoodPreferenceDeviation(FoodPreference foodPreferenceA, FoodPreference foodPreferenceB) {
-        int foodValueA = MatchingTools.getFoodPreference(foodPreferenceA);
-        int foodValueB = MatchingTools.getFoodPreference(foodPreferenceB);
+        int foodValueA = MatchingTools.getIntValueFoodPreference(foodPreferenceA);
+        int foodValueB = MatchingTools.getIntValueFoodPreference(foodPreferenceB);
         return Math.abs(foodValueA - foodValueB);
     }
 

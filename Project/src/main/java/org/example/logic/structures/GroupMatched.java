@@ -52,9 +52,9 @@ public class GroupMatched implements Metricable {
 
     protected FoodPreference calculateFoodPreference() {
         //Calculate here
-        int foodPreferencePairA = MatchingTools.getFoodPreference(pairA.getFoodPreference());
-        int foodPreferencePairB = MatchingTools.getFoodPreference(pairB.getFoodPreference());
-        int foodPreferencePairC = MatchingTools.getFoodPreference(pairC.getFoodPreference());
+        int foodPreferencePairA = MatchingTools.getIntValueFoodPreference(pairA.getFoodPreference());
+        int foodPreferencePairB = MatchingTools.getIntValueFoodPreference(pairB.getFoodPreference());
+        int foodPreferencePairC = MatchingTools.getIntValueFoodPreference(pairC.getFoodPreference());
         return FoodPreference.parseFoodPreference(Math.max(foodPreferencePairA, Math.max(foodPreferencePairB, foodPreferencePairC)));
 
         //throw new IllegalStateException("not implemented yet");

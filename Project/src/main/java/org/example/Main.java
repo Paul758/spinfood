@@ -46,24 +46,24 @@ public class Main {
 
         //unmatched solos
         System.out.println("unmatched solos size");
-        matchingRepository.UpdateSoloSuccessors();
         System.out.println(matchingRepository.soloSuccessors.size());
 
         //unmatched pairs
         System.out.println("unmatched pairs size");
-        matchingRepository.UpdatePairSuccessors();
         System.out.println(matchingRepository.pairSuccessors.size());
+
+        System.out.println("Food Preferences");
+        matchingRepository.printFoodPreferenceOfPairPersons();
+
         //Benchmarks
-        BenchmarkSystem benchmarkSystem = new BenchmarkSystem(matchingRepository);
+        /*BenchmarkSystem benchmarkSystem = new BenchmarkSystem(matchingRepository);
         benchmarkSystem.runBenchmarkOnPairs();
-        benchmarkSystem.runBenchmarkOnGroups();
+        benchmarkSystem.runBenchmarkOnGroups();*/
 
 
         //matchingRepository.printFoodPreferencesOfPairs();
 
         System.out.println("Matched groups total " + matchingRepository.getMatchedGroupsCollection().size());
-
-        //test5();
     }
 
     private static void test5() {

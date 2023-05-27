@@ -134,8 +134,8 @@ public class PairMatchingAlgorithm {
     }
 
     private static float calcFoodPreferenceCost(Solo soloA, Solo soloB, MatchCosts matchCosts) {
-        int soloAValue = MatchingTools.getFoodPreference(soloA.foodPreference);
-        int soloBValue = MatchingTools.getFoodPreference(soloB.foodPreference);
+        int soloAValue = MatchingTools.getIntValueFoodPreference(soloA.foodPreference);
+        int soloBValue = MatchingTools.getIntValueFoodPreference(soloB.foodPreference);
         float difference = Math.abs(soloAValue - soloBValue);
         return (difference / 2) * foodPreferenceCost * (float) matchCosts.getFoodPreferenceCosts();
     }

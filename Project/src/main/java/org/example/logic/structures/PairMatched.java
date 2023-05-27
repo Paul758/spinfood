@@ -17,6 +17,10 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
     private Person personA;
     private Person personB;
     private final FoodPreference foodPreference;
+
+    private FoodPreference personAFoodPreference;
+    private FoodPreference personBFoodPreference;
+
     private final Kitchen kitchen;
     public final boolean preMatched;
 
@@ -35,6 +39,8 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
         this.personA = pair.personA;
         this.personB = pair.personB;
         this.foodPreference = pair.foodPreference;
+        this.personAFoodPreference = pair.foodPreference;
+        this.personBFoodPreference = pair.foodPreference;
         this.kitchen = pair.kitchen;
 
         this.foodPreferenceDeviation = 0;
@@ -46,6 +52,8 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
         this.personA = soloA.person;
         this.personB = soloB.person;
         this.foodPreference = calculateFoodPreference(soloA, soloB);
+        this.personAFoodPreference = soloA.foodPreference;
+        this.personBFoodPreference = soloB.foodPreference;
         this.kitchen = calculateKitchen(soloA, soloB);
 
         this.foodPreferenceDeviation = MatchingTools.calculateFoodPreferenceDeviation(soloA.foodPreference, soloB.foodPreference);
@@ -65,6 +73,8 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
     public FoodPreference getFoodPreference() {
         return foodPreference;
     }
+
+
 
     public Kitchen getKitchen() {
         return kitchen;
@@ -120,8 +130,8 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
     }
 
     private FoodPreference calculateFoodPreference(Solo soloA, Solo soloB) {
-        int foodValueA = MatchingTools.getFoodPreference(soloA.foodPreference);
-        int foodValueB = MatchingTools.getFoodPreference(soloB.foodPreference);
+        int foodValueA = MatchingTools.getIntValueFoodPreference(soloA.foodPreference);
+        int foodValueB = MatchingTools.getIntValueFoodPreference(soloB.foodPreference);
         return FoodPreference.parseFoodPreference(Math.max(foodValueA, foodValueB));
     }
 
@@ -139,11 +149,10 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
     public void setDistanceToPartyLocation(Coordinate partyLocation) {
         this.partyLocation = partyLocation;
         this.distanceToPartyLocation = Coordinate.getDistance(getKitchen().coordinate, partyLocation);
-        System.out.println("The distance has been set to " + distanceToPartyLocation);
+
     }
 
     public double getDistanceToPartyLocation() {
-        System.out.println("The distance to partylocation now is " + distanceToPartyLocation);
         if (this.distanceToPartyLocation == null) {
             throw new IllegalStateException("Distance to party location isn't set");
         }
@@ -160,6 +169,14 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof PairMatched other)){
+            return false;
+        }
+        return this.personA.equals(other.getPersonA()) && this.personB.equals(other.getPersonB());
+    }
+
+    @Override
     public String toString() {
         return getPersonA().name() + ", " + getPersonB().name() + ", " + getFoodPreference();
     }
@@ -170,5 +187,13 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
 
     public void setPersonB(Person person) {
         this.personB = person;
+    }
+
+    public FoodPreference getPersonAFoodPreference() {
+        return personAFoodPreference;
+    }
+
+    public FoodPreference getPersonBFoodPreference() {
+        return personBFoodPreference;
     }
 }

@@ -43,9 +43,9 @@ class MatchingToolsTest {
 
     @Test
     void getFoodPreference() {
-        Assertions.assertEquals(0, MatchingTools.getFoodPreference(FoodPreference.NONE));
-        Assertions.assertEquals(0, MatchingTools.getFoodPreference(FoodPreference.MEAT));
-        Assertions.assertEquals(1, MatchingTools.getFoodPreference(FoodPreference.VEGGIE));
-        Assertions.assertEquals(2, MatchingTools.getFoodPreference(FoodPreference.VEGAN));
+        Assertions.assertEquals(0, MatchingTools.getIntValueFoodPreference(FoodPreference.NONE));
+        Assertions.assertEquals(0, MatchingTools.getIntValueFoodPreference(FoodPreference.MEAT));
+        Assertions.assertEquals(1, MatchingTools.getIntValueFoodPreference(FoodPreference.VEGGIE));
+        Assertions.assertEquals(2, MatchingTools.getIntValueFoodPreference(FoodPreference.VEGAN));
     }
 }

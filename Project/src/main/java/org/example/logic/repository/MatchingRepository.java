@@ -25,11 +25,11 @@ public class MatchingRepository {
 
     public MatchingRepository(DataManagement dataManagement){
         this.dataManagement = dataManagement;
-        soloDataCollection = dataManagement.soloParticipants;
-        pairDataCollection = dataManagement.pairParticipants;
-        System.out.println("pairDataCollection");
-        System.out.println(pairDataCollection);
+        addSoloCollection(dataManagement.soloParticipants);
+        addPairCollection(dataManagement.pairParticipants);
+
         createAndAddPrematchedPairs();
+
         Collection<PairMatched> matchedPairs = MatchingSystem.matchPairs((List<Solo>) this.getSoloDataCollection());
         this.addMatchedPairsCollection(matchedPairs);
 
@@ -37,6 +37,9 @@ public class MatchingRepository {
 
         Collection<GroupMatched> matchedGroups = MatchingSystem.matchGroups((List<PairMatched>) this.getMatchedPairsCollection());
         this.addMatchedGroupsCollection(matchedGroups);
+
+        UpdateSoloSuccessors();
+        UpdatePairSuccessors();
         
     }
 
@@ -49,45 +52,22 @@ public class MatchingRepository {
         addMatchedPairsCollection(preMatchedPairs);
     }
 
-    public void UpdatePairSuccessors() {
-
-        Collection<PairMatched> unmatchedPairs = new ArrayList<>(matchedPairsCollection);
-
-        for (PairMatched pair : matchedPairsCollection) {
-
-            for (GroupMatched group : matchedGroupsCollection) {
-                if(group.containsPair(pair)){
-                    unmatchedPairs.remove(pair);
-                }
-            }
-        }
-        pairSuccessors = unmatchedPairs;
-    }
-
-    public void UpdateSoloSuccessors(){
-        Collection<Solo> solos = new ArrayList<>(getSoloDataCollection());
-        Collection<PairMatched> pairMatchedList = new ArrayList<>(matchedPairsCollection);
-
-        for (Solo solo : soloDataCollection) {
-
-            for (PairMatched pair : pairMatchedList) {
-                if(solo.person.equals(pair.getPersonA()) || solo.person.equals(pair.getPersonB())){
-                    solos.remove(solo);
-                }
-            }
-        }
-        soloSuccessors = solos;
-    }
-
     public void setDistanceToPartyLocationForPairs(){
         Collection<PairMatched> pairs = getMatchedPairsCollection();
-        System.out.println("The party location " + dataManagement.partyLocation);
         for (PairMatched pair : pairs){
             pair.setDistanceToPartyLocation(this.dataManagement.partyLocation);
-            System.out.println("After setting the location, now is " + pair.getDistanceToPartyLocation());
         }
     }
 
+    public void printFoodPreferencesOfPairs(){
+        System.out.println("Now printing foodPreferences of matched pairs");
+        for (PairMatched pair :
+                getMatchedPairsCollection()) {
+            System.out.println(pair.getFoodPreference());
+        }
+    }
+
+    //Code for handling the un-registration of EventParticipants
     public void removeSolo(Solo solo){
         if(soloSuccessors.contains(solo)){
             soloDataCollection.remove(solo);
@@ -119,7 +99,6 @@ public class MatchingRepository {
         }
         return null;
     }
-
 
     public void removePair(PairMatched pair) {
         if (pairSuccessors.contains(pair)) {
@@ -156,21 +135,63 @@ public class MatchingRepository {
         return null;
     }
 
+    private void UpdateSoloSuccessors(){
+        Collection<Solo> solos = new ArrayList<>(getSoloDataCollection());
+        Collection<PairMatched> pairMatchedList = new ArrayList<>(matchedPairsCollection);
 
-    public void printFoodPreferencesOfPairs(){
-        System.out.println("now printing foodPreferences of matched pairs");
-        for (PairMatched pair :
-                getMatchedPairsCollection()) {
-            System.out.println(pair.getFoodPreference());
+        for (Solo solo : soloDataCollection) {
+
+            for (PairMatched pair : pairMatchedList) {
+                if(solo.person.equals(pair.getPersonA()) || solo.person.equals(pair.getPersonB())){
+                    solos.remove(solo);
+                }
+            }
         }
+        soloSuccessors = solos;
     }
 
+
+    public void UpdatePairSuccessors() {
+
+        Collection<PairMatched> unmatchedPairs = new ArrayList<>(matchedPairsCollection);
+
+        for (PairMatched pair : matchedPairsCollection) {
+
+            for (GroupMatched group : matchedGroupsCollection) {
+                if(group.containsPair(pair)){
+                    unmatchedPairs.remove(pair);
+                }
+            }
+        }
+        pairSuccessors = unmatchedPairs;
+    }
+
+    public void printFoodPreferenceOfPairPersons(){
+        List<PairMatched> pairMatchedList = (List<PairMatched>) getMatchedPairsCollection();
+
+        for (PairMatched pair : pairMatchedList) {
+            System.out.println("FoodPreferences");
+            System.out.println("A: " + pair.getPersonAFoodPreference() + " B: " + pair.getPersonBFoodPreference());
+        }
+        
+    }
+
+
+    //Getters, Setters
     public void addMatchedPairsCollection(Collection<PairMatched> matchedPairsCollection) {
         this.matchedPairsCollection.addAll(matchedPairsCollection);
     }
 
     public void addMatchedGroupsCollection(Collection<GroupMatched> matchedGroupsCollection) {
         this.matchedGroupsCollection.addAll(matchedGroupsCollection);
+    }
+
+    public void addSoloCollection(Collection<Solo> solos) {
+        this.soloDataCollection.addAll(solos);
+    }
+
+    public void addPairCollection(Collection<Pair> pairs) {
+        this.pairDataCollection.addAll(pairs);
     }
 
     public Collection<Solo> getSoloDataCollection() {
