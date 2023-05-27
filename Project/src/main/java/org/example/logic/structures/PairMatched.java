@@ -92,4 +92,8 @@ public class PairMatched extends Match {
     public String toString() {
         return soloA.toString() + "\n" + soloB.toString();
     }
+
+    public boolean contains(Solo unregisteredParticipant) {
+        return unregisteredParticipant.equals(soloA) || unregisteredParticipant.equals(soloB);
+    }
 }

@@ -47,7 +47,10 @@ public class Main {
         benchmarkSystem.runBenchmarkOnGroups();
 
 
-        matchingRepository.printFoodPreferencesOfPairs();
+        //matchingRepository.printFoodPreferencesOfPairs();
+
+        System.out.println("Matched groups total " + matchingRepository.getMatchedGroupsCollection().size());
+
     }
 
 

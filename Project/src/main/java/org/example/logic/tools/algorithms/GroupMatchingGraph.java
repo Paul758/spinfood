@@ -40,7 +40,7 @@ public class GroupMatchingGraph {
         System.out.println("Printing groupMatchedList: ");
         groupMatchedList.forEach(System.out::println);
 
-        return new ArrayList<>();
+        return groupMatchedList;
     }
 
     private static List<List<PairMatched>> findSuperGroups(List<PairMatched> matchedPairs, Graph<PairMatched> graph) {

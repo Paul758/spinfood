@@ -4,10 +4,16 @@ package org.example.data.structures;
 import org.example.data.enums.FoodPreference;
 import org.example.data.factory.Kitchen;
 import org.example.data.factory.Person;
+import org.example.logic.structures.GroupMatched;
+import org.example.logic.structures.PairMatched;
 
 public class Solo extends EventParticipant{
 
     public final Person person;
+
+    public PairMatched pair;
+
+    public GroupMatched group;
 
     public Solo(Person person, FoodPreference foodPreference, Kitchen kitchen){
         super.foodPreference = foodPreference;

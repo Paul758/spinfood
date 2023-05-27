@@ -1,6 +1,7 @@
 package org.example.logic.repository;
 
 import org.example.data.DataManagement;
+import org.example.data.enums.FoodPreference;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 import org.example.logic.structures.GroupMatched;
@@ -35,7 +36,6 @@ public class MatchingRepository {
         this.addMatchedPairsCollection(matchedPairs);
         Collection<GroupMatched> matchedGroups = MatchingSystem.matchGroups((List<PairMatched>) this.getMatchedPairsCollection());
         this.addMatchedGroupsCollection(matchedGroups);
-
 
 
     }
@@ -112,5 +112,69 @@ public class MatchingRepository {
                 getMatchedPairsCollection()) {
             System.out.println(pair.foodPreference);
         }
+    }
+
+
+
+    public void unregisterParticipant(Solo unregisteredParticipant){
+        if(isInGroup(unregisteredParticipant)) {
+
+
+        }
+
+        if(isInPair(unregisteredParticipant)){
+
+        }
+
+    }
+
+    private boolean isInGroup(Solo unregisteredParticipant) {
+        for (GroupMatched group : getMatchedGroupsCollection()) {
+            for (PairMatched pair: group.getPairList()) {
+
+                if (!pair.contains(unregisteredParticipant)) {
+                    continue;
+                }
+
+                Solo replacement = findReplacement(unregisteredParticipant);
+
+                if (replacement == null) {
+                    break;
+                }
+
+                if (pair.soloA.equals(unregisteredParticipant)) {
+                    pair.soloA = replacement;
+                } else {
+                    pair.soloB = replacement;
+                }
+            }
+        }
+
+    }
+
+    private boolean isInPair(Solo unregisteredParticipant) {
+        for (PairMatched pair : getMatchedPairsCollection()) {
+            if(pair.soloA.equals(unregisteredParticipant) || pair.soloB.equals(unregisteredParticipant)){
+                return true;
+            }
+        }
+    }
+
+    public void removeFromPair(Solo unregisteredParticipant){
+
+    }
+
+    public void removeFromGroup(Solo unregisteredParticipant){
+
+    }
+
+    public Solo findReplacement(Solo unregisteredParticipant){
+        for (Solo solo : soloSuccessors) {
+            if(solo.foodPreference.equals(unregisteredParticipant.foodPreference)){
+                return solo;
+            }
+            //TODO check for age compatibility
+        }
+        return null;
     }
 }
