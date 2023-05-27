@@ -16,7 +16,12 @@ public class MatchingSystem {
 
 
     public static Collection<PairMatched> matchPairs(List<Solo> unmatchedSolos) {
-        return PairMatchingAlgorithm.match(unmatchedSolos);
+        Criteria food = Criteria.IDENTICAL_FOOD_PREFERENCE;
+        Criteria age = Criteria.AGE_DIFFERENCE;
+        Criteria gender = Criteria.GENDER_DIFFERENCE;
+        Criteria mostMatches = Criteria.MATCH_COUNT;
+        Criteria path = Criteria.PATH_LENGTH;
+        return PairMatchingAlgorithm.match(unmatchedSolos, new MatchCosts(food, age, gender, mostMatches, path));
     }
 
     public static Collection<GroupMatched> matchGroups(List<PairMatched> unmatchedPairs) {

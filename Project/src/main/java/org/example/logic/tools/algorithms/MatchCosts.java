@@ -12,6 +12,7 @@ public class MatchCosts {
     private double genderCosts = 1;
     private double pathLengthCosts = 1;
     private double mostMatchesCosts = 1;
+    private double kitchenCosts = 1;
 
     public MatchCosts(
             Criteria important1,
@@ -27,6 +28,15 @@ public class MatchCosts {
             Criteria criteria = ranking.get(i);
             calculateValue(criteria, weightMultiplier);
         }
+    }
+
+    //Default constructor
+    public MatchCosts() {
+        //every cost is 1
+    }
+
+    public static MatchCosts getDefault() {
+        return new MatchCosts();
     }
 
     private void calculateValue(Criteria criteria, float weightMultiplier) {
@@ -57,5 +67,9 @@ public class MatchCosts {
 
     public double getMostMatchesCosts() {
         return mostMatchesCosts;
+    }
+
+    public double getKitchenCosts() {
+        return kitchenCosts;
     }
 }

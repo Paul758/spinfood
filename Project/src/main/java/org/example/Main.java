@@ -179,12 +179,12 @@ public class Main {
         PairBenchmark.matchedPairsBenchmark(pairMatchedList, dataManagement.soloParticipants);
         System.out.println();
 
-        CostCoefficients coefficients = new CostCoefficients(10,1,1,1);
-        List<PairMatched> pairMatchedList2 = PairMatchingAlgorithm.match(dataManagement.soloParticipants, coefficients, 0.5f);
+        //CostCoefficients coefficients = new CostCoefficients(10,1,1,1);
+        //List<PairMatched> pairMatchedList2 = PairMatchingAlgorithm.match(dataManagement.soloParticipants, coefficients, 0.5f);
 
         System.out.println("Priority: age");
 
-        PairBenchmark.matchedPairsBenchmark(pairMatchedList2, dataManagement.soloParticipants);
+       // PairBenchmark.matchedPairsBenchmark(pairMatchedList2, dataManagement.soloParticipants);
         System.out.println();
 
         List<PairMatched> pairMatchedList3 = PairMatchingAlgorithm.match(dataManagement.soloParticipants);

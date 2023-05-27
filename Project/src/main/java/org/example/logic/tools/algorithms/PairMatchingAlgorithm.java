@@ -22,21 +22,21 @@ public class PairMatchingAlgorithm {
     private static final float defaultLimitMultiplier = 1f;
 
     public static List<PairMatched> match(List<Solo> solos) {
-        return match(solos, CostCoefficients.getDefault(), defaultLimitMultiplier);
+        return match(solos, MatchCosts.getDefault(), defaultLimitMultiplier);
     }
 
-    public static List<PairMatched> match(List<Solo> solos, CostCoefficients coefficients) {
-        return match(solos, coefficients, defaultLimitMultiplier);
+    public static List<PairMatched> match(List<Solo> solos, MatchCosts matchingCosts) {
+        return match(solos, matchingCosts, defaultLimitMultiplier);
     }
 
     public static List<PairMatched> match(List<Solo> solos, float limitMultiplier) {
-        return match(solos, CostCoefficients.getDefault(), limitMultiplier);
+        return match(solos, MatchCosts.getDefault(), limitMultiplier);
     }
 
-    public static List<PairMatched> match(List<Solo> solos, CostCoefficients coefficients, float limitMultiplier) {
+    public static List<PairMatched> match(List<Solo> solos, MatchCosts matchCosts, float limitMultiplier) {
         List<PairMatched> pairMatched = new ArrayList<>();
 
-        Graph<Solo> graph = createGraph(solos, coefficients, limitMultiplier);
+        Graph<Solo> graph = createGraph(solos, matchCosts, limitMultiplier);
 
         for (int i = 0 ; i < solos.size() / 2; i++) {
             try {
@@ -57,10 +57,10 @@ public class PairMatchingAlgorithm {
         return pairMatched;
     }
 
-    private static Graph<Solo> createGraph(List<Solo> solos, CostCoefficients coefficients, float limitMultiplier) {
+    private static Graph<Solo> createGraph(List<Solo> solos, MatchCosts matchCosts, float limitMultiplier) {
         Graph<Solo> graph = new Graph<>();
 
-        float maxCosts = calcMaxCost(coefficients);
+        float maxCosts = calcMaxCost(matchCosts);
 
         for (int i = 0; i < solos.size(); i++) {
             for (int j = i + 1; j < solos.size(); j++) {
@@ -68,7 +68,7 @@ public class PairMatchingAlgorithm {
                 Solo soloB = solos.get(j);
 
                 if (fulfillsHardCriteria(soloA, soloB)) {
-                    float weight = calcValue(soloA, soloB, coefficients);
+                    float weight = calcValue(soloA, soloB, matchCosts);
                     if (weight <= maxCosts * limitMultiplier) {
                         graph.addEdge(soloA, soloB, weight);
                     }
@@ -90,54 +90,54 @@ public class PairMatchingAlgorithm {
         return !(noKitchenAvailable || unFittingFoodPreference);
     }
 
-    private static float calcMaxCost(CostCoefficients coefficients) {
-        return kitchenCost * coefficients.kitchenWeight()
-                + genderCost * coefficients.genderWeight()
-                + foodPreferenceCost * coefficients.foodPreferenceWeight()
-                + ageCost * coefficients.ageWeight();
+    private static float calcMaxCost(MatchCosts matchCosts) {
+        return (float) (kitchenCost * matchCosts.getKitchenCosts()
+                + genderCost * matchCosts.getGenderCosts()
+                + foodPreferenceCost * matchCosts.getFoodPreferenceCosts()
+                + ageCost * matchCosts.getAgeCosts());
     }
 
-    private static float calcValue(Solo soloA, Solo soloB, CostCoefficients coefficients) {
-        return calcKitchenCost(soloA, soloB, coefficients)
-                + calcGenderCost(soloA, soloB, coefficients)
-                + calcAgeCost(soloA, soloB, coefficients)
-                + calcFoodPreferenceCost(soloA, soloB, coefficients);
+    private static float calcValue(Solo soloA, Solo soloB, MatchCosts matchCosts) {
+        return calcKitchenCost(soloA, soloB, matchCosts)
+                + calcGenderCost(soloA, soloB, matchCosts)
+                + calcAgeCost(soloA, soloB, matchCosts)
+                + calcFoodPreferenceCost(soloA, soloB, matchCosts);
     }
 
-    private static float calcKitchenCost(Solo soloA, Solo soloB, CostCoefficients coefficients) {
+    private static float calcKitchenCost(Solo soloA, Solo soloB, MatchCosts matchCost) {
         boolean soloAHasKitchen = soloA.kitchen.kitchenType.equals(KitchenType.YES);
         boolean soloBHasKitchen = soloB.kitchen.kitchenType.equals(KitchenType.YES);
 
         if (soloAHasKitchen && soloBHasKitchen) {
-            return 1 * kitchenCost * coefficients.kitchenWeight();
+            return 1 * kitchenCost * (float) matchCost.getKitchenCosts();
         } else {
             return 0;
         }
     }
 
-    private static float calcGenderCost(Solo soloA, Solo soloB, CostCoefficients coefficients) {
+    private static float calcGenderCost(Solo soloA, Solo soloB, MatchCosts matchCosts) {
         Sex soloASex = soloA.person.sex();
         Sex soloBSex = soloB.person.sex();
 
         if (!soloASex.equals(Sex.OTHER) && soloASex.equals(soloBSex)) {
-            return 1 * genderCost * coefficients.genderWeight();
+            return 1 * genderCost * (float) matchCosts.getGenderCosts();
         } else {
             return 0;
         }
     }
 
-    private static float calcAgeCost(Solo soloA, Solo soloB, CostCoefficients coefficients) {
+    private static float calcAgeCost(Solo soloA, Solo soloB, MatchCosts matchCosts) {
         float ageRangeA = MatchingTools.getAgeRange(soloA.person.age());
         float ageRangeB = MatchingTools.getAgeRange(soloB.person.age());
         float difference = Math.abs(ageRangeA - ageRangeB);
-        return (difference / 8) * ageCost * coefficients.ageWeight();
+        return (difference / 8) * ageCost * (float) matchCosts.getAgeCosts();
     }
 
-    private static float calcFoodPreferenceCost(Solo soloA, Solo soloB, CostCoefficients coefficients) {
+    private static float calcFoodPreferenceCost(Solo soloA, Solo soloB, MatchCosts matchCosts) {
         int soloAValue = MatchingTools.getFoodPreference(soloA.foodPreference);
         int soloBValue = MatchingTools.getFoodPreference(soloB.foodPreference);
         float difference = Math.abs(soloAValue - soloBValue);
-        return (difference / 2) * foodPreferenceCost * coefficients.foodPreferenceWeight();
+        return (difference / 2) * foodPreferenceCost * (float) matchCosts.getFoodPreferenceCosts();
     }
 
     private static boolean isFoodPreferenceIncompatible(Solo soloA, Solo soloB) {
