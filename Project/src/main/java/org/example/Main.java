@@ -43,9 +43,15 @@ public class Main {
         System.out.println("groups count");
         System.out.println(matchingRepository.getMatchedGroupsCollection().size());
 
+
+        //unmatched solos
+        System.out.println("unmatched solos size");
+        matchingRepository.UpdateSoloSuccessors();
+        System.out.println(matchingRepository.soloSuccessors.size());
+
         //unmatched pairs
         System.out.println("unmatched pairs size");
-        matchingRepository.calculateUnmatchedPairs();
+        matchingRepository.UpdatePairSuccessors();
         System.out.println(matchingRepository.pairSuccessors.size());
         //Benchmarks
         BenchmarkSystem benchmarkSystem = new BenchmarkSystem(matchingRepository);

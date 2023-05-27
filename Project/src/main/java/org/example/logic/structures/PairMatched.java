@@ -14,8 +14,8 @@ import org.example.logic.tools.Metricable;
 
 public class PairMatched implements Comparable<PairMatched>, Metricable {
 
-    private final Person personA;
-    private final Person personB;
+    private Person personA;
+    private Person personB;
     private final FoodPreference foodPreference;
     private final Kitchen kitchen;
     public final boolean preMatched;
@@ -162,5 +162,13 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
     @Override
     public String toString() {
         return getPersonA().name() + ", " + getPersonB().name() + ", " + getFoodPreference();
+    }
+
+    public void setPersonA(Person person) {
+        this.personA = person;
+    }
+
+    public void setPersonB(Person person) {
+        this.personB = person;
     }
 }

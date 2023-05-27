@@ -20,7 +20,7 @@ public class MatchingRepository {
     Collection<PairMatched> matchedPairsCollection = new ArrayList<>();
     Collection<GroupMatched> matchedGroupsCollection =  new ArrayList<>();
 
-    Collection<Solo> soloSuccessors =  new ArrayList<>();
+    public Collection<Solo> soloSuccessors =  new ArrayList<>();
     public Collection<PairMatched> pairSuccessors = new ArrayList<>();
 
     public MatchingRepository(DataManagement dataManagement){
@@ -49,7 +49,7 @@ public class MatchingRepository {
         addMatchedPairsCollection(preMatchedPairs);
     }
 
-    public void calculateUnmatchedPairs() {
+    public void UpdatePairSuccessors() {
 
         Collection<PairMatched> unmatchedPairs = new ArrayList<>(matchedPairsCollection);
 
@@ -64,6 +64,21 @@ public class MatchingRepository {
         pairSuccessors = unmatchedPairs;
     }
 
+    public void UpdateSoloSuccessors(){
+        Collection<Solo> solos = new ArrayList<>(getSoloDataCollection());
+        Collection<PairMatched> pairMatchedList = new ArrayList<>(matchedPairsCollection);
+
+        for (Solo solo : soloDataCollection) {
+
+            for (PairMatched pair : pairMatchedList) {
+                if(solo.person.equals(pair.getPersonA()) || solo.person.equals(pair.getPersonB())){
+                    solos.remove(solo);
+                }
+            }
+        }
+        soloSuccessors = solos;
+    }
+
     public void setDistanceToPartyLocationForPairs(){
         Collection<PairMatched> pairs = getMatchedPairsCollection();
         System.out.println("The party location " + dataManagement.partyLocation);
@@ -71,6 +86,74 @@ public class MatchingRepository {
             pair.setDistanceToPartyLocation(this.dataManagement.partyLocation);
             System.out.println("After setting the location, now is " + pair.getDistanceToPartyLocation());
         }
+    }
+
+    public void removeSolo(Solo solo){
+        if(soloSuccessors.contains(solo)){
+            soloDataCollection.remove(solo);
+            soloSuccessors.remove(solo);
+            return;
+        }
+
+        PairMatched affectedPair = getMatchedPairsCollection().stream().filter(p -> p.containsPerson(solo.person)).toList().get(0);
+        Solo newSolo = findReplacement(solo);
+
+        if(newSolo != null){
+            if (affectedPair.getPersonA().equals(solo.person)) {
+                affectedPair.setPersonA(solo.person);
+            } else if (affectedPair.getPersonB().equals(solo.person)) {
+                affectedPair.setPersonB(solo.person);
+            }
+            return;
+        }
+
+        //If there is no replacement solo, the pair has to be removed from the group
+        removePair(affectedPair);
+    }
+
+    private Solo findReplacement(Solo solo) {
+        for (Solo replacementSolo : soloDataCollection) {
+            if(replacementSolo.foodPreference.equals(solo.foodPreference)){
+                return replacementSolo;
+            }
+        }
+        return null;
+    }
+
+
+    public void removePair(PairMatched pair) {
+        if (pairSuccessors.contains(pair)) {
+            getMatchedPairsCollection().remove(pair);
+            pairSuccessors.remove(pair);
+            return;
+        }
+
+        List<GroupMatched> affectedGroups = getMatchedGroupsCollection().stream().filter(g -> g.containsPair(pair)).toList();
+        PairMatched newPair = findReplacement(pair);
+
+        if (newPair != null) {
+            replacePairInGroups(pair, newPair, affectedGroups);
+        } else {
+            affectedGroups.forEach(g -> {g.deleteGroup(); getMatchedGroupsCollection().remove(g);});
+        }
+
+        getMatchedPairsCollection().remove(pair);
+        UpdatePairSuccessors();
+    }
+
+    private void replacePairInGroups(PairMatched pair, PairMatched newPair, List<GroupMatched> affectedGroups) {
+        for (GroupMatched group : affectedGroups) {
+            group.switchPairs(pair, newPair);
+        }
+    }
+
+    private PairMatched findReplacement(PairMatched pair) {
+        for (PairMatched replacementPair : getMatchedPairsCollection()) {
+            if(replacementPair.getFoodPreference().equals(pair.getFoodPreference())){
+                return replacementPair;
+            }
+        }
+        return null;
     }
 
 

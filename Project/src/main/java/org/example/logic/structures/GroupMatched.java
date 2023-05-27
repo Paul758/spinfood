@@ -131,4 +131,16 @@ public class GroupMatched implements Metricable {
 
         return !(meatNoneCount == 1 && veggieVeganCount == 2);
     }
+
+    public void switchPairs(PairMatched thisPair, PairMatched newPair){
+        if(thisPair.equals(pairA)){
+            pairA = newPair;
+        }
+        else if(thisPair.equals(pairB)){
+            pairB = newPair;
+        }
+        else if(thisPair.equals(pairC)){
+            pairC = newPair;
+        }
+    }
 }
