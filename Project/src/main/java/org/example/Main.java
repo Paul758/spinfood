@@ -2,9 +2,11 @@ package org.example;
 
 import org.example.data.*;
 import org.example.data.structures.Pair;
-import org.example.data.structures.Solo;
+
 import org.example.logic.repository.MatchingRepository;
-import org.example.logic.structures.GroupMatched;
+
+import org.example.logic.groupmatching.HungarianGroupMatching;
+
 import org.example.logic.structures.PairMatched;
 import org.example.logic.tools.*;
 import org.example.logic.tools.algorithms.CostCoefficients;
@@ -12,11 +14,15 @@ import org.example.logic.tools.algorithms.PairMatchingAlgorithm;
 import org.example.logic.tools.benchmarks.BenchmarkSystem;
 import org.example.logic.tools.benchmarks.PairBenchmark;
 
-import java.util.Collection;
+
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+
         //test1();
         //test2();
         testMatch();
@@ -50,6 +56,54 @@ public class Main {
         //matchingRepository.printFoodPreferencesOfPairs();
 
         System.out.println("Matched groups total " + matchingRepository.getMatchedGroupsCollection().size());
+
+        //test5();
+    }
+
+    private static void test5() {
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        String partyLocationPath = "src/main/java/org/example/artifacts/partylocation.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead, partyLocationPath);
+
+        List<PairMatched> pairMatchedList = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
+        List<PairMatched> pairs = new ArrayList<>(pairMatchedList);
+        for (Pair pair : dataManagement.pairParticipants) {
+            pairs.add(new PairMatched(pair));
+        }
+        pairs.forEach(p -> p.setDistanceToPartyLocation(dataManagement.partyLocation));
+
+        GroupMatchedList groupMatchedList = new GroupMatchedList(new ArrayList<>(pairs), AlgorithmType.RANDOM);
+        groupMatchedList.print();
+
+        groupMatchedList.removePair(pairs.get(0));
+        groupMatchedList.print();
+    }
+
+    private static void test4() {
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        String partyLocationPath = "src/main/java/org/example/artifacts/partylocation.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead, partyLocationPath);
+        List<PairMatched> pairMatchedList = PairMatchingAlgorithm.match(dataManagement.soloParticipants);
+        List<PairMatched> pairs = new ArrayList<>(pairMatchedList);
+        for (Pair pair : dataManagement.pairParticipants) {
+            pairs.add(new PairMatched(pair));
+        }
+
+        Coordinate partyLocation = dataManagement.partyLocation;
+        int counter = 0;
+        for (PairMatched pair : pairs) {
+            counter++;
+            pair.setDistanceToPartyLocation(partyLocation);
+            System.out.println(pair.getDistanceToPartyLocation());
+        }
+        System.out.println("Solo: " + dataManagement.soloParticipants.size());
+        System.out.println("Pair: " + dataManagement.pairParticipants.size());
+        System.out.println(counter);
+
+        pairs.sort(Comparator.naturalOrder());
+        pairs.forEach(p -> System.out.println(p.getDistanceToPartyLocation()));
+
+        HungarianGroupMatching.match(pairs);
 
     }
 

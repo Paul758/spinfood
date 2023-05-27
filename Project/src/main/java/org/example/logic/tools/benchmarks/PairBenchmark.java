@@ -1,10 +1,9 @@
 package org.example.logic.tools.benchmarks;
 
-import org.example.data.enums.FoodPreference;
+
 import org.example.data.enums.Sex;
 import org.example.data.structures.Solo;
 import org.example.logic.structures.PairMatched;
-import org.example.logic.tools.MatchingTools;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class PairBenchmark
         int soloSize = solos.size();
         int notMatchedSize = calcIsMatched(pairs, solos);
 
-        boolean isCorrect = isCorrect(pairs, solos);
+        boolean isCorrect = isCorrect(pairs);
 
         float countValue = calcCount(pairs.size(), solos.size());
         float ageDifference = calcAgeDifference(pairs);
@@ -43,7 +42,7 @@ public class PairBenchmark
         float maxValue = pairMatchedList.size() * 2 * 8;
         float sumAgeDifference = 0;
         for (PairMatched pairMatched : pairMatchedList) {
-            sumAgeDifference += pairMatched.calculateAgeRangeDeviation();
+            sumAgeDifference += pairMatched.getAgeRangeDeviation();
         }
 
         return 1f - sumAgeDifference / maxValue;
@@ -54,8 +53,8 @@ public class PairBenchmark
         float sum = 0;
 
         for (PairMatched pairMatched : pairMatchedList) {
-            Sex sexA = pairMatched.soloA.person.sex();
-            Sex sexB = pairMatched.soloB.person.sex();
+            Sex sexA = pairMatched.getPersonA().sex();
+            Sex sexB = pairMatched.getPersonB().sex();
             if (!sexA.equals(Sex.OTHER) && sexA.equals(sexB)) {
                 sum++;
             }
@@ -69,14 +68,9 @@ public class PairBenchmark
         float sum = 0;
 
         for (PairMatched pairMatched : pairMatchedList) {
-            FoodPreference fA = pairMatched.soloA.foodPreference;
-            FoodPreference fB = pairMatched.soloB.foodPreference;
-
-            int fAvalue = MatchingTools.getFoodPreference(fA);
-            int fBvalue = MatchingTools.getFoodPreference(fB);
-
-            sum += Math.abs(fAvalue - fBvalue);
+            sum += pairMatched.getFoodPreferenceDeviation();
         }
+
         return 1f - sum / maxValue;
     }
 
@@ -89,7 +83,7 @@ public class PairBenchmark
         for (Solo solo : solos) {
             boolean isMatched = false;
             for (PairMatched pair : pairs) {
-               if (pair.soloA.equals(solo) || pair.soloB.equals(solo)) {
+               if (pair.containsPerson(solo.person)) {
                    isMatched = true;
                    break;
                }
@@ -101,23 +95,11 @@ public class PairBenchmark
         return counter;
     }
 
-    private static boolean isCorrect(List<PairMatched> pairMatchedList, List<Solo> solos) {
+    private static boolean isCorrect(List<PairMatched> pairMatchedList) {
         boolean isCorrect = true;
-        for (Solo solo : solos) {
-            int counter = 0;
             for (PairMatched pair : pairMatchedList) {
-                if (pair.soloA.equals(solo)) {
-                    counter++;
-                }
-                if (pair.soloB.equals(solo)) {
-                    counter++;
-                }
+                isCorrect &= pair.isValid();
             }
-            if (counter > 1) {
-                isCorrect = false;
-                break;
-            }
-        }
         return isCorrect;
     }
 }

@@ -1,17 +1,22 @@
 package org.example.logic.structures;
 
 import org.example.data.enums.FoodPreference;
-import org.example.data.structures.EventParticipant;
-import org.example.data.structures.Solo;
+import org.example.data.factory.Kitchen;
+import org.example.data.factory.Person;
 
-public abstract class Match {
+public abstract class Match implements Comparable<Match> {
 
-    public abstract FoodPreference calculateFoodPreference();
+    public abstract Person getPersonA();
+    public abstract Person getPersonB();
+    public abstract FoodPreference getFoodPreference();
+    public abstract Kitchen getKitchen();
+    public abstract boolean isValid();
 
-    public abstract int calculateAgeRangeDeviation();
+    public boolean containsPerson(Person person) {
+        return getPersonA().equals(person) || getPersonB().equals(person);
+    }
 
-    public abstract float calculateSexDeviation();
 
-    public abstract int calculateFoodPreferenceDeviation();
+
 
 }

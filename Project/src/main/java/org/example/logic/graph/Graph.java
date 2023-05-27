@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class Graph <T> {
     HashMap<T, List<Edge<T>>> adjacencyList = new HashMap<>();
+
 
     public void addVertex(T participant) {
         if (!adjacencyList.containsKey(participant)) {

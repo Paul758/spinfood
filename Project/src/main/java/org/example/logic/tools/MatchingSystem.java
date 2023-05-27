@@ -3,7 +3,6 @@ package org.example.logic.tools;
 import org.example.data.structures.Solo;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
-import org.example.logic.tools.algorithms.GroupMatchingAlgorithm;
 import org.example.logic.tools.algorithms.GroupMatchingGraph;
 import org.example.logic.tools.algorithms.PairMatchingAlgorithm;
 

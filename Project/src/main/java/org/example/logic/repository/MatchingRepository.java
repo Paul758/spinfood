@@ -1,7 +1,6 @@
 package org.example.logic.repository;
 
 import org.example.data.DataManagement;
-import org.example.data.enums.FoodPreference;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 import org.example.logic.structures.GroupMatched;
@@ -49,13 +48,37 @@ public class MatchingRepository {
         addMatchedPairsCollection(preMatchedPairs);
     }
 
+    public void calculateUnmatchedPairs() {
 
-    public void setMatchedPairsCollection(Collection<PairMatched> matchedPairsCollection) {
-        this.matchedPairsCollection = matchedPairsCollection;
+        Collection<PairMatched> unmatchedPairs = new ArrayList<>(matchedPairsCollection);
+
+        for (PairMatched pair : matchedPairsCollection) {
+
+            for (GroupMatched group : matchedGroupsCollection) {
+                if(group.containsPair(pair)){
+                    unmatchedPairs.remove(pair);
+                }
+            }
+        }
+        pairSuccessors = unmatchedPairs;
     }
 
-    public void setMatchedGroupsCollection(Collection<GroupMatched> matchedGroupsCollection) {
-        this.matchedGroupsCollection = matchedGroupsCollection;
+    public void setDistanceToPartyLocationForPairs(){
+        Collection<PairMatched> pairs = getMatchedPairsCollection();
+        System.out.println("The party location " + dataManagement.partyLocation);
+        for (PairMatched pair : pairs){
+            pair.setDistanceToPartyLocation(this.dataManagement.partyLocation);
+            System.out.println("After setting the location, now is " + pair.getDistanceToPartyLocation());
+        }
+    }
+
+
+    public void printFoodPreferencesOfPairs(){
+        System.out.println("now printing foodPreferences of matched pairs");
+        for (PairMatched pair :
+                getMatchedPairsCollection()) {
+            System.out.println(pair.getFoodPreference());
+        }
     }
 
     public void addMatchedPairsCollection(Collection<PairMatched> matchedPairsCollection) {
@@ -82,99 +105,5 @@ public class MatchingRepository {
         return matchedGroupsCollection;
     }
 
-    public void calculateUnmatchedPairs() {
 
-        Collection<PairMatched> unmatchedPairs = new ArrayList<>(matchedPairsCollection);
-
-        for (PairMatched pair : matchedPairsCollection) {
-
-            for (GroupMatched group : matchedGroupsCollection) {
-                if(group.contains(pair)){
-                    unmatchedPairs.remove(pair);
-                }
-            }
-        }
-        pairSuccessors = unmatchedPairs;
-    }
-
-    public void setDistanceToPartyLocationForPairs(){
-        Collection<PairMatched> pairs = getMatchedPairsCollection();
-
-        for (PairMatched pair : pairs){
-            pair.setDistanceToPartyLocation(this.dataManagement.partyLocation);
-        }
-    }
-
-
-    public void printFoodPreferencesOfPairs(){
-        System.out.println("now printing foodPreferences of matched pairs");
-        for (PairMatched pair :
-                getMatchedPairsCollection()) {
-            System.out.println(pair.foodPreference);
-        }
-    }
-
-
-
-    public void unregisterParticipant(Solo unregisteredParticipant){
-        if(isInGroup(unregisteredParticipant)) {
-
-
-        }
-
-        if(isInPair(unregisteredParticipant)){
-
-        }
-
-    }
-
-    private boolean isInGroup(Solo unregisteredParticipant) {
-        for (GroupMatched group : getMatchedGroupsCollection()) {
-            for (PairMatched pair: group.getPairList()) {
-
-                if (!pair.contains(unregisteredParticipant)) {
-                    continue;
-                }
-
-                Solo replacement = findReplacement(unregisteredParticipant);
-
-                if (replacement == null) {
-                    break;
-                }
-
-                if (pair.soloA.equals(unregisteredParticipant)) {
-                    pair.soloA = replacement;
-                } else {
-                    pair.soloB = replacement;
-                }
-            }
-        }
-
-    }
-
-    private boolean isInPair(Solo unregisteredParticipant) {
-        for (PairMatched pair : getMatchedPairsCollection()) {
-            if(pair.soloA.equals(unregisteredParticipant) || pair.soloB.equals(unregisteredParticipant)){
-                return true;
-            }
-        }
-    }
-
-    public void removeFromPair(Solo unregisteredParticipant){
-
-    }
-
-    public void removeFromGroup(Solo unregisteredParticipant){
-
-    }
-
-    public Solo findReplacement(Solo unregisteredParticipant){
-        for (Solo solo : soloSuccessors) {
-            if(solo.foodPreference.equals(unregisteredParticipant.foodPreference)){
-                return solo;
-            }
-            //TODO check for age compatibility
-        }
-        return null;
-    }
 }

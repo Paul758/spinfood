@@ -18,7 +18,7 @@ public class GroupMatchingGraph {
         List<PairMatched> veggieVeganPairs = getVeggieVeganPairs(matchedPairs);
 
 
-        Graph<PairMatched> graph = createGraph(matchedPairs);
+        //Graph<PairMatched> graph = createGraph(matchedPairs);
 
         Graph<PairMatched> meatGraph = createGraph(meatNonePairs);
         Graph<PairMatched> veganGraph = createGraph(veggieVeganPairs);
@@ -98,19 +98,19 @@ public class GroupMatchingGraph {
             PairMatched pairI = superGroup.get(8);
 
             //starters groups
-            GroupMatched starterGroupA = new GroupMatched(pairA, pairD, pairG, pairA, MealType.STARTER);
-            GroupMatched starterGroupB = new GroupMatched(pairB, pairE, pairH, pairB, MealType.STARTER);
-            GroupMatched starterGroupC = new GroupMatched(pairC, pairF, pairI, pairC, MealType.STARTER);
+            GroupMatched starterGroupA = new GroupMatched(pairA, pairD, pairG, MealType.STARTER);
+            GroupMatched starterGroupB = new GroupMatched(pairB, pairE, pairH, MealType.STARTER);
+            GroupMatched starterGroupC = new GroupMatched(pairC, pairF, pairI, MealType.STARTER);
 
             //main course groups
-            GroupMatched mainCourseGroupA = new GroupMatched(pairA, pairF, pairH, pairF, MealType.MAIN);
-            GroupMatched mainCourseGroupB = new GroupMatched(pairB, pairD, pairI, pairD, MealType.MAIN);
-            GroupMatched mainCourseGroupC = new GroupMatched(pairC, pairE, pairG, pairE, MealType.MAIN);
+            GroupMatched mainCourseGroupA = new GroupMatched(pairF, pairA, pairH, MealType.MAIN);
+            GroupMatched mainCourseGroupB = new GroupMatched(pairD, pairB, pairI, MealType.MAIN);
+            GroupMatched mainCourseGroupC = new GroupMatched(pairE, pairC, pairG, MealType.MAIN);
 
             //dessert groups
-            GroupMatched dessertGroupA = new GroupMatched(pairA, pairE, pairI, pairI, MealType.DESSERT);
-            GroupMatched dessertGroupB = new GroupMatched(pairB, pairF, pairG, pairG, MealType.DESSERT);
-            GroupMatched dessertGroupC = new GroupMatched(pairC, pairD, pairH, pairH, MealType.DESSERT);
+            GroupMatched dessertGroupA = new GroupMatched(pairI, pairE, pairA, MealType.DESSERT);
+            GroupMatched dessertGroupB = new GroupMatched(pairG, pairF, pairB, MealType.DESSERT);
+            GroupMatched dessertGroupC = new GroupMatched(pairH, pairD, pairC, MealType.DESSERT);
 
             dinnerGroups.addAll(List.of(
                     starterGroupA, starterGroupB, starterGroupC,
@@ -123,7 +123,7 @@ public class GroupMatchingGraph {
     private static List<PairMatched> getVeggieVeganPairs(List<PairMatched> matchedPairs) {
         List<PairMatched> veggieVeganPairs = new ArrayList<>();
         for (PairMatched pair : matchedPairs) {
-            if (pair.foodPreference.equals(FoodPreference.VEGGIE) || pair.foodPreference.equals(FoodPreference.VEGAN)) {
+            if (pair.getFoodPreference().equals(FoodPreference.VEGGIE) || pair.getFoodPreference().equals(FoodPreference.VEGAN)) {
                 veggieVeganPairs.add(pair);
             }
         }
@@ -134,7 +134,7 @@ public class GroupMatchingGraph {
     private static List<PairMatched> getMeatNonePairs(List<PairMatched> matchedPairs) {
         List<PairMatched> meatNonePairs = new ArrayList<>();
         for (PairMatched pair : matchedPairs) {
-            if (pair.foodPreference.equals(FoodPreference.MEAT) || pair.foodPreference.equals(FoodPreference.NONE)) {
+            if (pair.getFoodPreference().equals(FoodPreference.MEAT) || pair.getFoodPreference().equals(FoodPreference.NONE)) {
                 meatNonePairs.add(pair);
             }
         }
@@ -147,7 +147,7 @@ public class GroupMatchingGraph {
 
         PairMatched furthestPair = GetFurthestPair(matchedPairs);
         //System.out.println("furthest Distance" + furthestPair.distanceToPartyLocation);
-        double maxDistanceToPartyLocation = furthestPair.distanceToPartyLocation;
+        double maxDistanceToPartyLocation = furthestPair.getDistanceToPartyLocation();
 
         for (int i = 0; i < matchedPairs.size(); i++) {
 
@@ -174,8 +174,8 @@ public class GroupMatchingGraph {
     }
 
     private static boolean fullfillsHardCriteria(PairMatched pairA, PairMatched pairB) {
-        System.out.println("Pair A foodPreference is " + pairA.foodPreference);
-        System.out.println("Pair B foodPreference is " + pairB.foodPreference);
+        System.out.println("Pair A foodPreference is " + pairA.getFoodPreference());
+        System.out.println("Pair B foodPreference is " + pairB.getFoodPreference());
 
         //foodPreference TODO review this code
         /*if (pairA.foodPreference.equals(FoodPreference.MEAT) || pairA.foodPreference.equals(FoodPreference.NONE)
@@ -206,7 +206,7 @@ public class GroupMatchingGraph {
 
     public static PairMatched GetFurthestPair(List<PairMatched> pairs) {
         pairs.sort((pairA, pairB) -> {
-            return Double.compare(pairB.distanceToPartyLocation, pairA.distanceToPartyLocation);
+            return Double.compare(pairB.getDistanceToPartyLocation(), pairA.getDistanceToPartyLocation());
         });
         return pairs.get(0);
     }
@@ -216,7 +216,7 @@ public class GroupMatchingGraph {
         System.out.println("now printing foodPreferences of superGroup");
         for (PairMatched pair :
                 matchedList) {
-            System.out.println(pair.foodPreference);
+            System.out.println(pair.getFoodPreference());
         }
         return true;
     }

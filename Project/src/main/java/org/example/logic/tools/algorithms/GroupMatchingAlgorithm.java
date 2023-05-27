@@ -1,7 +1,6 @@
 package org.example.logic.tools.algorithms;
 
 import org.example.data.Coordinate;
-import org.example.data.DataManagement;
 import org.example.logic.enums.MealType;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
@@ -19,7 +18,7 @@ public class GroupMatchingAlgorithm {
 
     public static List<PairMatched> sortPairListByDistance(List<PairMatched> pairs){
         System.out.println("matched pair list: " + pairs);
-        pairs.sort((pairA, pairB) -> Double.compare(pairB.distanceToPartyLocation, pairA.distanceToPartyLocation));
+        pairs.sort((pairA, pairB) -> Double.compare(pairB.getDistanceToPartyLocation(), pairA.getDistanceToPartyLocation()));
         pairs.forEach(System.out::println);
         return pairs;
     }
@@ -99,7 +98,7 @@ public class GroupMatchingAlgorithm {
            //convert to single groups
 
 
-           //starters groups
+         /*  //starters groups
            GroupMatched starterGroupA = new GroupMatched(pairA, pairD, pairG, pairA, MealType.STARTER);
            GroupMatched starterGroupB = new GroupMatched(pairB, pairE, pairH, pairB, MealType.STARTER);
            GroupMatched starterGroupC = new GroupMatched(pairC, pairF, pairI, pairC, MealType.STARTER);
@@ -113,7 +112,7 @@ public class GroupMatchingAlgorithm {
            GroupMatched dessertGroupA = new GroupMatched(pairA, pairE, pairI, pairI, MealType.DESSERT);
            GroupMatched dessertGroupB = new GroupMatched(pairB, pairF, pairG, pairG, MealType.DESSERT);
            GroupMatched dessertGroupC = new GroupMatched(pairC, pairD, pairH, pairH, MealType.DESSERT);
-           dessertGroups.addAll(List.of(dessertGroupA, dessertGroupB, dessertGroupC));
+           dessertGroups.addAll(List.of(dessertGroupA, dessertGroupB, dessertGroupC));*/
 
        }
 
@@ -130,7 +129,7 @@ public class GroupMatchingAlgorithm {
        int counter = 0;
        ArrayList<PairMatched> addList = new ArrayList<>();
 
-       double distanceToPartyLocation = starterPair.distanceToPartyLocation;
+       double distanceToPartyLocation = starterPair.getDistanceToPartyLocation();
 
        while(foodListIterator.hasNext()){
            PairMatched possiblePair = foodListIterator.next();

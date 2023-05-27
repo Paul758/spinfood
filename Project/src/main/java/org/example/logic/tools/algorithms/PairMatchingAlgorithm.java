@@ -3,11 +3,11 @@ package org.example.logic.tools.algorithms;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.enums.Sex;
-import org.example.data.structures.EventParticipant;
 import org.example.data.structures.Solo;
 import org.example.logic.graph.Graph;
 import org.example.logic.structures.PairMatched;
 import org.example.logic.tools.MatchingTools;
+
 
 
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ public class PairMatchingAlgorithm {
 
     public static List<PairMatched> match(List<Solo> solos, CostCoefficients coefficients, float limitMultiplier) {
         List<PairMatched> pairMatched = new ArrayList<>();
+
         Graph<Solo> graph = createGraph(solos, coefficients, limitMultiplier);
 
         for (int i = 0 ; i < solos.size() / 2; i++) {
@@ -42,10 +43,12 @@ public class PairMatchingAlgorithm {
                 Solo participantA = graph.getVertexWithLeastEdges();
                 Solo participantB = graph.getEdgeWithLeastWeight(participantA).participant;
 
+
                 pairMatched.add(new PairMatched( participantA, participantB));
 
                 graph.removeVertex(participantA);
                 graph.removeVertex(participantB);
+
             } catch (NullPointerException e) {
                 break;
             }
@@ -56,6 +59,7 @@ public class PairMatchingAlgorithm {
 
     private static Graph<Solo> createGraph(List<Solo> solos, CostCoefficients coefficients, float limitMultiplier) {
         Graph<Solo> graph = new Graph<>();
+
         float maxCosts = calcMaxCost(coefficients);
 
         for (int i = 0; i < solos.size(); i++) {

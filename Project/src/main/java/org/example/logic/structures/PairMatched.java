@@ -3,97 +3,164 @@ package org.example.logic.structures;
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
+import org.example.data.enums.Sex;
 import org.example.data.factory.Kitchen;
+import org.example.data.factory.Person;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
-import org.example.logic.structures.Match;
 import org.example.logic.tools.MatchingTools;
+import org.example.logic.enums.MealType;
+import org.example.logic.tools.Metricable;
 
-public class PairMatched extends Match {
+public class PairMatched implements Comparable<PairMatched>, Metricable {
 
-    public Solo soloA;
-    public Solo soloB;
-    public FoodPreference foodPreference;
-    public double distanceToPartyLocation;
+    private final Person personA;
+    private final Person personB;
+    private final FoodPreference foodPreference;
+    private final Kitchen kitchen;
+    public final boolean preMatched;
 
-    public int foodPreferenceDeviation;
-    public int ageRangeDeviation;
+    private Coordinate partyLocation;
+    private Double distanceToPartyLocation;
+    public MealType cooksMealType;
+    private GroupMatched starterGroup;
+    private GroupMatched mainGroup;
+    private GroupMatched dessertGroup;
 
-    public boolean prematched;
+
+    private final int foodPreferenceDeviation;
+    private final int ageRangeDeviation;
 
     public PairMatched(Pair pair){
+        this.personA = pair.personA;
+        this.personB = pair.personB;
+        this.foodPreference = pair.foodPreference;
+        this.kitchen = pair.kitchen;
 
-        this(   new Solo(pair.personA, pair.foodPreference, pair.kitchen),
-                new Solo(pair.personB, pair.foodPreference, pair.kitchen));
-        //System.out.println("This constructor is called");
-        prematched = true;
+        this.foodPreferenceDeviation = 0;
+        this.ageRangeDeviation = MatchingTools.calculateAgeRangeDeviation(personA, personB);
+        this.preMatched = true;
     }
 
     public PairMatched(Solo soloA, Solo soloB){
-        //System.out.println("This constructor is called");
-        this.soloA = soloA;
-        this.soloB = soloB;
-        this.foodPreference = calculateFoodPreference();
-        //this.foodPreference = foodPreference;
+        this.personA = soloA.person;
+        this.personB = soloB.person;
+        this.foodPreference = calculateFoodPreference(soloA, soloB);
+        this.kitchen = calculateKitchen(soloA, soloB);
 
-        int foodValueA = MatchingTools.getFoodPreference(soloA.foodPreference);
-        int foodValueB = MatchingTools.getFoodPreference(soloB.foodPreference);
+        this.foodPreferenceDeviation = MatchingTools.calculateFoodPreferenceDeviation(soloA.foodPreference, soloB.foodPreference);
+        this.ageRangeDeviation = MatchingTools.calculateAgeRangeDeviation(personA, personB);
+        this.preMatched = false;
+    }
 
-        foodPreferenceDeviation = Math.abs(foodValueA - foodValueB);
-        //this.prematched = prematched;
+
+    public Person getPersonA() {
+        return personA;
+    }
+
+    public Person getPersonB() {
+        return personB;
+    }
+
+    public FoodPreference getFoodPreference() {
+        return foodPreference;
+    }
+
+    public Kitchen getKitchen() {
+        return kitchen;
     }
 
     @Override
-    public FoodPreference calculateFoodPreference() {
+    public double getPathLength() {
+        Coordinate starter = starterGroup.getKitchenCoordinate();
+        Coordinate main = mainGroup.getKitchenCoordinate();
+        Coordinate dessert = dessertGroup.getKitchenCoordinate();
 
+        double distanceStarterToMain = Coordinate.getDistance(starter, main);
+        double distanceMainToDessert = Coordinate.getDistance(main, dessert);
+        double distanceDessertToParty = Coordinate.getDistance(dessert, partyLocation);
+
+        return  distanceStarterToMain + distanceMainToDessert + distanceDessertToParty;
+    }
+
+    @Override
+    public double getGenderDeviation() {
+        double countFemale = 0;
+        if (personA.sex().equals(Sex.FEMALE)) countFemale++;
+        if (personB.sex().equals(Sex.FEMALE)) countFemale++;
+        return countFemale / 2;
+    }
+
+    @Override
+    public double getAgeRangeDeviation() {
+        return ageRangeDeviation;
+    }
+
+    @Override
+    public double getFoodPreferenceDeviation() {
+        return foodPreferenceDeviation;
+    }
+
+    @Override
+    public boolean isValid() {
+        return !personA.equals(personB);
+    }
+
+    public void addGroup(GroupMatched groupMatched) {
+        switch (groupMatched.mealType) {
+            case NONE -> throw new IllegalArgumentException();
+            case STARTER -> starterGroup = groupMatched;
+            case MAIN ->  mainGroup = groupMatched;
+            case DESSERT -> dessertGroup = groupMatched;
+        }
+    }
+
+    public boolean isNotInGroup() {
+        return starterGroup == null && mainGroup == null && dessertGroup == null;
+    }
+
+    private FoodPreference calculateFoodPreference(Solo soloA, Solo soloB) {
         int foodValueA = MatchingTools.getFoodPreference(soloA.foodPreference);
         int foodValueB = MatchingTools.getFoodPreference(soloB.foodPreference);
-        //System.out.println("Setting foodPreference of pair to " + FoodPreference.parseFoodPreference(Math.max(foodValueA, foodValueB)));
         return FoodPreference.parseFoodPreference(Math.max(foodValueA, foodValueB));
     }
 
-    @Override
-    public int calculateAgeRangeDeviation() {
-        int ageValueA = MatchingTools.getAgeRange(soloA.person.age());
-        int ageValueB = MatchingTools.getAgeRange(soloB.person.age());
-        return  Math.abs(ageValueA - ageValueB);
-    }
+    private Kitchen calculateKitchen(Solo soloA, Solo soloB) {
+        Kitchen kitchenA = soloA.kitchen;
+        Kitchen kitchenB = soloB.kitchen;
 
-    @Override
-    public float calculateSexDeviation() {
-        if(soloA.person.sex().equals(soloB.person.sex())){
-            return 0f;
-        } else {
-            return 0.5f;
-        }
-    }
-
-    @Override
-    public int calculateFoodPreferenceDeviation() {
-        return Math.abs(MatchingTools.getFoodPreference(this.foodPreference) - MatchingTools.getFoodPreference(soloA.foodPreference))
-                + Math.abs(MatchingTools.getFoodPreference(this.foodPreference) - MatchingTools.getFoodPreference(soloA.foodPreference));
-    }
-
-    public Kitchen getKitchen(){
-        if(!soloA.kitchen.kitchenType.equals(KitchenType.NO)){
-            return soloA.kitchen;
-        } else {
-            return soloB.kitchen;
-        }
-
+        if (kitchenA.kitchenType.equals(KitchenType.YES)) return kitchenA;
+        else if (kitchenB.kitchenType.equals(KitchenType.YES)) return kitchenB;
+        else if (kitchenA.kitchenType.equals(KitchenType.MAYBE)) return kitchenA;
+        else if (kitchenB.kitchenType.equals(KitchenType.MAYBE)) return kitchenB;
+        else throw new IllegalStateException(this + " has no kitchen");
     }
 
     public void setDistanceToPartyLocation(Coordinate partyLocation) {
-        System.out.println("party Location " + partyLocation);
-        this.distanceToPartyLocation = Coordinate.getDistance(partyLocation, getKitchen().coordinate);
+        this.partyLocation = partyLocation;
+        this.distanceToPartyLocation = Coordinate.getDistance(getKitchen().coordinate, partyLocation);
+        System.out.println("The distance has been set to " + distanceToPartyLocation);
+    }
+
+    public double getDistanceToPartyLocation() {
+        System.out.println("The distance to partylocation now is " + distanceToPartyLocation);
+        if (this.distanceToPartyLocation == null) {
+            throw new IllegalStateException("Distance to party location isn't set");
+        }
+        return this.distanceToPartyLocation;
+    }
+
+    public boolean containsPerson(Person person) {
+        return getPersonA().equals(person) || getPersonB().equals(person);
+    }
+
+    @Override
+    public int compareTo(PairMatched o) {
+        return Double.compare(this.getDistanceToPartyLocation(), o.getDistanceToPartyLocation());
     }
 
     @Override
     public String toString() {
-        return soloA.toString() + "\n" + soloB.toString();
-    }
-
-    public boolean contains(Solo unregisteredParticipant) {
-        return unregisteredParticipant.equals(soloA) || unregisteredParticipant.equals(soloB);
+        return getPersonA().name() + ", " + getPersonB().name() + ", " + getFoodPreference();
     }
 }

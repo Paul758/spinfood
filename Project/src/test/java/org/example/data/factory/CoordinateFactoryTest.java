@@ -19,8 +19,8 @@ class CoordinateFactoryTest {
 
     @BeforeAll
     public static void Setup() {
-        keywordMap.put(Keywords.kitchenLongitude, 0);
-        keywordMap.put(Keywords.kitchenLatitude, 1);
+        keywordMap.put(Keywords.longitude, 0);
+        keywordMap.put(Keywords.latitude, 1);
     }
 
     @Test
