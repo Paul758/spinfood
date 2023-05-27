@@ -205,6 +205,12 @@ public class GroupMatchingGraph {
     }
 
     public static PairMatched GetFurthestPair(List<PairMatched> pairs) {
+        System.out.println("before sorting, printing out every distance to location");
+        for (PairMatched pair : pairs) {
+            System.out.println(pair.getDistanceToPartyLocation());
+        }
+
+
         pairs.sort((pairA, pairB) -> {
             return Double.compare(pairB.getDistanceToPartyLocation(), pairA.getDistanceToPartyLocation());
         });

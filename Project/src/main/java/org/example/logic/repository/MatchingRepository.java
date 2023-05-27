@@ -30,13 +30,14 @@ public class MatchingRepository {
         System.out.println("pairDataCollection");
         System.out.println(pairDataCollection);
         createAndAddPrematchedPairs();
-        setDistanceToPartyLocationForPairs();
         Collection<PairMatched> matchedPairs = MatchingSystem.matchPairs((List<Solo>) this.getSoloDataCollection());
         this.addMatchedPairsCollection(matchedPairs);
+
+        setDistanceToPartyLocationForPairs();
+
         Collection<GroupMatched> matchedGroups = MatchingSystem.matchGroups((List<PairMatched>) this.getMatchedPairsCollection());
         this.addMatchedGroupsCollection(matchedGroups);
-
-
+        
     }
 
     public void createAndAddPrematchedPairs() {
