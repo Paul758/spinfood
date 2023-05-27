@@ -2,6 +2,7 @@ package org.example.logic.tools.algorithms;
 
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
+import org.example.data.enums.Sex;
 import org.example.logic.enums.MealType;
 import org.example.logic.graph.Graph;
 import org.example.logic.structures.GroupMatched;
@@ -13,15 +14,14 @@ import java.util.List;
 public class GroupMatchingGraph {
 
 
-    public static List<GroupMatched> match(List<PairMatched> matchedPairs) {
+    public static List<GroupMatched> match(List<PairMatched> matchedPairs, MatchCosts matchCosts) {
         List<PairMatched> meatNonePairs = getMeatNonePairs(matchedPairs);
         List<PairMatched> veggieVeganPairs = getVeggieVeganPairs(matchedPairs);
 
-
         //Graph<PairMatched> graph = createGraph(matchedPairs);
 
-        Graph<PairMatched> meatGraph = createGraph(meatNonePairs);
-        Graph<PairMatched> veganGraph = createGraph(veggieVeganPairs);
+        Graph<PairMatched> meatGraph = createGraph(meatNonePairs, matchCosts);
+        Graph<PairMatched> veganGraph = createGraph(veggieVeganPairs, matchCosts);
 
         List<List<PairMatched>> superGroups = new ArrayList<>();
 
@@ -142,7 +142,7 @@ public class GroupMatchingGraph {
     }
 
 
-    public static Graph<PairMatched> createGraph(List<PairMatched> matchedPairs) {
+    public static Graph<PairMatched> createGraph(List<PairMatched> matchedPairs, MatchCosts matchCosts) {
         Graph<PairMatched> graph = new Graph<>();
 
         PairMatched furthestPair = GetFurthestPair(matchedPairs);
@@ -156,7 +156,7 @@ public class GroupMatchingGraph {
                 PairMatched pairB = matchedPairs.get(j);
 
                 if(fullfillsHardCriteria(pairA,pairB)){
-                   double costs = calcMatchingCosts(pairA, pairB, maxDistanceToPartyLocation);
+                   double costs = calcMatchingCosts(pairA, pairB, maxDistanceToPartyLocation, matchCosts);
                   // System.out.println("cost: " + costs);
                    graph.addEdge(pairA, pairB, (float) costs);
                 }
@@ -166,10 +166,20 @@ public class GroupMatchingGraph {
         return graph;
     }
 
-    private static double calcMatchingCosts(PairMatched pairA, PairMatched pairB, double maxDistanceToPartyLocation) {
+    private static double calcMatchingCosts(PairMatched pairA, PairMatched pairB, double maxDistanceToPartyLocation, MatchCosts matchCosts) {
         double costs = 0;
-        costs += calcPathCosts(pairA, pairB, maxDistanceToPartyLocation);
+        costs += calcPathCosts(pairA, pairB, maxDistanceToPartyLocation, matchCosts);
+        costs += calcAgeCosts(pairA, pairB, matchCosts);
+        costs += calcSexCosts(pairA, pairB, matchCosts);
+        costs += calcFoodPreferenceCosts(pairA, pairB, matchCosts);
+        return costs;
+    }
 
+    private static double calcFoodPreferenceCosts(PairMatched pairA, PairMatched pairB, MatchCosts matchCosts) {
+        double costs = 0;
+        if(pairA.getFoodPreference() != pairB.getFoodPreference()){
+            costs += matchCosts.getFoodPreferenceCosts();
+        }
         return costs;
     }
 
@@ -197,11 +207,50 @@ public class GroupMatchingGraph {
 
     }
 
-    public static double calcPathCosts(PairMatched pairA, PairMatched pairB, double maxDistanceToPartyLocation) {
+    public static double calcPathCosts(PairMatched pairA, PairMatched pairB, double maxDistanceToPartyLocation, MatchCosts matchCosts) {
         double pathCosts =  Coordinate.getDistance(pairA.getKitchen().coordinate, pairB.getKitchen().coordinate) / (maxDistanceToPartyLocation * 2);
-       // System.out.println("maxDistance " + maxDistanceToPartyLocation);
-       // System.out.println("pathCosts " + pathCosts);
-        return pathCosts;
+        return pathCosts * matchCosts.getPathLengthCosts();
+    }
+
+    public static double calcAgeCosts(PairMatched pairA, PairMatched pairB, MatchCosts matchCosts){
+        int ageRangeA = pairA.getPersonA().age();
+        int ageRangeB = pairA.getPersonB().age();
+        int meanAgePairA = (ageRangeA + ageRangeB) / 2;
+
+        int ageRangeC = pairB.getPersonA().age();
+        int ageRangeD = pairB.getPersonB().age();
+        int meanAgePairB = (ageRangeC + ageRangeD) / 2;
+
+        int ageRangeDeviation = Math.abs(meanAgePairA - meanAgePairB);
+
+        return ageRangeDeviation * matchCosts.getAgeCosts();
+    }
+
+    public static double calcSexCosts(PairMatched pairA, PairMatched pairB, MatchCosts matchCosts) {
+
+        double costs = 0;
+
+        Sex sexA = pairA.getPersonA().sex();
+        Sex sexB = pairA.getPersonB().sex();
+
+        Sex sexC = pairB.getPersonA().sex();
+        Sex sexD = pairB.getPersonB().sex();
+
+        if(!sexA.equals(sexC)){
+            costs++;
+        }
+        if(!sexA.equals(sexD)){
+            costs++;
+        }
+
+        if(!sexB.equals(sexC)){
+            costs++;
+        }
+        if(!sexB.equals(sexD)){
+            costs++;
+        }
+
+        return costs * matchCosts.getGenderCosts();
     }
 
     public static PairMatched GetFurthestPair(List<PairMatched> pairs) {
