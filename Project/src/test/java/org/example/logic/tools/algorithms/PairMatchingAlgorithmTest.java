@@ -42,7 +42,13 @@ class PairMatchingAlgorithmTest {
     private boolean IsFeasible(PairMatched pair) {
         boolean isFeasible;
         isFeasible = checkFoodPreference(pair);
+        isFeasible = checkKitchen(pair);
+
         return isFeasible;
+    }
+
+    private boolean checkKitchen(PairMatched pair) {
+        return pair.getKitchen() != null;
     }
 
     private boolean checkFoodPreference(PairMatched pair) {
@@ -52,7 +58,7 @@ class PairMatchingAlgorithmTest {
         boolean personAIsMeat = personAFoodPreference.equals(FoodPreference.MEAT);
         boolean personBIsVeggie = personBFoodPreference.equals(FoodPreference.VEGGIE);
         boolean personBisVegan = personBFoodPreference.equals(FoodPreference.VEGAN);
-        
+
         return !(personAIsMeat && (personBIsVeggie || personBisVegan));
     }
 

@@ -76,23 +76,39 @@ public class MatchingRepository {
         }
 
         PairMatched affectedPair = getMatchedPairsCollection().stream().filter(p -> p.containsPerson(solo.person)).toList().get(0);
+        System.out.println("The affected pair is " + affectedPair);
         Solo newSolo = findReplacement(solo);
-
+        System.out.println("The new solo is " + newSolo);
         if(newSolo != null){
             if (affectedPair.getPersonA().equals(solo.person)) {
-                affectedPair.setPersonA(solo.person);
+                System.out.println("personA will be removed");
+                affectedPair.setPersonA(newSolo.person);
             } else if (affectedPair.getPersonB().equals(solo.person)) {
-                affectedPair.setPersonB(solo.person);
+                affectedPair.setPersonB(newSolo.person);
+                System.out.println("personB will be removed");
             }
             return;
         }
+        System.out.println("There is no replacementSolo, deleting pair");
+        Solo remainingSolo = null;
+        if (affectedPair.getPersonA().equals(solo.person)) {
+            System.out.println("personB will remain");
+            //TODO get real foodPreference and kitchen from remaining pair
+            remainingSolo = new Solo(affectedPair.getPersonB(), affectedPair.getFoodPreference(), affectedPair.getKitchen());
+        } else if (affectedPair.getPersonB().equals(solo.person)) {
+            System.out.println("personA will remain");
+            //TODO get real foodPreference and kitchen from remaining pair
+            remainingSolo = new Solo(affectedPair.getPersonA(), affectedPair.getFoodPreference(), affectedPair.getKitchen());
+        }
+
+        soloSuccessors.add(remainingSolo);
 
         //If there is no replacement solo, the pair has to be removed from the group
         removePair(affectedPair);
     }
 
     private Solo findReplacement(Solo solo) {
-        for (Solo replacementSolo : soloDataCollection) {
+        for (Solo replacementSolo : soloSuccessors) {
             if(replacementSolo.foodPreference.equals(solo.foodPreference)){
                 return replacementSolo;
             }
@@ -106,28 +122,35 @@ public class MatchingRepository {
             pairSuccessors.remove(pair);
             return;
         }
-
+        System.out.println("The pair to remove is " + pair);
         List<GroupMatched> affectedGroups = getMatchedGroupsCollection().stream().filter(g -> g.containsPair(pair)).toList();
         PairMatched newPair = findReplacement(pair);
-
+        System.out.println("The new pair is" + newPair);
         if (newPair != null) {
             replacePairInGroups(pair, newPair, affectedGroups);
         } else {
-            affectedGroups.forEach(g -> {g.deleteGroup(); getMatchedGroupsCollection().remove(g);});
+            affectedGroups.forEach(g -> {g.removePair(pair);
+                                            disbandGroup(g);
+                                            getMatchedGroupsCollection().remove(g);});
         }
 
         getMatchedPairsCollection().remove(pair);
         UpdatePairSuccessors();
     }
 
+    private void disbandGroup(GroupMatched group) {
+        pairSuccessors.addAll(group.getPairList());
+    }
+
     private void replacePairInGroups(PairMatched pair, PairMatched newPair, List<GroupMatched> affectedGroups) {
+        System.out.println("now replacing " + pair + " with " + newPair);
         for (GroupMatched group : affectedGroups) {
             group.switchPairs(pair, newPair);
         }
     }
 
     private PairMatched findReplacement(PairMatched pair) {
-        for (PairMatched replacementPair : getMatchedPairsCollection()) {
+        for (PairMatched replacementPair : pairSuccessors) {
             if(replacementPair.getFoodPreference().equals(pair.getFoodPreference())){
                 return replacementPair;
             }
@@ -174,6 +197,16 @@ public class MatchingRepository {
             System.out.println("A: " + pair.getPersonAFoodPreference() + " B: " + pair.getPersonBFoodPreference());
         }
         
+    }
+
+    public void printFoodPreferenceOfUnmatchedPairs(){
+        List<PairMatched> pairSuccessors = (List<PairMatched>) this.pairSuccessors;
+
+        for (PairMatched pair : pairSuccessors) {
+            System.out.println("FoodPreferences");
+            System.out.println(pair.getFoodPreference());;
+        }
+
     }
 
 

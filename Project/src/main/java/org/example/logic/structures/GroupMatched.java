@@ -2,6 +2,7 @@ package org.example.logic.structures;
 
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
+import org.example.data.structures.Pair;
 import org.example.logic.tools.MatchingTools;
 import org.example.logic.enums.MealType;
 import org.example.logic.tools.Metricable;
@@ -12,7 +13,7 @@ import java.util.List;
 public class GroupMatched implements Metricable {
 
     private static final int groupSize = 3;
-    PairMatched cook;
+    private PairMatched cook;
     MealType mealType;
     PairMatched pairA;
     PairMatched pairB;
@@ -21,11 +22,6 @@ public class GroupMatched implements Metricable {
 
     FoodPreference groupFoodPreference;
 
-    public GroupMatched(PairMatched pairA, PairMatched pairB, PairMatched pairC) {
-        this.pairA = pairA;
-        this.pairB = pairB;
-        this.pairC = pairC;
-    }
 
     public GroupMatched(PairMatched cook, PairMatched guestA, PairMatched guestB, MealType mealType) {
         this.cook = cook;
@@ -36,6 +32,12 @@ public class GroupMatched implements Metricable {
         this.pairs.add(cook);
         this.pairs.add(guestA);
         this.pairs.add(guestB);
+
+        this.pairA = cook;
+        this.pairB = guestA;
+        this.pairC = guestB;
+
+        this.groupFoodPreference = calculateFoodPreference();
 
         for (PairMatched pair : pairs) {
             pair.addGroup(this);
@@ -132,15 +134,42 @@ public class GroupMatched implements Metricable {
         return !(meatNoneCount == 1 && veggieVeganCount == 2);
     }
 
-    public void switchPairs(PairMatched thisPair, PairMatched newPair){
+    public void switchPairs(PairMatched thisPair, PairMatched newPair) {
         if(thisPair.equals(pairA)){
             pairA = newPair;
+            System.out.println("switched pair A");
         }
         else if(thisPair.equals(pairB)){
             pairB = newPair;
+            System.out.println("switched pair B");
         }
         else if(thisPair.equals(pairC)){
             pairC = newPair;
+            System.out.println("switched pair C");
         }
+
+        if(thisPair.equals(cook)){
+            System.out.println("old pair was cook, new cook is " + newPair);
+            cook = newPair;
+        }
+
+        removePair(thisPair);
+        addPair(newPair);
+    }
+
+    public List<PairMatched> getPairList(){
+        return pairs;
+    }
+
+    public PairMatched getCook(){
+        return cook;
+    }
+
+    public void removePair(PairMatched pair) {
+        pairs.remove(pair);
+    }
+
+    public void addPair(PairMatched pair) {
+        pairs.add(pair);
     }
 }

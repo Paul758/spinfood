@@ -53,7 +53,7 @@ public class Main {
         System.out.println(matchingRepository.pairSuccessors.size());
 
         System.out.println("Food Preferences");
-        matchingRepository.printFoodPreferenceOfPairPersons();
+        //matchingRepository.printFoodPreferenceOfPairPersons();
 
         //Benchmarks
         /*BenchmarkSystem benchmarkSystem = new BenchmarkSystem(matchingRepository);
@@ -64,6 +64,8 @@ public class Main {
         //matchingRepository.printFoodPreferencesOfPairs();
 
         System.out.println("Matched groups total " + matchingRepository.getMatchedGroupsCollection().size());
+
+        matchingRepository.printFoodPreferenceOfUnmatchedPairs();
     }
 
     private static void test5() {
