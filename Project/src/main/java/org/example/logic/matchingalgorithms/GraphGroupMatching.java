@@ -14,6 +14,12 @@ import java.util.List;
 public class GraphGroupMatching {
 
 
+    /**
+     * @param matchedPairs list of pairs that need to be matched to groups
+     * @param matchCosts
+     * @return
+     */
+
     public static List<GroupMatched> match(List<PairMatched> matchedPairs, MatchCosts matchCosts) {
 
         //Split pairs based on foodPreference
