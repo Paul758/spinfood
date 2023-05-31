@@ -210,17 +210,17 @@ public class GroupMatchingGraph {
         Sex sexC = pairB.getPersonA().sex();
         Sex sexD = pairB.getPersonB().sex();
 
-        if(!sexA.equals(sexC)){
+        if(sexA.equals(sexC)){
             costs++;
         }
-        if(!sexA.equals(sexD)){
+        if(sexA.equals(sexD)){
             costs++;
         }
 
-        if(!sexB.equals(sexC)){
+        if(sexB.equals(sexC)){
             costs++;
         }
-        if(!sexB.equals(sexD)){
+        if(sexB.equals(sexD)){
             costs++;
         }
 

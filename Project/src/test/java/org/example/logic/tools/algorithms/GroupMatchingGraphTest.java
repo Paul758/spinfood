@@ -14,6 +14,7 @@ import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ class GroupMatchingGraphTest {
 
     static MatchingRepository matchingRepository;
 
-    @BeforeAll
-    static void setup() {
+    @BeforeEach
+    void setup() {
         String filePathParticipants = "src/main/java/org/example/artifacts/teilnehmerListe.csv";
         String filePathLocation = "src/main/java/org/example/artifacts/partylocation.csv";
         DataManagement dataManagement = new DataManagement(filePathParticipants, filePathLocation);

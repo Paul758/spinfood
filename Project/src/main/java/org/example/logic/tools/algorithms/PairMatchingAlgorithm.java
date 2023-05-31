@@ -68,7 +68,7 @@ public class PairMatchingAlgorithm {
                 Solo soloB = solos.get(j);
 
                 if (fulfillsHardCriteria(soloA, soloB)) {
-                    float weight = calcValue(soloA, soloB, matchCosts);
+                    float weight = calcEdgeWeight(soloA, soloB, matchCosts);
                     if (weight <= maxCosts * limitMultiplier) {
                         graph.addEdge(soloA, soloB, weight);
                     }
@@ -97,7 +97,7 @@ public class PairMatchingAlgorithm {
                 + ageCost * matchCosts.getAgeCosts());
     }
 
-    private static float calcValue(Solo soloA, Solo soloB, MatchCosts matchCosts) {
+    private static float calcEdgeWeight(Solo soloA, Solo soloB, MatchCosts matchCosts) {
         return calcKitchenCost(soloA, soloB, matchCosts)
                 + calcGenderCost(soloA, soloB, matchCosts)
                 + calcAgeCost(soloA, soloB, matchCosts)

@@ -54,13 +54,13 @@ public class Graph <T> {
         return minParticipant;
     }
 
-    public T getVertexWithLeastEdges(int limit) {
+    public T getVertexWithLeastEdges(int minimum) {
         int minCount = Integer.MAX_VALUE;
         T minParticipant = null;
 
         for (T participant : adjacencyList.keySet()) {
             int count = adjacencyList.get(participant).size();
-            if (count < minCount && count >= limit) {
+            if (count < minCount && count >= minimum) {
                 minCount = count;
                 minParticipant = participant;
             }
