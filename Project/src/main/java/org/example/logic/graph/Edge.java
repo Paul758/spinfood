@@ -1,9 +1,15 @@
 package org.example.logic.graph;
 
-import org.example.data.structures.Solo;
-
-import java.util.Comparator;
-
+/**
+ * Edge class to be used for solving the matching problem for pairs and groups
+ * Implemented generic to be used for both Pair and Group matching
+ * Contains a participant and a weight
+ * The weight is later used to determine the best match between two participants
+ * @author David Riemer
+ * @version 1.1
+ * @see org.example.logic.matchingalgorithms.GraphGroupMatching
+ * @see org.example.logic.matchingalgorithms.GraphPairMatching
+ */
 public class Edge <T>{
     public T participant;
     public float weight;

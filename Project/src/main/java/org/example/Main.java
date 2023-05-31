@@ -6,8 +6,8 @@ import org.example.logic.structures.MatchingRepository;
 
 public class Main {
     public static void main(String[] args) {
-        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        String partyLocation = "src/main/java/org/example/artifacts/partylocation.csv";
+        String fileToRead = "Project/src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        String partyLocation = "Project/src/main/java/org/example/artifacts/partylocation.csv";
         DataManagement dataManagement = new DataManagement(fileToRead, partyLocation);
         MatchingRepository matchingRepository = new MatchingRepository(dataManagement);
 
