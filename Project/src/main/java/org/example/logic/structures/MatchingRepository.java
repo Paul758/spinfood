@@ -94,11 +94,11 @@ public class MatchingRepository {
         if (affectedPair.getPersonA().equals(solo.person)) {
             System.out.println("personB will remain");
             //TODO get real foodPreference and kitchen from remaining pair
-            remainingSolo = new Solo(affectedPair.getPersonB(), affectedPair.getFoodPreference(), affectedPair.getKitchen());
+            remainingSolo = new Solo(affectedPair.getPersonB(), affectedPair.getPersonBFoodPreference(), affectedPair.getKitchen());
         } else if (affectedPair.getPersonB().equals(solo.person)) {
             System.out.println("personA will remain");
             //TODO get real foodPreference and kitchen from remaining pair
-            remainingSolo = new Solo(affectedPair.getPersonA(), affectedPair.getFoodPreference(), affectedPair.getKitchen());
+            remainingSolo = new Solo(affectedPair.getPersonA(), affectedPair.getPersonAFoodPreference(), affectedPair.getKitchen());
         }
 
         soloSuccessors.add(remainingSolo);
@@ -122,6 +122,7 @@ public class MatchingRepository {
             pairSuccessors.remove(pair);
             return;
         }
+
         System.out.println("The pair to remove is " + pair);
         List<GroupMatched> affectedGroups = getMatchedGroupsCollection().stream().filter(g -> g.containsPair(pair)).toList();
         PairMatched newPair = findReplacement(pair);
