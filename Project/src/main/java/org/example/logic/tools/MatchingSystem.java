@@ -13,14 +13,14 @@ import java.util.List;
 
 public class MatchingSystem {
 
-
-
+    //TODO Refactor, don't use this class anymore
     public static Collection<PairMatched> matchPairs(List<Solo> unmatchedSolos) {
         Criteria food = Criteria.IDENTICAL_FOOD_PREFERENCE;
         Criteria age = Criteria.AGE_DIFFERENCE;
         Criteria gender = Criteria.GENDER_DIFFERENCE;
         Criteria mostMatches = Criteria.MATCH_COUNT;
         Criteria path = Criteria.PATH_LENGTH;
+
         return GraphPairMatching.match(unmatchedSolos, new MatchCosts(food, age, gender, mostMatches, path));
     }
 

@@ -5,6 +5,9 @@ import org.example.logic.enums.Criteria;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class that contains the data for the costs of matching solos and pairs
+ */
 public class MatchCosts {
 
     private double foodPreferenceCosts = 1;
@@ -14,6 +17,16 @@ public class MatchCosts {
     private double mostMatchesCosts = 1;
     private double kitchenCosts = 1;
 
+
+    /**
+     * Takes a list of criteria as a ranking. The most important criterion gets the highest weight multiplier
+     * value. This influences potential matchings, as important criteria lead to more costs
+     * @param important1 the most important criterion
+     * @param important2 criterion
+     * @param important3 criterion
+     * @param important4 criterion
+     * @param important5 the least important criterion
+     */
     public MatchCosts(
             Criteria important1,
             Criteria important2,
@@ -30,15 +43,13 @@ public class MatchCosts {
         }
     }
 
-    //Default constructor
-    public MatchCosts() {
-        //every cost is 1
-    }
 
-    public static MatchCosts getDefault() {
-        return new MatchCosts();
-    }
 
+    /**
+     * Assigns a value to the passed criterion, depending on its importance
+     * @param criteria a soft criteria
+     * @param weightMultiplier a float value between 1 and 5
+     */
     private void calculateValue(Criteria criteria, float weightMultiplier) {
         switch (criteria){
             case IDENTICAL_FOOD_PREFERENCE -> foodPreferenceCosts = weightMultiplier;
@@ -49,6 +60,19 @@ public class MatchCosts {
         }
     }
 
+    /**
+     * Default constructor, every cost multiplier for each criterion is 1, meaning they are equally important
+     */
+    public MatchCosts() {
+
+    }
+
+    public static MatchCosts getDefault() {
+        return new MatchCosts();
+    }
+
+
+    //Getter methods
     public double getFoodPreferenceCosts() {
         return foodPreferenceCosts;
     }
@@ -63,10 +87,6 @@ public class MatchCosts {
 
     public double getPathLengthCosts() {
         return pathLengthCosts;
-    }
-
-    public double getMostMatchesCosts() {
-        return mostMatchesCosts;
     }
 
     public double getKitchenCosts() {

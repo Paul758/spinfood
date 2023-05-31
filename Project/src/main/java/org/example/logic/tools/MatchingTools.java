@@ -3,8 +3,16 @@ package org.example.logic.tools;
 import org.example.data.enums.FoodPreference;
 import org.example.data.factory.Person;
 
+/**
+ * Tools for calculating deviations from age and food preference of a matched pair
+ */
 public class MatchingTools {
 
+    /**
+     * Calculates the int-value age group of a participant
+     * @param age age of a participant
+     * @return int value of the age group
+     */
     public static int getAgeRange(int age){
         if (age < 0) throw new IllegalStateException("Unknown age: " + age);
         if (age <= 17) return 0;
@@ -18,6 +26,11 @@ public class MatchingTools {
         else return 8;
     }
 
+    /**
+     * Calculates the int-value food preference  of a participant
+     * @param foodPreference food preference of a participant
+     * @return int value of the food preference
+     */
     public static int getIntValueFoodPreference(FoodPreference foodPreference){
         return switch (foodPreference) {
             case NONE -> 0;
@@ -27,21 +40,24 @@ public class MatchingTools {
         };
     }
 
-    public static FoodPreference mapIntToFoodPreference(int value) {
-        return switch (value) {
-            case 0 -> FoodPreference.MEAT;
-            case 1 -> FoodPreference.VEGGIE;
-            case 3 -> FoodPreference.VEGAN;
-            default -> throw new IllegalArgumentException("int " + value + "cant be mapped to food preference");
-        };
-    }
-
+    /**
+     * Calculates the deviation of two participants' food preferences
+     * @param foodPreferenceA food Preference of a participant A
+     * @param foodPreferenceB food Preference of a participant B
+     * @return the int-value food preference distance between the food preferences of the two participants
+     */
     public static int calculateFoodPreferenceDeviation(FoodPreference foodPreferenceA, FoodPreference foodPreferenceB) {
         int foodValueA = MatchingTools.getIntValueFoodPreference(foodPreferenceA);
         int foodValueB = MatchingTools.getIntValueFoodPreference(foodPreferenceB);
         return Math.abs(foodValueA - foodValueB);
     }
 
+    /**
+     * Calculates the deviation of two participants' ages
+     * @param personA the person data of a participant A
+     * @param personB the person data of a participant B
+     * @return the int-value age distance between ages of the two participants
+     */
     public static int calculateAgeRangeDeviation(Person personA, Person personB) {
         int ageValueA = MatchingTools.getAgeRange(personA.age());
         int ageValueB = MatchingTools.getAgeRange(personB.age());
