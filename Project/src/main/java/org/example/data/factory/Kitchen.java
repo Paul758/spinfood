@@ -3,7 +3,11 @@ import org.example.data.Coordinate;
 import org.example.data.enums.KitchenType;
 
 /** Data class to hold the kitchen values from the .csv file
- *
+ * Has a coordinate object to hold the longitude and latitude values
+ * Has a kitchenType object to hold the kitchen type
+ * Has a story value to hold the story of the kitchen
+ * @author Felix Groß
+ * @version 1.0
  */
 public class Kitchen {
     public final KitchenType kitchenType;

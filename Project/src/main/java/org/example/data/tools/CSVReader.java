@@ -8,6 +8,7 @@ import java.util.*;
  * This class reads in a csv file and returns a list of lists of strings.
  * Can be used to read all sorts of csv-files, not only given one, however filepath should be changed.
  * @author David Riemer
+ * @version 1.2
  */
 public class CSVReader {
 

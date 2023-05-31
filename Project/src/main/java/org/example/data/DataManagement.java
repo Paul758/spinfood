@@ -1,6 +1,5 @@
 package org.example.data;
 
-import org.example.data.*;
 import org.example.data.factory.CoordinateFactory;
 import org.example.data.factory.DataFactory;
 import org.example.data.structures.EventParticipant;

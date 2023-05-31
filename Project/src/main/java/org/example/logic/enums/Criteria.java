@@ -2,7 +2,7 @@ package org.example.logic.enums;
 
 /**
  * Enum class to hold the criteria for the matching algorithm
- * @author Paul Groß
+ * @author David Riemer
  * @version 1.0
  * @see org.example.logic.tools.MatchingSystem
  * @see org.example.logic.matchingalgorithms.MatchCosts

@@ -5,6 +5,16 @@ import org.example.data.enums.FoodPreference;
 import org.example.data.factory.Kitchen;
 import org.example.data.factory.Person;
 
+/**
+ * Data holding class for a pair of people. Contains two people and their food preference and kitchen.
+ * @author David Riemer
+ * @version 1.0
+ * @see org.example.data.factory.Person
+ * @see org.example.data.enums.FoodPreference
+ * @see org.example.data.factory.Kitchen
+ * @see org.example.data.structures.EventParticipant
+ *
+ */
 public class Pair extends EventParticipant{
 
     public final Person personA;

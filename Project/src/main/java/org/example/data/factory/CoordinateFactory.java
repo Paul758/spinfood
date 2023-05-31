@@ -7,6 +7,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * Factory to create a Coordinate object from a list of values
+ * @author Paul Groß
+ * @version 1.0
+ * @see Coordinate
+ * @see org.example.data.tools.CSVReader
+ */
 public class CoordinateFactory {
 
     public static Coordinate createCoordinate(final Collection<String> values, Map<String, Integer> keyWordMap) {

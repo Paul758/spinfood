@@ -2,7 +2,7 @@ package org.example.logic.enums;
 
 /**
  * Enum class to hold the mealtype for the matching algorithm
- * @author Paul Groß
+ * @author David Riemer
  * @version 1.0
  * @see org.example.logic.matchingalgorithms.GraphGroupMatching
  * @see org.example.logic.structures.GroupMatched
