@@ -1,4 +1,4 @@
-package org.example.logic.repository;
+package org.example.logic.structures;
 
 import org.example.data.DataManagement;
 import org.example.data.structures.Pair;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class MatchingRepository {
 
-    DataManagement dataManagement;
+    public DataManagement dataManagement;
     Collection<Solo> soloDataCollection = new ArrayList<>();
     Collection<Pair> pairDataCollection = new ArrayList<>();
 

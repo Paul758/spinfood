@@ -1,4 +1,4 @@
-package org.example.logic.tools.algorithms;
+package org.example.logic.matchingalgorithms;
 
 import org.example.logic.enums.Criteria;
 

@@ -10,9 +10,8 @@ import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 import org.example.logic.tools.MatchingTools;
 import org.example.logic.enums.MealType;
-import org.example.logic.tools.Metricable;
 
-public class PairMatched implements Comparable<PairMatched>, Metricable {
+public class PairMatched implements Comparable<PairMatched> {
 
     private Person personA;
     private Person personB;
@@ -80,41 +79,6 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
         return kitchen;
     }
 
-    @Override
-    public double getPathLength() {
-        Coordinate starter = starterGroup.getKitchenCoordinate();
-        Coordinate main = mainGroup.getKitchenCoordinate();
-        Coordinate dessert = dessertGroup.getKitchenCoordinate();
-
-        double distanceStarterToMain = Coordinate.getDistance(starter, main);
-        double distanceMainToDessert = Coordinate.getDistance(main, dessert);
-        double distanceDessertToParty = Coordinate.getDistance(dessert, partyLocation);
-
-        return  distanceStarterToMain + distanceMainToDessert + distanceDessertToParty;
-    }
-
-    @Override
-    public double getGenderDeviation() {
-        double countFemale = 0;
-        if (personA.sex().equals(Sex.FEMALE)) countFemale++;
-        if (personB.sex().equals(Sex.FEMALE)) countFemale++;
-        return countFemale / 2;
-    }
-
-    @Override
-    public double getAgeRangeDeviation() {
-        return ageRangeDeviation;
-    }
-
-    @Override
-    public double getFoodPreferenceDeviation() {
-        return foodPreferenceDeviation;
-    }
-
-    @Override
-    public boolean isValid() {
-        return !personA.equals(personB);
-    }
 
     public void addGroup(GroupMatched groupMatched) {
         switch (groupMatched.mealType) {
@@ -123,10 +87,6 @@ public class PairMatched implements Comparable<PairMatched>, Metricable {
             case MAIN ->  mainGroup = groupMatched;
             case DESSERT -> dessertGroup = groupMatched;
         }
-    }
-
-    public boolean isNotInGroup() {
-        return starterGroup == null && mainGroup == null && dessertGroup == null;
     }
 
     private FoodPreference calculateFoodPreference(Solo soloA, Solo soloB) {

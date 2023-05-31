@@ -1,4 +1,4 @@
-package org.example.logic.groupmatching;
+package org.example.logic.matchingalgorithms;
 
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.enums.MealType;

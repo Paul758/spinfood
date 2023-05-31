@@ -8,14 +8,13 @@ import org.example.data.enums.Sex;
 import org.example.data.factory.Kitchen;
 import org.example.data.factory.Person;
 import org.example.data.structures.Pair;
+import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MatchingRepositoryTest {
 
@@ -44,7 +43,7 @@ class MatchingRepositoryTest {
         matchingRepository.getMatchedPairsCollection().clear();
         matchingRepository.createAndAddPrematchedPairs();
 
-        Assertions.assertTrue(matchingRepository.matchedPairsCollection.contains(expectedPairMatched));
+        Assertions.assertTrue(matchingRepository.getMatchedPairsCollection().contains(expectedPairMatched));
     }
 
     @Test

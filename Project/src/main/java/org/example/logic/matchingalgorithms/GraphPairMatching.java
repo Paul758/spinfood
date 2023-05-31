@@ -1,4 +1,4 @@
-package org.example.logic.tools.algorithms;
+package org.example.logic.matchingalgorithms;
 
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
@@ -13,7 +13,7 @@ import org.example.logic.tools.MatchingTools;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PairMatchingAlgorithm {
+public class GraphPairMatching {
 
     private static final float genderCost = 1f;
     private static final float kitchenCost = 1f;

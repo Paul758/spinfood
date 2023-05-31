@@ -1,4 +1,4 @@
-package org.example.logic.tools.algorithms;
+package org.example.logic.matchingalgorithms;
 
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
@@ -11,7 +11,7 @@ import org.example.logic.structures.PairMatched;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupMatchingGraph {
+public class GraphGroupMatching {
 
 
     public static List<GroupMatched> match(List<PairMatched> matchedPairs, MatchCosts matchCosts) {

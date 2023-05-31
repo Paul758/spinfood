@@ -2,15 +2,13 @@ package org.example.logic.structures;
 
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
-import org.example.data.structures.Pair;
 import org.example.logic.tools.MatchingTools;
 import org.example.logic.enums.MealType;
-import org.example.logic.tools.Metricable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupMatched implements Metricable {
+public class GroupMatched {
 
     private static final int groupSize = 3;
     private PairMatched cook;
@@ -58,12 +56,6 @@ public class GroupMatched implements Metricable {
         int foodPreferencePairB = MatchingTools.getIntValueFoodPreference(pairB.getFoodPreference());
         int foodPreferencePairC = MatchingTools.getIntValueFoodPreference(pairC.getFoodPreference());
         return FoodPreference.parseFoodPreference(Math.max(foodPreferencePairA, Math.max(foodPreferencePairB, foodPreferencePairC)));
-
-        //throw new IllegalStateException("not implemented yet");
-    }
-
-    public void deleteGroup() {
-
     }
 
     @Override
@@ -71,67 +63,6 @@ public class GroupMatched implements Metricable {
         return "(" + pairs.get(0).toString() + "), ("
                 + pairs.get(1).toString() + "), ("
                 + pairs.get(2).toString() + ")";
-    }
-
-    @Override
-    public double getPathLength() {
-        double sum = 0;
-        for (PairMatched pair : pairs) {
-            sum += pair.getPathLength();
-        }
-        return sum / groupSize;
-    }
-
-    @Override
-    public double getGenderDeviation() {
-        double sum = 0;
-        for (PairMatched pair : pairs) {
-            sum += pair.getGenderDeviation();
-        }
-        return sum / groupSize;
-    }
-
-    @Override
-    public double getAgeRangeDeviation() {
-        double sum = 0;
-        for (PairMatched pair : pairs) {
-            sum += pair.getAgeRangeDeviation();
-        }
-        return sum / groupSize;
-    }
-
-    @Override
-    public double getFoodPreferenceDeviation() {
-        double sum = 0;
-        for (PairMatched pair : pairs) {
-            sum += pair.getFoodPreferenceDeviation();
-        }
-        return sum / groupSize;
-    }
-
-    @Override
-    public boolean isValid() {
-        return cook != null
-                && pairs.size() == groupSize
-                && pairs.get(0).isValid()
-                && pairs.get(1).isValid()
-                && pairs.get(2).isValid()
-                && validFoodPreferences();
-    }
-
-    private boolean validFoodPreferences() {
-        int meatNoneCount = 0;
-        int veggieVeganCount = 0;
-
-        for (PairMatched pair : pairs) {
-            boolean isMeatOrNone = pair.getFoodPreference().equals(FoodPreference.MEAT)
-                    || pair.getFoodPreference().equals(FoodPreference.NONE);
-
-            if (isMeatOrNone) meatNoneCount++;
-            else veggieVeganCount++;
-        }
-
-        return !(meatNoneCount == 1 && veggieVeganCount == 2);
     }
 
     public void switchPairs(PairMatched thisPair, PairMatched newPair) {

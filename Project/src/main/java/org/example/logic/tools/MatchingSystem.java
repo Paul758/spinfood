@@ -4,9 +4,9 @@ import org.example.data.structures.Solo;
 import org.example.logic.enums.Criteria;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
-import org.example.logic.tools.algorithms.GroupMatchingGraph;
-import org.example.logic.tools.algorithms.MatchCosts;
-import org.example.logic.tools.algorithms.PairMatchingAlgorithm;
+import org.example.logic.matchingalgorithms.GraphGroupMatching;
+import org.example.logic.matchingalgorithms.MatchCosts;
+import org.example.logic.matchingalgorithms.GraphPairMatching;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +21,7 @@ public class MatchingSystem {
         Criteria gender = Criteria.GENDER_DIFFERENCE;
         Criteria mostMatches = Criteria.MATCH_COUNT;
         Criteria path = Criteria.PATH_LENGTH;
-        return PairMatchingAlgorithm.match(unmatchedSolos, new MatchCosts(food, age, gender, mostMatches, path));
+        return GraphPairMatching.match(unmatchedSolos, new MatchCosts(food, age, gender, mostMatches, path));
     }
 
     public static Collection<GroupMatched> matchGroups(List<PairMatched> unmatchedPairs) {
@@ -31,7 +31,7 @@ public class MatchingSystem {
         Criteria mostMatches = Criteria.MATCH_COUNT;
         Criteria path = Criteria.PATH_LENGTH;
 
-        return GroupMatchingGraph.match(unmatchedPairs, new MatchCosts(food, age, gender, mostMatches, path));
+        return GraphGroupMatching.match(unmatchedPairs, new MatchCosts(food, age, gender, mostMatches, path));
     }
 
 

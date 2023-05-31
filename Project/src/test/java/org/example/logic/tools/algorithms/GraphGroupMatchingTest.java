@@ -9,11 +9,10 @@ import org.example.data.factory.Person;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 import org.example.logic.enums.MealType;
-import org.example.logic.repository.MatchingRepository;
+import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-class GroupMatchingGraphTest {
+class GraphGroupMatchingTest {
 
     static MatchingRepository matchingRepository;
 

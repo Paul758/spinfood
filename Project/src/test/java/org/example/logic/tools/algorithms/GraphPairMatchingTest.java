@@ -2,16 +2,15 @@ package org.example.logic.tools.algorithms;
 
 import org.example.data.DataManagement;
 import org.example.data.enums.FoodPreference;
-import org.example.logic.repository.MatchingRepository;
+import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
-import org.example.logic.tools.MatchingTools;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-class PairMatchingAlgorithmTest {
+class GraphPairMatchingTest {
     private static MatchingRepository matchingRepository;
 
 
