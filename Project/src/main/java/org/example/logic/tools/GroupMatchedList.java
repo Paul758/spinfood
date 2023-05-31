@@ -59,7 +59,7 @@ public class GroupMatchedList implements Metricable{
     public double getPathLength() {
         double sum = 0;
         for (GroupMatched group : groups) {
-            sum += group.getPathLength();
+            //sum += group.getPathLength();
         }
 
         return sum;

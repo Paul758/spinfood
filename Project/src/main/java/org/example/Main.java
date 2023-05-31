@@ -3,10 +3,13 @@ package org.example;
 import org.example.data.*;
 import org.example.data.structures.Pair;
 
+import org.example.logic.metrics.GroupListMetrics;
+import org.example.logic.metrics.PairListMetrics;
 import org.example.logic.repository.MatchingRepository;
 
 import org.example.logic.groupmatching.HungarianGroupMatching;
 
+import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
 import org.example.logic.tools.*;
 import org.example.logic.tools.algorithms.CostCoefficients;
@@ -25,7 +28,24 @@ public class Main {
 
         //test1();
         //test2();
-        testMatch();
+        test6();
+    }
+
+    private static void test6() {
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        String partyLocation = "src/main/java/org/example/artifacts/partylocation.csv";
+        DataManagement dataManagement = new DataManagement(fileToRead, partyLocation);
+        MatchingRepository matchingRepository = new MatchingRepository(dataManagement);
+
+        List<PairMatched> matchedPairs = (List<PairMatched>) matchingRepository.getMatchedPairsCollection();
+        System.out.println("Matched Pairs");
+        PairListMetrics.printAllMetrics(matchedPairs);
+        System.out.println();
+
+        List<GroupMatched> matchedGroups = (List<GroupMatched>) matchingRepository.getMatchedGroupsCollection();
+        System.out.println("Matched Groups");
+        GroupListMetrics.printAllMetrics(matchedGroups);
+        System.out.println();
     }
 
     private static void testMatch() {

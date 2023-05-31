@@ -42,7 +42,7 @@ public class PairBenchmark
         float maxValue = pairMatchedList.size() * 2 * 8;
         float sumAgeDifference = 0;
         for (PairMatched pairMatched : pairMatchedList) {
-            sumAgeDifference += pairMatched.getAgeRangeDeviation();
+            //sumAgeDifference += pairMatched.getAgeRangeDeviation();
         }
 
         return 1f - sumAgeDifference / maxValue;
@@ -68,7 +68,7 @@ public class PairBenchmark
         float sum = 0;
 
         for (PairMatched pairMatched : pairMatchedList) {
-            sum += pairMatched.getFoodPreferenceDeviation();
+            //sum += pairMatched.getFoodPreferenceDeviation();
         }
 
         return 1f - sum / maxValue;
@@ -98,7 +98,7 @@ public class PairBenchmark
     private static boolean isCorrect(List<PairMatched> pairMatchedList) {
         boolean isCorrect = true;
             for (PairMatched pair : pairMatchedList) {
-                isCorrect &= pair.isValid();
+                //isCorrect &= pair.isValid();
             }
         return isCorrect;
     }

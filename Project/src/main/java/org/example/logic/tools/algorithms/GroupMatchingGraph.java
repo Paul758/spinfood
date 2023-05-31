@@ -29,16 +29,10 @@ public class GroupMatchingGraph {
         superGroups.addAll(findSuperGroups(veggieVeganPairs, veganGraph));
 
 
-        System.out.println("The superGroups are");
-        System.out.println(superGroups.toString());
-        System.out.println("the superGroups size is: " + superGroups.size());
 
         List<GroupMatched> groupMatchedList = createDinnerGroupsFromSuperGroups(superGroups);
 
-        System.out.println("The groupMatchedList size is: " + groupMatchedList.size());
 
-        System.out.println("Printing groupMatchedList: ");
-        groupMatchedList.forEach(System.out::println);
 
         return groupMatchedList;
     }
@@ -72,9 +66,7 @@ public class GroupMatchingGraph {
 
         for (List<PairMatched> pairMatchedList: superGroups) {
             if(isSuperGroupFeasible(pairMatchedList)){
-                System.out.println("is feasible group");
             } else {
-                System.out.println("is not a feasible group");
             }
         }
 
@@ -184,8 +176,6 @@ public class GroupMatchingGraph {
     }
 
     private static boolean fullfillsHardCriteria(PairMatched pairA, PairMatched pairB) {
-        System.out.println("Pair A foodPreference is " + pairA.getFoodPreference());
-        System.out.println("Pair B foodPreference is " + pairB.getFoodPreference());
 
         //foodPreference TODO review this code
         /*if (pairA.foodPreference.equals(FoodPreference.MEAT) || pairA.foodPreference.equals(FoodPreference.NONE)
@@ -254,9 +244,8 @@ public class GroupMatchingGraph {
     }
 
     public static PairMatched GetFurthestPair(List<PairMatched> pairs) {
-        System.out.println("before sorting, printing out every distance to location");
         for (PairMatched pair : pairs) {
-            System.out.println(pair.getDistanceToPartyLocation());
+
         }
 
 
@@ -268,10 +257,8 @@ public class GroupMatchingGraph {
 
 
     public static boolean isSuperGroupFeasible(List<PairMatched> matchedList){
-        System.out.println("now printing foodPreferences of superGroup");
         for (PairMatched pair :
                 matchedList) {
-            System.out.println(pair.getFoodPreference());
         }
         return true;
     }

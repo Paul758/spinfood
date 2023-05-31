@@ -27,8 +27,6 @@ public class MatchingRepository {
         this.dataManagement = dataManagement;
         soloDataCollection = dataManagement.soloParticipants;
         pairDataCollection = dataManagement.pairParticipants;
-        System.out.println("pairDataCollection");
-        System.out.println(pairDataCollection);
         createAndAddPrematchedPairs();
         Collection<PairMatched> matchedPairs = MatchingSystem.matchPairs((List<Solo>) this.getSoloDataCollection());
         this.addMatchedPairsCollection(matchedPairs);
@@ -81,10 +79,8 @@ public class MatchingRepository {
 
     public void setDistanceToPartyLocationForPairs(){
         Collection<PairMatched> pairs = getMatchedPairsCollection();
-        System.out.println("The party location " + dataManagement.partyLocation);
         for (PairMatched pair : pairs){
             pair.setDistanceToPartyLocation(this.dataManagement.partyLocation);
-            System.out.println("After setting the location, now is " + pair.getDistanceToPartyLocation());
         }
     }
 
@@ -158,10 +154,8 @@ public class MatchingRepository {
 
 
     public void printFoodPreferencesOfPairs(){
-        System.out.println("now printing foodPreferences of matched pairs");
         for (PairMatched pair :
                 getMatchedPairsCollection()) {
-            System.out.println(pair.getFoodPreference());
         }
     }
 

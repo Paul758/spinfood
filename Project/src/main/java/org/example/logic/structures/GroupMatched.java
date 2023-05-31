@@ -9,9 +9,9 @@ import org.example.logic.tools.Metricable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupMatched implements Metricable {
+public class GroupMatched {
 
-    private static final int groupSize = 3;
+    public static final int groupSize = 3;
     PairMatched cook;
     MealType mealType;
     PairMatched pairA;
@@ -38,7 +38,7 @@ public class GroupMatched implements Metricable {
         this.pairs.add(guestB);
 
         for (PairMatched pair : pairs) {
-            pair.addGroup(this);
+            pair.addToGroup(this);
         }
     }
 
@@ -60,6 +60,10 @@ public class GroupMatched implements Metricable {
         //throw new IllegalStateException("not implemented yet");
     }
 
+    public List<PairMatched> getPairs() {
+        return pairs;
+    }
+
     public void deleteGroup() {
 
     }
@@ -69,52 +73,6 @@ public class GroupMatched implements Metricable {
         return "(" + pairs.get(0).toString() + "), ("
                 + pairs.get(1).toString() + "), ("
                 + pairs.get(2).toString() + ")";
-    }
-
-    @Override
-    public double getPathLength() {
-        double sum = 0;
-        for (PairMatched pair : pairs) {
-            sum += pair.getPathLength();
-        }
-        return sum / groupSize;
-    }
-
-    @Override
-    public double getGenderDeviation() {
-        double sum = 0;
-        for (PairMatched pair : pairs) {
-            sum += pair.getGenderDeviation();
-        }
-        return sum / groupSize;
-    }
-
-    @Override
-    public double getAgeRangeDeviation() {
-        double sum = 0;
-        for (PairMatched pair : pairs) {
-            sum += pair.getAgeRangeDeviation();
-        }
-        return sum / groupSize;
-    }
-
-    @Override
-    public double getFoodPreferenceDeviation() {
-        double sum = 0;
-        for (PairMatched pair : pairs) {
-            sum += pair.getFoodPreferenceDeviation();
-        }
-        return sum / groupSize;
-    }
-
-    @Override
-    public boolean isValid() {
-        return cook != null
-                && pairs.size() == groupSize
-                && pairs.get(0).isValid()
-                && pairs.get(1).isValid()
-                && pairs.get(2).isValid()
-                && validFoodPreferences();
     }
 
     private boolean validFoodPreferences() {

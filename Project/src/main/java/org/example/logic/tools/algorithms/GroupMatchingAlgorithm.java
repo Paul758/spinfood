@@ -17,9 +17,7 @@ public class GroupMatchingAlgorithm {
     }
 
     public static List<PairMatched> sortPairListByDistance(List<PairMatched> pairs){
-        System.out.println("matched pair list: " + pairs);
         pairs.sort((pairA, pairB) -> Double.compare(pairB.getDistanceToPartyLocation(), pairA.getDistanceToPartyLocation()));
-        pairs.forEach(System.out::println);
         return pairs;
     }
 
@@ -53,7 +51,6 @@ public class GroupMatchingAlgorithm {
            List<PairMatched> groupOfNine = new ArrayList<>();
 
            if(starterPairs.size() == 0){
-               System.out.println("There is no starter pair left");
                break;
            }
 
@@ -78,7 +75,6 @@ public class GroupMatchingAlgorithm {
 
 
            if(groupOfNine.size() < 9){
-               System.out.println("There are not enough people to form a group of nine");
                break;
            }
 
@@ -136,7 +132,6 @@ public class GroupMatchingAlgorithm {
            double distanceToPair = Coordinate.getDistance(starterPair.getKitchen().coordinate, possiblePair.getKitchen().coordinate);
 
            if(distanceToPair <= distanceToPartyLocation){
-               System.out.println(possiblePair);
                counter++;
                addList.add(possiblePair);
                if(counter >= counterLimit){
