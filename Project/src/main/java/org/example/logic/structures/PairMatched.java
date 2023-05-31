@@ -11,26 +11,24 @@ import org.example.data.structures.Solo;
 import org.example.logic.tools.MatchingTools;
 import org.example.logic.enums.MealType;
 
+/**
+ * Data storage class for the matched pairs in the logic layer
+ */
 public class PairMatched implements Comparable<PairMatched> {
 
     private Person personA;
     private Person personB;
     private final FoodPreference foodPreference;
-
     private FoodPreference personAFoodPreference;
     private FoodPreference personBFoodPreference;
-
     private final Kitchen kitchen;
     public final boolean preMatched;
-
     private Coordinate partyLocation;
     private Double distanceToPartyLocation;
     public MealType cooksMealType;
     private GroupMatched starterGroup;
     private GroupMatched mainGroup;
     private GroupMatched dessertGroup;
-
-
     private final int foodPreferenceDeviation;
     private final int ageRangeDeviation;
 
@@ -61,25 +59,10 @@ public class PairMatched implements Comparable<PairMatched> {
     }
 
 
-    public Person getPersonA() {
-        return personA;
-    }
-
-    public Person getPersonB() {
-        return personB;
-    }
-
-    public FoodPreference getFoodPreference() {
-        return foodPreference;
-    }
-
-
-
-    public Kitchen getKitchen() {
-        return kitchen;
-    }
-
-
+    /**
+     * Gradually sets the field variables related to the group membership based on the meal type / course
+     * @param groupMatched A group which the pair is part of
+     */
     public void addGroup(GroupMatched groupMatched) {
         switch (groupMatched.mealType) {
             case NONE -> throw new IllegalArgumentException();
@@ -89,12 +72,24 @@ public class PairMatched implements Comparable<PairMatched> {
         }
     }
 
+    /**
+     * Determine the common foodPreference
+     * @param soloA first member of the pair
+     * @param soloB second member of the pair
+     * @return the common food preference
+     */
     private FoodPreference calculateFoodPreference(Solo soloA, Solo soloB) {
         int foodValueA = MatchingTools.getIntValueFoodPreference(soloA.foodPreference);
         int foodValueB = MatchingTools.getIntValueFoodPreference(soloB.foodPreference);
         return FoodPreference.parseFoodPreference(Math.max(foodValueA, foodValueB));
     }
 
+    /**
+     * Determine which kitchen of the two solos should be used
+     * @param soloA first member of the pair
+     * @param soloB second member of the pair
+     * @return the kitchen that the pair uses.
+     */
     private Kitchen calculateKitchen(Solo soloA, Solo soloB) {
         Kitchen kitchenA = soloA.kitchen;
         Kitchen kitchenB = soloB.kitchen;
@@ -106,22 +101,6 @@ public class PairMatched implements Comparable<PairMatched> {
         else throw new IllegalStateException(this + " has no kitchen");
     }
 
-    public void setDistanceToPartyLocation(Coordinate partyLocation) {
-        this.partyLocation = partyLocation;
-        this.distanceToPartyLocation = Coordinate.getDistance(getKitchen().coordinate, partyLocation);
-
-    }
-
-    public double getDistanceToPartyLocation() {
-        if (this.distanceToPartyLocation == null) {
-            throw new IllegalStateException("Distance to party location isn't set");
-        }
-        return this.distanceToPartyLocation;
-    }
-
-    public boolean containsPerson(Person person) {
-        return getPersonA().equals(person) || getPersonB().equals(person);
-    }
 
     @Override
     public int compareTo(PairMatched o) {
@@ -139,6 +118,39 @@ public class PairMatched implements Comparable<PairMatched> {
     @Override
     public String toString() {
         return getPersonA().name() + ", " + getPersonB().name() + ", " + getFoodPreference();
+    }
+
+    //Getters, Setters
+    public void setDistanceToPartyLocation(Coordinate partyLocation) {
+        this.partyLocation = partyLocation;
+        this.distanceToPartyLocation = Coordinate.getDistance(getKitchen().coordinate, partyLocation);
+    }
+
+    public double getDistanceToPartyLocation() {
+        if (this.distanceToPartyLocation == null) {
+            throw new IllegalStateException("Distance to party location isn't set");
+        }
+        return this.distanceToPartyLocation;
+    }
+
+    public boolean containsPerson(Person person) {
+        return getPersonA().equals(person) || getPersonB().equals(person);
+    }
+
+    public Person getPersonA() {
+        return personA;
+    }
+
+    public Person getPersonB() {
+        return personB;
+    }
+
+    public FoodPreference getFoodPreference() {
+        return foodPreference;
+    }
+
+    public Kitchen getKitchen() {
+        return kitchen;
     }
 
     public void setPersonA(Person person) {

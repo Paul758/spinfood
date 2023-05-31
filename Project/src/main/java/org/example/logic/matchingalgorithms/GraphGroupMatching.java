@@ -15,11 +15,12 @@ public class GraphGroupMatching {
 
 
     /**
+     * Matches the pairs into groups via a graph solution based on the given importance of matching criteria
+     * @author Paul Groß
      * @param matchedPairs list of pairs that need to be matched to groups
-     * @param matchCosts
-     * @return
+     * @param matchCosts object that contains the importance of the soft criteria
+     * @return returns a list of the matched groups
      */
-
     public static List<GroupMatched> match(List<PairMatched> matchedPairs, MatchCosts matchCosts) {
 
         //Split pairs based on foodPreference
@@ -42,6 +43,16 @@ public class GraphGroupMatching {
         return groupMatchedList;
     }
 
+
+    /**
+     * Performs the actual matching of the pairs into groups via a graph
+     * @author Paul Groß
+     * @param matchedPairs a list of matched pair participants
+     * @param graph a graph where Pairs are vertices and weighted edges show the feasibility
+     * of a possible group matching
+     * @return A list of superGroups (List of 9 pairs) the supergroups get separated into 3 Starter groups, 3 main
+     * course groups and 3 dessert groups
+     */
     private static List<List<PairMatched>> findSuperGroups(List<PairMatched> matchedPairs, Graph<PairMatched> graph) {
         int superGroupSize = 9;
         List<List<PairMatched>> superGroups = new ArrayList<>();
@@ -67,6 +78,14 @@ public class GraphGroupMatching {
         return superGroups;
     }
 
+
+    /**
+     * Splits the supergroups into 9 dinner groups, so that every pair meets two new pairs at every course.
+     * Creates 3 starter Groups, 3 main course groups and 3 dessert groups
+     * @author Paul Groß
+     * @param superGroups The supergroups calculated in the findDinnerGroups() method
+     * @return A list containing every single group of 3 pairs and the respective course they eat together
+     */
     private static List<GroupMatched> createDinnerGroupsFromSuperGroups(List<List<PairMatched>> superGroups) {
         List<GroupMatched> dinnerGroups = new ArrayList<>();
         for (List<PairMatched> superGroup : superGroups){
@@ -103,6 +122,13 @@ public class GraphGroupMatching {
         return dinnerGroups;
     }
 
+
+    /**
+     * Filters the vegan and veggie pairs of all matched pairs
+     * @author Paul Groß
+     * @param matchedPairs a list of pairs that have been matched
+     * @return the pairs that have a vegan or veggie food preference
+     */
     private static List<PairMatched> getVeggieVeganPairs(List<PairMatched> matchedPairs) {
         List<PairMatched> veggieVeganPairs = new ArrayList<>();
         for (PairMatched pair : matchedPairs) {
@@ -114,6 +140,12 @@ public class GraphGroupMatching {
 
     }
 
+    /**
+     * Filters the meat and none pairs of all matched pairs
+     * @author Paul Groß
+     * @param matchedPairs a list of pairs that have been matched
+     * @return the pairs that have a meat or none food preference
+     */
     private static List<PairMatched> getMeatNonePairs(List<PairMatched> matchedPairs) {
         List<PairMatched> meatNonePairs = new ArrayList<>();
         for (PairMatched pair : matchedPairs) {
@@ -124,7 +156,13 @@ public class GraphGroupMatching {
         return meatNonePairs;
     }
 
-
+    /**
+     * Creates a graph based on the pairs as vertices. Calculates the costs to match two pairs and adds these costs as
+     * the edge weight. If a pair can be matched with another pair, they have an edge
+     * @param matchedPairs a list of pairs that have been matched
+     * @param matchCosts an object containing the importance of the soft criteria
+     * @return a graph with pairs as vertices. If a pair can be matched to another pair, they have an edge
+     */
     public static Graph<PairMatched> createGraph(List<PairMatched> matchedPairs, MatchCosts matchCosts) {
         Graph<PairMatched> graph = new Graph<>();
 
@@ -146,6 +184,14 @@ public class GraphGroupMatching {
         return graph;
     }
 
+    /**
+     * Calculates the cost and thus, the likeability of two pairs being matched.
+     * @param pairA A single matched pair.
+     * @param pairB Another matched pair.
+     * @param maxDistanceToPartyLocation Distance from the pair, farthest from the party location.
+     * @param matchCosts an object containing the importance of the soft criteria.
+     * @return the cost of matching PairA and PairB.
+     */
     private static double calcMatchingCosts(PairMatched pairA, PairMatched pairB, double maxDistanceToPartyLocation, MatchCosts matchCosts) {
         double costs = 0;
         costs += calcPathCosts(pairA, pairB, maxDistanceToPartyLocation, matchCosts);
@@ -155,6 +201,13 @@ public class GraphGroupMatching {
         return costs;
     }
 
+    /**
+     * Calculates the cost for matching the pairs based on their food preference.
+     * @param pairA A single matched pair.
+     * @param pairB Another matched pair.
+     * @param matchCosts an object containing the importance of the soft criteria.
+     * @return the cost of matching PairA and PairB based on the food preference.
+     */
     private static double calcFoodPreferenceCosts(PairMatched pairA, PairMatched pairB, MatchCosts matchCosts) {
         double costs = 0;
         if(pairA.getFoodPreference() != pairB.getFoodPreference()){
@@ -164,34 +217,29 @@ public class GraphGroupMatching {
     }
 
     private static boolean fullfillsHardCriteria(PairMatched pairA, PairMatched pairB) {
-       // System.out.println("Pair A foodPreference is " + pairA.getFoodPreference());
-       // System.out.println("Pair B foodPreference is " + pairB.getFoodPreference());
-
-        //foodPreference TODO review this code
-        /*if (pairA.foodPreference.equals(FoodPreference.MEAT) || pairA.foodPreference.equals(FoodPreference.NONE)
-                && (pairB.foodPreference.equals(FoodPreference.VEGAN) || pairB.foodPreference.equals(FoodPreference.VEGGIE))) {
-            System.out.println("cant match");
-            return false;
-        } else if (pairB.foodPreference.equals(FoodPreference.MEAT) || pairB.foodPreference.equals(FoodPreference.NONE)
-                && (pairA.foodPreference.equals(FoodPreference.VEGAN) || pairA.foodPreference.equals(FoodPreference.VEGGIE))) {
-            System.out.println("cant match");
-            return false;
-        } else {
-            System.out.println("is matchable");
-            return true;
-        }*/
-
-        //don't match pairs in the same WG
         return !pairA.getKitchen().coordinate.equals(pairB.getKitchen().coordinate);
-
-
     }
 
+    /**
+     * Calculates the cost for matching the pairs based on their distance to one another.
+     * @param pairA A single matched pair.
+     * @param pairB Another matched pair.
+     * @param matchCosts an object containing the importance of the soft criteria.
+     * @return the cost of matching PairA and PairB based on their distance to one another.
+     */
     public static double calcPathCosts(PairMatched pairA, PairMatched pairB, double maxDistanceToPartyLocation, MatchCosts matchCosts) {
         double pathCosts =  Coordinate.getDistance(pairA.getKitchen().coordinate, pairB.getKitchen().coordinate) / (maxDistanceToPartyLocation * 2);
         return pathCosts * matchCosts.getPathLengthCosts();
     }
 
+
+    /**
+     * Calculates the cost for matching the pairs based on their age.
+     * @param pairA A single matched pair.
+     * @param pairB Another matched pair.
+     * @param matchCosts an object containing the importance of the soft criteria.
+     * @return the cost of matching PairA and PairB based on their age.
+     */
     public static double calcAgeCosts(PairMatched pairA, PairMatched pairB, MatchCosts matchCosts){
         int ageRangeA = pairA.getPersonA().age();
         int ageRangeB = pairA.getPersonB().age();
@@ -206,6 +254,13 @@ public class GraphGroupMatching {
         return ageRangeDeviation * matchCosts.getAgeCosts();
     }
 
+    /**
+     * Calculates the cost for matching the pairs based on their gender.
+     * @param pairA A single matched pair.
+     * @param pairB Another matched pair.
+     * @param matchCosts an object containing the importance of the soft criteria.
+     * @return the cost of matching PairA and PairB based on their gender.
+     */
     public static double calcSexCosts(PairMatched pairA, PairMatched pairB, MatchCosts matchCosts) {
 
         double costs = 0;
@@ -233,6 +288,13 @@ public class GraphGroupMatching {
         return costs * matchCosts.getGenderCosts();
     }
 
+    /**
+     * Finds the pair that is the furthest away from the party location.
+     * This pair is later used, to calculate the distance from the furthest pair to the party location, this distance is used to normalize the
+     * distance value from every other pair to receive a value between zero and one for the costs
+     * @param pairs a list of all matched pairs
+     * @return the pair that is the furthest away from the party location
+     */
     public static PairMatched GetFurthestPair(List<PairMatched> pairs) {
         pairs.sort((pairA, pairB) -> {
             return Double.compare(pairB.getDistanceToPartyLocation(), pairA.getDistanceToPartyLocation());

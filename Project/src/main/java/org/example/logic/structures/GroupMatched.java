@@ -8,6 +8,9 @@ import org.example.logic.enums.MealType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data storage class for the matched groups in the logic layer
+ */
 public class GroupMatched {
 
     private static final int groupSize = 3;
@@ -17,7 +20,6 @@ public class GroupMatched {
     PairMatched pairB;
     PairMatched pairC;
     private List<PairMatched> pairs;
-
     FoodPreference groupFoodPreference;
 
 
@@ -46,12 +48,7 @@ public class GroupMatched {
         return pairs.contains(pairMatched);
     }
 
-    public Coordinate getKitchenCoordinate() {
-        return cook.getKitchen().coordinate;
-    }
-
     protected FoodPreference calculateFoodPreference() {
-        //Calculate here
         int foodPreferencePairA = MatchingTools.getIntValueFoodPreference(pairA.getFoodPreference());
         int foodPreferencePairB = MatchingTools.getIntValueFoodPreference(pairB.getFoodPreference());
         int foodPreferencePairC = MatchingTools.getIntValueFoodPreference(pairC.getFoodPreference());
