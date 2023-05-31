@@ -48,6 +48,12 @@ public class GroupMatched {
         return pairs.contains(pairMatched);
     }
 
+    /**
+     * Calculates the food preference of the group, the food preference of the group is the food preference of a pair
+     * that has the highest priority.
+     * The priories are: 1. vegan, 2. veggie, 3. meat, 4. none
+     * @return the food preference of the group
+     */
     protected FoodPreference calculateFoodPreference() {
         int foodPreferencePairA = MatchingTools.getIntValueFoodPreference(pairA.getFoodPreference());
         int foodPreferencePairB = MatchingTools.getIntValueFoodPreference(pairB.getFoodPreference());
@@ -62,6 +68,11 @@ public class GroupMatched {
                 + pairs.get(2).toString() + ")";
     }
 
+    /**
+     * Replaces a pair of the group with a new pair
+     * @param thisPair the pair of the group that should be replaced
+     * @param newPair the new pair
+     */
     public void switchPairs(PairMatched thisPair, PairMatched newPair) {
         if(thisPair.equals(pairA)){
             pairA = newPair;
