@@ -339,7 +339,7 @@ class GroupMatchingGraphTest {
         Assertions.assertFalse(testMatchingRepository.soloSuccessors.contains(soloRemaining));
 
         testMatchingRepository.removeSolo(soloRemove);
-        
+
         Assertions.assertTrue(matchingRepository.getMatchedGroupsCollection().isEmpty());
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedA));
         Assertions.assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedB));
