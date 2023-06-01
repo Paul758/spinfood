@@ -20,7 +20,6 @@ public class Main {
         System.out.println("groups count");
         System.out.println(matchingRepository.getMatchedGroupsCollection().size());
 
-
         //unmatched solos
         System.out.println("unmatched solos size");
         System.out.println(matchingRepository.soloSuccessors.size());

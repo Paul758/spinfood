@@ -40,8 +40,9 @@ public class Graph <T> {
      * First addVertex is called to make sure both participants are in the graph
      * Then two edges are created and linked to each other
      * @author David Riemer
-     * @param participantA participant to be added to the graph
-     * @param participantB participant to be added to the graph
+     * @param participantA participant to be added to the graph if not already part of the graph
+     * @param participantB participant to be added to the graph if not already part of the graph
+     * A linked edge is created between the two participants
      * @param weight weight of the edge between the two participants
      */
     public void addEdge(T participantA, T participantB, float weight) {
