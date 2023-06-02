@@ -30,7 +30,6 @@ class GraphGroupMatchingTest {
         String filePathLocation = "src/main/java/org/example/artifacts/partylocation.csv";
         DataManagement dataManagement = new DataManagement(filePathParticipants, filePathLocation);
         matchingRepository = new MatchingRepository(dataManagement);
-
     }
 
 
@@ -43,11 +42,12 @@ class GraphGroupMatchingTest {
         for (GroupMatched group : groupMatchedList) {
 
             isFeasible = checkFoodPreference(group);
+            Assertions.assertTrue(isFeasible);
             isFeasible = checkGroupHasCook(group);
+            Assertions.assertTrue(isFeasible);
         }
 
         isFeasible = checkEveryPairIsCookingOnlyOnce();
-
         Assertions.assertTrue(isFeasible);
     }
 
@@ -238,7 +238,7 @@ class GraphGroupMatchingTest {
         GroupMatched testGroup = groupMatchedList.get(0);
 
         PairMatched pairMatchedA = testGroup.getCook();
-        Solo soloRemove = new Solo(pairMatchedA.getPersonA(), pairMatchedA.getFoodPreference(), pairMatchedA.getKitchen());
+        Solo soloRemove = pairMatchedA.getSoloA();
         List<Solo> soloSuccessors  = (List<Solo>) matchingRepository.soloSuccessors;
         Solo replacementSolo = soloSuccessors.get(0);
 
@@ -261,7 +261,7 @@ class GraphGroupMatchingTest {
 
         PairMatched pairMatchedAafter = testGroupAfter.getPairList().get(0);
 
-        Assertions.assertEquals(pairMatchedAafter.getPersonA(), replacementSolo.person);
+        Assertions.assertEquals(pairMatchedAafter.getSoloA(), replacementSolo);
         Assertions.assertTrue(matchingRepository.getMatchedGroupsCollection().size() > 0);
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedA));
     }
@@ -323,8 +323,8 @@ class GraphGroupMatchingTest {
         GroupMatched testGroup = groupMatchedList.get(0);
 
         PairMatched pairMatchedA = testGroup.getCook();
-        Solo soloRemove = new Solo(pairMatchedA.getPersonA(), pairMatchedA.getFoodPreference(), pairMatchedA.getKitchen());
-        Solo soloRemaining = new Solo(pairMatchedA.getPersonB(), pairMatchedA.getFoodPreference(), pairMatchedA.getKitchen());
+        Solo soloRemove = pairMatchedA.getSoloA();
+        Solo soloRemaining = pairMatchedA.getSoloB();
 
         PairMatched pairMatchedB = testGroup.getPairList().get(1);
         PairMatched pairMatchedC = testGroup.getPairList().get(2);

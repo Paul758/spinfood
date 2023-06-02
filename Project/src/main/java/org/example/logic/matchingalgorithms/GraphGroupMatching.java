@@ -241,12 +241,12 @@ public class GraphGroupMatching {
      * @return the cost of matching PairA and PairB based on their age.
      */
     public static double calcAgeCosts(PairMatched pairA, PairMatched pairB, MatchCosts matchCosts){
-        int ageRangeA = pairA.getPersonA().age();
-        int ageRangeB = pairA.getPersonB().age();
+        int ageRangeA = pairA.getSoloA().person.age();
+        int ageRangeB = pairB.getSoloB().person.age();
         int meanAgePairA = (ageRangeA + ageRangeB) / 2;
 
-        int ageRangeC = pairB.getPersonA().age();
-        int ageRangeD = pairB.getPersonB().age();
+        int ageRangeC = pairB.getSoloA().person.age();
+        int ageRangeD = pairB.getSoloB().person.age();
         int meanAgePairB = (ageRangeC + ageRangeD) / 2;
 
         int ageRangeDeviation = Math.abs(meanAgePairA - meanAgePairB);
@@ -265,11 +265,11 @@ public class GraphGroupMatching {
 
         double costs = 0;
 
-        Sex sexA = pairA.getPersonA().sex();
-        Sex sexB = pairA.getPersonB().sex();
+        Sex sexA = pairA.getSoloA().person.sex();
+        Sex sexB = pairA.getSoloB().person.sex();
 
-        Sex sexC = pairB.getPersonA().sex();
-        Sex sexD = pairB.getPersonB().sex();
+        Sex sexC = pairB.getSoloA().person.sex();
+        Sex sexD = pairB.getSoloB().person.sex();
 
         if(sexA.equals(sexC)){
             costs++;

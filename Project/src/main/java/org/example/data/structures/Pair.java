@@ -2,6 +2,7 @@ package org.example.data.structures;
 
 
 import org.example.data.enums.FoodPreference;
+import org.example.data.enums.KitchenType;
 import org.example.data.factory.Kitchen;
 import org.example.data.factory.Person;
 
@@ -17,14 +18,14 @@ import org.example.data.factory.Person;
  */
 public class Pair extends EventParticipant{
 
-    public final Person personA;
-    public final Person personB;
+    public final Solo soloA;
+    public final Solo soloB;
 
-    public Pair(Person personA, Person personB, FoodPreference foodPreference, Kitchen kitchen){
-      this.personA = personA;
-      this.personB = personB;
-      super.foodPreference = foodPreference;
-      super.kitchen = kitchen;
+    public Pair(Person personA, Person personB, FoodPreference foodPreference, Kitchen kitchen) {
+        this.soloA = new Solo(personA,foodPreference, kitchen);
+        this.soloB = new Solo(personB, foodPreference, new Kitchen(KitchenType.NO,-1,-1,-1));
+        super.foodPreference = foodPreference;
+        super.kitchen = kitchen;
     }
 
     @Override
@@ -38,12 +39,12 @@ public class Pair extends EventParticipant{
         }
 
         Pair pair = (Pair) obj;
-        return this.personA.equals(pair.personA) && this.personB.equals(pair.personB)
-                || this.personA.equals(pair.personB) && this.personB.equals(pair.personA);
+        return this.soloA.equals(pair.soloA) && this.soloB.equals(pair.soloB)
+                || this.soloA.equals(pair.soloB) && this.soloB.equals(pair.soloA);
     }
 
     @Override
     public String toString() {
-        return  "Pair first person information: " + personA.toString() + ", second person information: " + personB.toString() + super.toString();
+        return  "Pair first person information: " + soloA.toString() + ", second person information: " + soloB.toString() + super.toString();
     }
 }

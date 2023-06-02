@@ -1,6 +1,8 @@
 package org.example.logic.structures;
 
 import org.example.data.DataManagement;
+import org.example.data.enums.FoodPreference;
+import org.example.data.enums.KitchenType;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 import org.example.logic.structures.GroupMatched;
@@ -91,9 +93,8 @@ public class MatchingRepository {
         Collection<PairMatched> pairMatchedList = new ArrayList<>(matchedPairsCollection);
 
         for (Solo solo : soloDataCollection) {
-
             for (PairMatched pair : pairMatchedList) {
-                if(solo.person.equals(pair.getPersonA()) || solo.person.equals(pair.getPersonB())){
+                if(pair.contains(solo)){
                     solos.remove(solo);
                 }
             }
@@ -120,15 +121,6 @@ public class MatchingRepository {
         pairSuccessors = unmatchedPairs;
     }
 
-
-    public void printFoodPreferencesOfPairs(){
-        System.out.println("Now printing foodPreferences of matched pairs");
-        for (PairMatched pair :
-                getMatchedPairsCollection()) {
-            System.out.println(pair.getFoodPreference());
-        }
-    }
-
     //Code for handling the un-registration of EventParticipants
 
     /**
@@ -144,28 +136,29 @@ public class MatchingRepository {
         }
 
         //Find the pair that is affected by the removing of a solo
-        PairMatched affectedPair = getMatchedPairsCollection().stream().filter(p -> p.containsPerson(solo.person)).toList().get(0);
+        PairMatched affectedPair = getMatchedPairsCollection().stream().filter(p -> p.contains(solo)).toList().get(0);
 
         //Find a replacement
-        Solo newSolo = findReplacement(solo);
+        Solo newSolo = findReplacement(affectedPair, solo);
 
         //If a replacement solo is found, replace it in the affected pair
         if(newSolo != null) {
-            if (affectedPair.getPersonA().equals(solo.person)) {
-                affectedPair.setPersonA(newSolo.person);
-            } else if (affectedPair.getPersonB().equals(solo.person)) {
-                affectedPair.setPersonB(newSolo.person);
+            if (affectedPair.getSoloA().equals(solo)) {
+                affectedPair.setSoloA(newSolo);
+            } else if (affectedPair.getSoloB().equals(solo)) {
+                affectedPair.setSoloB(newSolo);
             }
+            affectedPair.updatePairMatchedData();
             return;
         }
 
         //If there is no replacement, the pair has to be deleted and the remaining solo needs to be added to the
         //successor list
         Solo remainingSolo = null;
-        if (affectedPair.getPersonA().equals(solo.person)) {
-            remainingSolo = new Solo(affectedPair.getPersonB(), affectedPair.getPersonBFoodPreference(), affectedPair.getKitchen());
-        } else if (affectedPair.getPersonB().equals(solo.person)) {
-            remainingSolo = new Solo(affectedPair.getPersonA(), affectedPair.getPersonAFoodPreference(), affectedPair.getKitchen());
+        if (affectedPair.getSoloA().equals(solo)) {
+            remainingSolo = affectedPair.getSoloB();
+        } else if (affectedPair.getSoloB().equals(solo)) {
+            remainingSolo = affectedPair.getSoloA();
         }
 
         soloSuccessors.add(remainingSolo);
@@ -175,16 +168,46 @@ public class MatchingRepository {
     }
 
     /**
-     * Tries to find a replacement from the successor list
+     * Tries to find a replacement from the successor list the successor may need a kitchen and needs to have
+     * the same food preference as the leaving solo or a none food preference
      * @author Paul Groß
      * @param solo a solo that unregistered from the event
      * @return a replacement solo for the unregistered solo participant
      */
-    private Solo findReplacement(Solo solo) {
+    private Solo findReplacement(PairMatched affectedPair, Solo solo) {
+        //Check kitchen situation
+        Solo pairSoloA = affectedPair.getSoloA();
+        Solo pairSoloB = affectedPair.getSoloB();
+        boolean soloAhasKitchen = false;
+        boolean soloBhasKitchen = false;
+        boolean kitchenNeeded = false;
+
+        if(pairSoloA.kitchen.kitchenType.equals(KitchenType.YES)) {
+            soloAhasKitchen = true;
+        }
+        if(pairSoloB.kitchen.kitchenType.equals(KitchenType.YES)) {
+            soloBhasKitchen = true;
+        }
+
+        //If leaving solo is the one with the kitchen and the remaining doesn't have a kitchen, the new
+        //solo needs to have a kitchen
+        if(solo.equals(pairSoloA) && !soloBhasKitchen){
+            kitchenNeeded = true;
+        } else if(solo.equals(pairSoloB) && !soloAhasKitchen){
+            kitchenNeeded = true;
+        }
+
         for (Solo replacementSolo : soloSuccessors) {
-            if(replacementSolo.foodPreference.equals(solo.foodPreference)){
-                return replacementSolo;
+            if(kitchenNeeded) {
+                if(replacementSolo.kitchen.kitchenType.equals(KitchenType.NO)){
+                    continue;
+                }
             }
+
+            if (!replacementSolo.foodPreference.equals(solo.foodPreference) && !replacementSolo.foodPreference.equals(FoodPreference.NONE)) {
+                continue;
+            }
+            return replacementSolo;
         }
         return null;
     }
@@ -257,29 +280,6 @@ public class MatchingRepository {
         return null;
     }
 
-
-
-    public void printFoodPreferenceOfPairPersons(){
-        List<PairMatched> pairMatchedList = (List<PairMatched>) getMatchedPairsCollection();
-
-        for (PairMatched pair : pairMatchedList) {
-            System.out.println("FoodPreferences");
-            System.out.println("A: " + pair.getPersonAFoodPreference() + " B: " + pair.getPersonBFoodPreference());
-        }
-        
-    }
-
-    public void printFoodPreferenceOfUnmatchedPairs(){
-        List<PairMatched> pairSuccessors = (List<PairMatched>) this.pairSuccessors;
-
-        for (PairMatched pair : pairSuccessors) {
-            System.out.println("FoodPreferences");
-            System.out.println(pair.getFoodPreference());;
-        }
-
-    }
-
-
     //Getters, Setters
     public void addMatchedPairsCollection(Collection<PairMatched> matchedPairsCollection) {
         this.matchedPairsCollection.addAll(matchedPairsCollection);
@@ -314,4 +314,7 @@ public class MatchingRepository {
     }
 
 
+    public void printPairSuccessorList(){
+        pairSuccessors.forEach(x -> System.out.println(x.getFoodPreference()));
+    }
 }

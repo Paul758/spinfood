@@ -6,8 +6,8 @@ import org.example.logic.structures.MatchingRepository;
 
 public class Main {
     public static void main(String[] args) {
-        String fileToRead = "Project/src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        String partyLocation = "Project/src/main/java/org/example/artifacts/partylocation.csv";
+        String fileToRead = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        String partyLocation = "src/main/java/org/example/artifacts/partylocation.csv";
         DataManagement dataManagement = new DataManagement(fileToRead, partyLocation);
         MatchingRepository matchingRepository = new MatchingRepository(dataManagement);
 
@@ -30,5 +30,8 @@ public class Main {
         System.out.println(matchingRepository.pairSuccessors.size());
 
         System.out.println("Matched groups total " + matchingRepository.getMatchedGroupsCollection().size());
+
+        //Print food preferences of pair successors
+        matchingRepository.printPairSuccessorList();
     }
 }

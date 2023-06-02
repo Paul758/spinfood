@@ -3,7 +3,6 @@ package org.example.logic.structures;
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
-import org.example.data.enums.Sex;
 import org.example.data.factory.Kitchen;
 import org.example.data.factory.Person;
 import org.example.data.structures.Pair;
@@ -15,49 +14,34 @@ import org.example.logic.enums.MealType;
  * Data storage class for the matched pairs in the logic layer
  */
 public class PairMatched implements Comparable<PairMatched> {
-
-    private Person personA;
-    private Person personB;
-    private final FoodPreference foodPreference;
-    private FoodPreference personAFoodPreference;
-    private FoodPreference personBFoodPreference;
-    private final Kitchen kitchen;
-    public final boolean preMatched;
-    private Coordinate partyLocation;
+    private Solo soloA;
+    private Solo soloB;
+    private FoodPreference foodPreference;
+    private Kitchen kitchen;
+    public boolean preMatched;
     private Double distanceToPartyLocation;
     public MealType cooksMealType;
     private GroupMatched starterGroup;
     private GroupMatched mainGroup;
     private GroupMatched dessertGroup;
-    private final int foodPreferenceDeviation;
-    private final int ageRangeDeviation;
+    private int foodPreferenceDeviation;
+    private int ageRangeDeviation;
 
     public PairMatched(Pair pair){
-        this.personA = pair.personA;
-        this.personB = pair.personB;
-        this.foodPreference = pair.foodPreference;
-        this.personAFoodPreference = pair.foodPreference;
-        this.personBFoodPreference = pair.foodPreference;
-        this.kitchen = pair.kitchen;
-
-        this.foodPreferenceDeviation = 0;
-        this.ageRangeDeviation = MatchingTools.calculateAgeRangeDeviation(personA, personB);
-        this.preMatched = true;
+        this(pair.soloA, pair.soloB);
     }
 
     public PairMatched(Solo soloA, Solo soloB){
-        this.personA = soloA.person;
-        this.personB = soloB.person;
+        this.soloA = soloA;
+        this.soloB = soloB;
+
         this.foodPreference = calculateFoodPreference(soloA, soloB);
-        this.personAFoodPreference = soloA.foodPreference;
-        this.personBFoodPreference = soloB.foodPreference;
         this.kitchen = calculateKitchen(soloA, soloB);
 
         this.foodPreferenceDeviation = MatchingTools.calculateFoodPreferenceDeviation(soloA.foodPreference, soloB.foodPreference);
-        this.ageRangeDeviation = MatchingTools.calculateAgeRangeDeviation(personA, personB);
+        this.ageRangeDeviation = MatchingTools.calculateAgeRangeDeviation(soloA.person, soloB.person);
         this.preMatched = false;
     }
-
 
     /**
      * Gradually sets the field variables related to the group membership based on the meal type / course
@@ -112,17 +96,16 @@ public class PairMatched implements Comparable<PairMatched> {
         if(!(obj instanceof PairMatched other)){
             return false;
         }
-        return this.personA.equals(other.getPersonA()) && this.personB.equals(other.getPersonB());
+        return this.soloA.equals(other.soloA) && this.soloB.equals(other.soloB);
     }
 
     @Override
     public String toString() {
-        return getPersonA().name() + ", " + getPersonB().name() + ", " + getFoodPreference();
+        return soloA + ", " + soloB + ", " + getFoodPreference();
     }
 
     //Getters, Setters
     public void setDistanceToPartyLocation(Coordinate partyLocation) {
-        this.partyLocation = partyLocation;
         this.distanceToPartyLocation = Coordinate.getDistance(getKitchen().coordinate, partyLocation);
     }
 
@@ -133,39 +116,39 @@ public class PairMatched implements Comparable<PairMatched> {
         return this.distanceToPartyLocation;
     }
 
-    public boolean containsPerson(Person person) {
-        return getPersonA().equals(person) || getPersonB().equals(person);
-    }
-
-    public Person getPersonA() {
-        return personA;
-    }
-
-    public Person getPersonB() {
-        return personB;
-    }
-
     public FoodPreference getFoodPreference() {
         return foodPreference;
     }
-
     public Kitchen getKitchen() {
         return kitchen;
     }
 
-    public void setPersonA(Person person) {
-        this.personA = person;
+    public boolean contains(Solo solo) {
+        return soloA.equals(solo) || soloB.equals(solo);
     }
 
-    public void setPersonB(Person person) {
-        this.personB = person;
+    public void setSoloA(Solo newSolo) {
+        soloA = newSolo;
     }
 
-    public FoodPreference getPersonAFoodPreference() {
-        return personAFoodPreference;
+    public void setSoloB(Solo newSolo) {
+        soloB = newSolo;
     }
 
-    public FoodPreference getPersonBFoodPreference() {
-        return personBFoodPreference;
+    public Solo getSoloA(){
+        return soloA;
+    }
+
+    public Solo getSoloB(){
+        return soloB;
+    }
+
+    public void updatePairMatchedData() {
+        this.foodPreference = calculateFoodPreference(soloA, soloB);
+        this.kitchen = calculateKitchen(soloA, soloB);
+
+        this.foodPreferenceDeviation = MatchingTools.calculateFoodPreferenceDeviation(soloA.foodPreference, soloB.foodPreference);
+        this.ageRangeDeviation = MatchingTools.calculateAgeRangeDeviation(soloA.person, soloB.person);
+        this.preMatched = false;
     }
 }
