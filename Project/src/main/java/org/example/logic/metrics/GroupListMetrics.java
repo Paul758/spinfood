@@ -44,6 +44,8 @@ public class GroupListMetrics {
                 .toList();
     }
 
+
+
     public static void printAllMetrics(List<GroupMatched> groups) {
         System.out.println("Is valid:               " + isValid(groups));
         System.out.println("Count groups:           " + groups.size());

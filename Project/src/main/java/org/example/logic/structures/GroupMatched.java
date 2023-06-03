@@ -42,6 +42,14 @@ public class GroupMatched {
         }
     }
 
+    public PairMatched getCook() {
+        return cook;
+    }
+
+    public MealType getMealType() {
+        return mealType;
+    }
+
     public boolean containsPair(PairMatched pairMatched) {
         return pairs.contains(pairMatched);
     }
