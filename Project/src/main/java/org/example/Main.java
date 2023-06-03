@@ -29,5 +29,8 @@ public class Main {
         System.out.println(matchingRepository.pairSuccessors.size());
 
         System.out.println("Matched groups total " + matchingRepository.getMatchedGroupsCollection().size());
+
+        //Print food preferences of pair successors
+        matchingRepository.printPairSuccessorList();
     }
 }

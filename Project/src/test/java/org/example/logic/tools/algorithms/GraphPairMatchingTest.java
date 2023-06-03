@@ -51,8 +51,8 @@ class GraphPairMatchingTest {
     }
 
     private boolean checkFoodPreference(PairMatched pair) {
-        FoodPreference personAFoodPreference = pair.getPersonAFoodPreference();
-        FoodPreference personBFoodPreference = pair.getPersonBFoodPreference();
+        FoodPreference personAFoodPreference = pair.getSoloA().foodPreference;
+        FoodPreference personBFoodPreference = pair.getSoloB().foodPreference;
 
         boolean personAIsMeat = personAFoodPreference.equals(FoodPreference.MEAT);
         boolean personBIsVeggie = personBFoodPreference.equals(FoodPreference.VEGGIE);
