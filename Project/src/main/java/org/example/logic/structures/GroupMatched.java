@@ -2,6 +2,7 @@ package org.example.logic.structures;
 
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
+import org.example.data.factory.Kitchen;
 import org.example.logic.tools.MatchingTools;
 import org.example.logic.enums.MealType;
 
@@ -12,8 +13,7 @@ import java.util.List;
  * Data storage class for the matched groups in the logic layer
  */
 public class GroupMatched {
-
-    private static final int groupSize = 3;
+    public static final int groupSize = 3;
     private PairMatched cook;
     MealType mealType;
     PairMatched pairA;
@@ -40,8 +40,16 @@ public class GroupMatched {
         this.groupFoodPreference = calculateFoodPreference();
 
         for (PairMatched pair : pairs) {
-            pair.addGroup(this);
+            pair.addToGroup(this);
         }
+    }
+
+    public PairMatched getCook() {
+        return cook;
+    }
+
+    public MealType getMealType() {
+        return mealType;
     }
 
     public boolean containsPair(PairMatched pairMatched) {
@@ -59,6 +67,7 @@ public class GroupMatched {
         int foodPreferencePairB = MatchingTools.getIntValueFoodPreference(pairB.getFoodPreference());
         int foodPreferencePairC = MatchingTools.getIntValueFoodPreference(pairC.getFoodPreference());
         return FoodPreference.parseFoodPreference(Math.max(foodPreferencePairA, Math.max(foodPreferencePairB, foodPreferencePairC)));
+        //throw new IllegalStateException("not implemented yet");
     }
 
     @Override
@@ -100,8 +109,8 @@ public class GroupMatched {
         return pairs;
     }
 
-    public PairMatched getCook(){
-        return cook;
+    public Coordinate getKitchenCoordinate() {
+        return cook.getKitchen().coordinate;
     }
 
     public void removePair(PairMatched pair) {

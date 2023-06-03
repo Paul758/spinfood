@@ -14,32 +14,29 @@ import org.example.logic.enums.MealType;
  * Data storage class for the matched pairs in the logic layer
  */
 public class PairMatched implements Comparable<PairMatched> {
+    public static final int pairSize = 2;
     private Solo soloA;
     private Solo soloB;
     private FoodPreference foodPreference;
     private Kitchen kitchen;
     public boolean preMatched;
+    private Coordinate partyLocation;
     private Double distanceToPartyLocation;
     public MealType cooksMealType;
     private GroupMatched starterGroup;
     private GroupMatched mainGroup;
     private GroupMatched dessertGroup;
-    private int foodPreferenceDeviation;
-    private int ageRangeDeviation;
 
     public PairMatched(Pair pair){
         this(pair.soloA, pair.soloB);
+        this.preMatched = true;
     }
 
     public PairMatched(Solo soloA, Solo soloB){
         this.soloA = soloA;
         this.soloB = soloB;
-
         this.foodPreference = calculateFoodPreference(soloA, soloB);
         this.kitchen = calculateKitchen(soloA, soloB);
-
-        this.foodPreferenceDeviation = MatchingTools.calculateFoodPreferenceDeviation(soloA.foodPreference, soloB.foodPreference);
-        this.ageRangeDeviation = MatchingTools.calculateAgeRangeDeviation(soloA.person, soloB.person);
         this.preMatched = false;
     }
 
@@ -47,13 +44,29 @@ public class PairMatched implements Comparable<PairMatched> {
      * Gradually sets the field variables related to the group membership based on the meal type / course
      * @param groupMatched A group which the pair is part of
      */
-    public void addGroup(GroupMatched groupMatched) {
-        switch (groupMatched.mealType) {
+    public void addToGroup(GroupMatched groupMatched) {
+        switch (groupMatched.getMealType()) {
             case NONE -> throw new IllegalArgumentException();
             case STARTER -> starterGroup = groupMatched;
             case MAIN ->  mainGroup = groupMatched;
             case DESSERT -> dessertGroup = groupMatched;
         }
+    }
+
+    public GroupMatched getStarterGroup() {
+        return starterGroup;
+    }
+
+    public GroupMatched getMainGroup() {
+        return mainGroup;
+    }
+
+    public GroupMatched getDessertGroup() {
+        return dessertGroup;
+    }
+
+    public Coordinate getPartyLocation() {
+        return partyLocation;
     }
 
     /**
@@ -85,6 +98,9 @@ public class PairMatched implements Comparable<PairMatched> {
         else throw new IllegalStateException(this + " has no kitchen");
     }
 
+    public boolean containsPerson(Person person) {
+        return soloA.person.equals(person) || soloB.person.equals(person);
+    }
 
     @Override
     public int compareTo(PairMatched o) {
@@ -146,9 +162,6 @@ public class PairMatched implements Comparable<PairMatched> {
     public void updatePairMatchedData() {
         this.foodPreference = calculateFoodPreference(soloA, soloB);
         this.kitchen = calculateKitchen(soloA, soloB);
-
-        this.foodPreferenceDeviation = MatchingTools.calculateFoodPreferenceDeviation(soloA.foodPreference, soloB.foodPreference);
-        this.ageRangeDeviation = MatchingTools.calculateAgeRangeDeviation(soloA.person, soloB.person);
         this.preMatched = false;
     }
 }

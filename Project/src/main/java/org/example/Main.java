@@ -1,7 +1,6 @@
 package org.example;
 
 import org.example.data.*;
-
 import org.example.logic.structures.MatchingRepository;
 
 public class Main {
