@@ -15,6 +15,14 @@ public abstract class EventParticipant {
     public FoodPreference foodPreference;
     public Kitchen kitchen;
 
+    public FoodPreference getFoodPreference() {
+        return foodPreference;
+    }
+
+    public Kitchen getKitchen() {
+        return kitchen;
+    }
+
     @Override
     public String toString() {
         return "foodPreference = " + foodPreference + " " + kitchen;

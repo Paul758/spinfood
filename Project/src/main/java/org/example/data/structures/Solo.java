@@ -22,6 +22,10 @@ public class Solo extends EventParticipant{
         this.person = person;
     }
 
+    public Person getPerson() {
+        return person;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {

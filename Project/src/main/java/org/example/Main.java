@@ -1,7 +1,15 @@
 package org.example;
 
 import org.example.data.*;
+import org.example.data.structures.Solo;
+import org.example.logic.matchingalgorithms.RandomGroupMatching;
+import org.example.logic.metrics.GroupListMetrics;
+import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.MatchingRepository;
+import org.example.logic.structures.PairMatched;
+
+import java.util.List;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
@@ -31,5 +39,13 @@ public class Main {
 
         //Print food preferences of pair successors
         matchingRepository.printPairSuccessorList();
+
+        System.out.println("Graph Group Match");
+        GroupListMetrics.printAllMetrics((List<GroupMatched>) matchingRepository.getMatchedGroupsCollection(), dataManagement.partyLocation);
+        System.out.println();
+
+        System.out.println("Random Group Match");
+        List<GroupMatched> randomGroups = RandomGroupMatching.match((List<PairMatched>) matchingRepository.getMatchedPairsCollection());
+        GroupListMetrics.printAllMetrics(randomGroups, dataManagement.partyLocation);
     }
 }

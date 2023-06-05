@@ -11,12 +11,16 @@ import java.util.List;
 public class GroupMetrics {
 
     /**
-     * The age difference of a group is the sum of all the age differences of each pair in the group.
+     * The age difference of a group is the average of the age differences of each pair in the group
      * @param group a GroupMatched object
      * @return the age difference of the group
+     * @throws IllegalArgumentException if the group has no pairs
      */
     public static double calcAgeDifference(GroupMatched group) {
-        return PairListMetrics.calcAgeDifference(group.getPairList());
+        return group.getPairList().stream()
+                .mapToDouble(PairMetrics::calcAgeDifference)
+                .average()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     /**
@@ -24,13 +28,14 @@ public class GroupMetrics {
      * the total number of people in the group from the ideal value of 0.5 (3 women in a group of 6 people).
      * @param group a GroupMatched object
      * @return the gender diversity of the group
+     * @throws IllegalArgumentException if the group has no pairs
      */
     public static double calcGenderDiversity(GroupMatched group) {
         double countFemale = 0;
 
         for (PairMatched pair : group.getPairList()) {
-            if (pair.getSoloA().person.sex().equals(Sex.FEMALE)) countFemale++;
-            if (pair.getSoloB().person.sex().equals(Sex.FEMALE)) countFemale++;
+            if (pair.getSoloA().getPerson().sex().equals(Sex.FEMALE)) countFemale++;
+            if (pair.getSoloB().getPerson().sex().equals(Sex.FEMALE)) countFemale++;
         }
 
         double ratio = countFemale / (GroupMatched.groupSize * PairMatched.pairSize);
@@ -41,12 +46,13 @@ public class GroupMetrics {
      * The preference deviation of a group is the average of the preference deviations of each pair in the group
      * @param group a GroupMatched object
      * @return the average food preference deviation of the group
+     * @throws IllegalArgumentException if the group has no pairs
      */
     public static double calcPreferenceDeviation(GroupMatched group) {
         return group.getPairList().stream()
                 .mapToDouble(PairMetrics::calcPreferenceDeviation)
                 .average()
-                .orElse(-1);
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     /**
@@ -62,18 +68,18 @@ public class GroupMetrics {
     public static boolean isValid(GroupMatched group) {
         return group.getPairList().size() == GroupMatched.groupSize
                 && PairListMetrics.isValid (group.getPairList())
-                && !hasInvalidPreferenceComposition(group.getPairList())
+                && hasValidPreferenceComposition(group.getPairList())
                 && group.getCook() != null
                 && !group.getMealType().equals(MealType.NONE);
     }
 
     /**
-     * The preference composition of a group is not valid, when there are two none or two meat pairs and
-     * one veggie or one vegan pair in the group
+     * The preference composition of a group is valid, there the group doesn't contain two none ore meat pairs and
+     * one veggie or vegan pair
      * @param pairs the pairs of a group
      * @return true if the preference composition of the group is invalid, otherwise false
      */
-    public static boolean hasInvalidPreferenceComposition(List<PairMatched> pairs) {
+    public static boolean hasValidPreferenceComposition(List<PairMatched> pairs) {
         // counter[0] = none, counter[1] = meat, counter[2] = veggie, counter[3] = vegan
         int[] counter = new int[4];
 
@@ -82,6 +88,6 @@ public class GroupMetrics {
             counter[value]++;
         }
 
-       return !((counter[0] == 2 || counter[1] == 2) && (counter[2] == 1 || counter[3] == 1));
+       return !((counter[0] + counter[1] == 2) && (counter[2] + counter[3] == 1));
     }
 }

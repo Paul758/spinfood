@@ -5,6 +5,7 @@ import org.example.data.enums.FoodPreference;
 
 public class MetricTools {
     public static final double idealGenderRatio = 0.5;
+
     public static int getPreferenceValue(FoodPreference foodPreference) {
         return switch (foodPreference) {
             case NONE, MEAT -> 0;

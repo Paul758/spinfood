@@ -20,6 +20,10 @@ public class Kitchen {
         this.coordinate = new Coordinate(longitude, latitude);
     }
 
+    public KitchenType getKitchenType() {
+        return kitchenType;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {

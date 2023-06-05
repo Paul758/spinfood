@@ -69,6 +69,18 @@ public class PairMatched implements Comparable<PairMatched> {
         return partyLocation;
     }
 
+    public Coordinate getStarterLocation() {
+        return starterGroup.getKitchenCoordinate();
+    }
+
+    public Coordinate getMainLocation() {
+        return mainGroup.getKitchenCoordinate();
+    }
+
+    public Coordinate getDessertLocation() {
+        return dessertGroup.getKitchenCoordinate();
+    }
+
     /**
      * Determine the common foodPreference
      * @param soloA first member of the pair
@@ -99,7 +111,7 @@ public class PairMatched implements Comparable<PairMatched> {
     }
 
     public boolean containsPerson(Person person) {
-        return soloA.person.equals(person) || soloB.person.equals(person);
+        return soloA .person.equals(person) || soloB.person.equals(person);
     }
 
     @Override
