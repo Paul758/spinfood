@@ -1,6 +1,11 @@
 package org.example.data.factory;
 import org.example.data.Coordinate;
 import org.example.data.enums.KitchenType;
+import com.fasterxml.jackson.annotation.*;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /** Data class to hold the kitchen values from the .csv file
  * Has a coordinate object to hold the longitude and latitude values
@@ -9,6 +14,7 @@ import org.example.data.enums.KitchenType;
  * @author Felix Groß
  * @version 1.0
  */
+
 public class Kitchen {
     public final KitchenType kitchenType;
     public final int story;
@@ -43,4 +49,20 @@ public class Kitchen {
         return "[" + "kitchenType = " + kitchenType + ", story=" + story
                 + ", coordinate=" + coordinate + "]";
     }
+
+    @JsonValue
+    public Map<String, String> toJson(){
+
+        Map<String, String> values = new LinkedHashMap<>();
+        if(!kitchenType.equals(KitchenType.NO)){
+            values.put("emergencyKitchen", String.valueOf(kitchenType.equals(KitchenType.MAYBE)));
+            values.put("story", String.valueOf(story));
+            values.put("longitude", String.valueOf(coordinate.longitude));
+            values.put("latitude", String.valueOf(coordinate.latitude));
+        } else {
+            return null;
+        }
+        return values;
+    }
+
 }
