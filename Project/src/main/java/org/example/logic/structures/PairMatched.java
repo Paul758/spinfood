@@ -176,4 +176,8 @@ public class PairMatched implements Comparable<PairMatched> {
         this.kitchen = calculateKitchen(soloA, soloB);
         this.preMatched = false;
     }
+
+    public boolean isPreMatched() {
+        return preMatched;
+    }
 }

@@ -49,20 +49,4 @@ public class Kitchen {
         return "[" + "kitchenType = " + kitchenType + ", story=" + story
                 + ", coordinate=" + coordinate + "]";
     }
-
-    @JsonValue
-    public Map<String, String> toJson(){
-
-        Map<String, String> values = new LinkedHashMap<>();
-        if(!kitchenType.equals(KitchenType.NO)){
-            values.put("emergencyKitchen", String.valueOf(kitchenType.equals(KitchenType.MAYBE)));
-            values.put("story", String.valueOf(story));
-            values.put("longitude", String.valueOf(coordinate.longitude));
-            values.put("latitude", String.valueOf(coordinate.latitude));
-        } else {
-            return null;
-        }
-        return values;
-    }
-
 }

@@ -317,4 +317,12 @@ public class MatchingRepository {
     public void printPairSuccessorList(){
         pairSuccessors.forEach(x -> System.out.println(x.getFoodPreference()));
     }
+
+    public Collection<PairMatched> getPairSuccessors() {
+        return pairSuccessors;
+    }
+
+    public Collection<Solo> getSoloSuccessors() {
+        return soloSuccessors;
+    }
 }

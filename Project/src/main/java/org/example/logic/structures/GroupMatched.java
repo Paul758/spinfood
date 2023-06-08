@@ -19,7 +19,7 @@ public class GroupMatched {
     PairMatched pairA;
     PairMatched pairB;
     PairMatched pairC;
-    private List<PairMatched> pairs;
+    private final List<PairMatched> pairs;
     FoodPreference groupFoodPreference;
 
 
@@ -119,5 +119,9 @@ public class GroupMatched {
 
     public void addPair(PairMatched pair) {
         pairs.add(pair);
+    }
+
+    public FoodPreference getFoodPreference() {
+        return groupFoodPreference;
     }
 }

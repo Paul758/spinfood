@@ -1,15 +1,15 @@
 package org.example;
 
 import org.example.data.*;
-import org.example.data.structures.Solo;
+import org.example.data.json.Serializer;
 import org.example.logic.matchingalgorithms.RandomGroupMatching;
 import org.example.logic.metrics.GroupListMetrics;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
@@ -47,5 +47,12 @@ public class Main {
         System.out.println("Random Group Match");
         List<GroupMatched> randomGroups = RandomGroupMatching.match((List<PairMatched>) matchingRepository.getMatchedPairsCollection());
         GroupListMetrics.printAllMetrics(randomGroups, dataManagement.partyLocation);
+
+        try {
+            String output = Serializer.serializeMatchingRepository(matchingRepository);
+            Serializer.writeToFile(output, "C:\\Users\\felix\\Desktop\\data.json");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

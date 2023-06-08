@@ -1,45 +1,39 @@
-package org.example.data.jsonwrapper;
+package org.example.data.json;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import org.example.data.enums.KitchenType;
 import org.example.data.factory.Kitchen;
 
-@JsonRootName(value = "Kitchen")
+@JsonPropertyOrder({"emergencyKitchen", "story", "longitude", "latitude"})
 public class KitchenWrapper {
 
-    boolean emergencyKitchen;
-    int story;
-    double longitude;
-    double latitude;
-
+    @JsonIgnore
+    Kitchen kitchen;
 
     public KitchenWrapper(Kitchen kitchen){
-        emergencyKitchen = kitchen.getKitchenType().equals(KitchenType.MAYBE);
-        story = kitchen.story;
-        longitude = kitchen.coordinate.longitude;
-        latitude = kitchen.coordinate.latitude;
+        this.kitchen = kitchen;
     }
 
     @JsonGetter
     public boolean getEmergencyKitchen(){
-        return emergencyKitchen;
+        return kitchen.getKitchenType().equals(KitchenType.MAYBE);
     }
 
     @JsonGetter
     public int getStory(){
-        return story;
+        return kitchen.story;
     }
 
     @JsonGetter
     public double getLongitude(){
-        return longitude;
+        return kitchen.coordinate.longitude;
     }
 
     @JsonGetter
     public double getLatitude(){
-        return latitude;
+        return kitchen.coordinate.latitude;
     }
-
-
 }
