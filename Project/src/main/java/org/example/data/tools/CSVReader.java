@@ -1,6 +1,7 @@
 package org.example.data.tools;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
@@ -36,5 +37,22 @@ public class CSVReader {
             keyWordMap.put(line.get(i), i);
         }
         return keyWordMap;
+    }
+
+    public static boolean isPartyLocation(File file) {
+        List<List<String>> readInValues = readValues(file.getAbsolutePath());
+
+        List<String> headerValues = readInValues.get(0);
+
+        if(headerValues.contains(Keywords.id)) {
+            return false;
+        }
+
+        if(headerValues.contains(Keywords.longitude) && headerValues.contains(Keywords.latitude)) {
+            System.out.println("This file is a party location");
+            return true;
+        }
+
+        throw new IllegalStateException("The chosen file is not identified as party location, the headers in this file are " + headerValues.toString());
     }
 }
