@@ -1,21 +1,21 @@
 package org.example.view;
 
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.example.data.DataManagement;
 import org.example.data.structures.Solo;
 import org.example.data.tools.CSVReader;
+import org.example.logic.metrics.PairMetrics;
 import org.example.logic.structures.MatchingRepository;
 import javafx.event.ActionEvent;
 import org.example.logic.structures.PairMatched;
@@ -32,11 +32,59 @@ public class ApplicationEntry extends Application {
     @FXML
     private ListView<Solo> listViewSoloRegistration;
 
+
+    @FXML
+    private TableView<PairMatched> tableViewMatchedPairs;
+
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnFirstPerson;
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnFirstPersonGender;
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnFirstPersonAge;
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnFirstPersonFoodPreference;
+
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnSecondPerson;
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnSecondPersonGender;
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnSecondPersonAge;
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnSecondPersonFoodPreference;
+
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnAgeDifference;
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnGenderDiversity;
+    @FXML
+    private TableColumn<PairMatched, String> tableColumnFoodPreferenceDeviation;
+
+
+    @FXML
+    private TableView<Solo> tableViewUnmatchedSolos;
+
+    @FXML
+    private TableColumn<Solo, String> tableColumnUnmatchedPerson;
+    @FXML
+    private TableColumn<Solo, String> tableColumnUnmatchedPersonGender;
+    @FXML
+    private TableColumn<Solo, String> tableColumnUnmatchedPersonAge;
+    @FXML
+    private TableColumn<Solo, String> tableColumnUnmatchedPersonFoodPreference;
+
+
+
+
     @FXML
     private ListView<PairMatched> listViewPairs;
 
     Stage primaryStage;
     MatchingRepository matchingRepository;
+
+    public ApplicationEntry() {
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -48,8 +96,6 @@ public class ApplicationEntry extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-
-
     }
 
     @FXML
@@ -60,6 +106,8 @@ public class ApplicationEntry extends Application {
 
 
         ShowParticipants();
+        populatePairMatchedTable();
+        populateUnmatchedSoloTable();
     }
 
     private void ShowParticipants() {
@@ -84,6 +132,36 @@ public class ApplicationEntry extends Application {
             }
         });
     }
+
+
+    private void populatePairMatchedTable() {
+        tableColumnFirstPersonGender.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloA().person.sex().toString()));
+        tableColumnFirstPersonAge.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getSoloA().person.age())));
+        tableColumnFirstPersonFoodPreference.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloA().foodPreference.toString()));
+
+        tableColumnSecondPersonGender.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloB().person.sex().toString()));
+        tableColumnSecondPersonAge.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getSoloB().person.age())));
+        tableColumnSecondPersonFoodPreference.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloB().foodPreference.toString()));
+
+        tableColumnAgeDifference.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(PairMetrics.calcAgeDifference(data.getValue()))));
+        tableColumnGenderDiversity.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(PairMetrics.calcGenderDiversity(data.getValue()))));
+        tableColumnFoodPreferenceDeviation.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(PairMetrics.calcPreferenceDeviation(data.getValue()))));
+        ObservableList<PairMatched> pairMatchedObservableList = FXCollections.observableArrayList();
+        pairMatchedObservableList.addAll(matchingRepository.getMatchedPairsCollection());
+
+        tableViewMatchedPairs.setItems(pairMatchedObservableList);
+    }
+
+    private void populateUnmatchedSoloTable() {
+        tableColumnUnmatchedPersonGender.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().person.sex().toString()));
+        tableColumnUnmatchedPersonAge.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().person.age())));
+        tableColumnUnmatchedPersonFoodPreference.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().foodPreference.toString()));
+        ObservableList<Solo> soloObservableList = FXCollections.observableArrayList();
+        soloObservableList.addAll(matchingRepository.soloSuccessors);
+
+        tableViewUnmatchedSolos.setItems(soloObservableList);
+    }
+
 
     private List<File> selectFiles(Stage primaryStage) {
         FileChooser fileChooser = new FileChooser();
