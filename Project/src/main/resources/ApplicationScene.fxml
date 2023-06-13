@@ -90,7 +90,66 @@
                       </Tab>
                         <Tab text="Groups">
                           <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <SplitPane dividerPositions="0.29797979797979796" prefHeight="769.0" prefWidth="1287.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <items>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                             <children>
+                                                <TableView fx:id="tableViewUnmatchedSolos1" layoutX="34.0" layoutY="55.0" prefHeight="767.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <columns>
+                                                      <TableColumn fx:id="tableColumnUnmatchedPerson1" prefWidth="75.0" text="Unmatched Pairs">
+                                                         <columns>
+                                                            <TableColumn fx:id="tableColumnUnmatchedPersonGender1" prefWidth="75.0" text="Gender" />
+                                                            <TableColumn fx:id="tableColumnUnmatchedPersonAge1" prefWidth="75.0" text="Age" />
+                                                            <TableColumn fx:id="tableColumnUnmatchedPersonFoodPreference1" prefWidth="75.0" text="Food Preference" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                   </columns>
+                                                   <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                   </columnResizePolicy>
+                                                </TableView>
+                                             </children>
+                                          </AnchorPane>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                             <children>
+                                                <TableView fx:id="tableViewGroupMatched" prefHeight="767.0" prefWidth="899.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <columns>
+                                                      <TableColumn fx:id="tableColumnCookingPair" prefWidth="252.0" text="Cooking Pair">
+                                                         <columns>
+                                                            <TableColumn fx:id="tableColumnCookingPairGender" prefWidth="75.0" text="Gender" />
+                                                            <TableColumn fx:id="tableColumnCookingPairAge" prefWidth="75.0" text="Age" />
+                                                            <TableColumn fx:id="tableColumnCookingPairFoodPreference" prefWidth="75.0" text="Food Preference" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                      <TableColumn fx:id="tableColumnSecondPair" prefWidth="198.0" text="Second Pair">
+                                                         <columns>
+                                                            <TableColumn fx:id="tableColumnSecondPairGender" prefWidth="75.0" text="Gender" />
+                                                            <TableColumn fx:id="tableColumnSecondPairAge" prefWidth="75.0" text="Age" />
+                                                            <TableColumn fx:id="tableColumnSecondPairFoodPreference" prefWidth="75.0" text="Food Preference" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                      <TableColumn fx:id="tableColumnThirdPair" prefWidth="252.0" text="Third Pair">
+                                                         <columns>
+                                                            <TableColumn fx:id="tableColumnThirdPairGender" prefWidth="75.0" text="Gender" />
+                                                            <TableColumn fx:id="tableColumnThirdPairAge" prefWidth="75.0" text="Age" />
+                                                            <TableColumn fx:id="tableColumnThirdPairFoodPreference" prefWidth="75.0" text="Food Preference" />
+                                                         </columns>
+                                                      </TableColumn>
+                                                      <TableColumn prefWidth="90.0" text="Age Difference" />
+                                                      <TableColumn prefWidth="76.0" text="Gender Diversity" />
+                                                      <TableColumn prefWidth="105.0" text="Food Preference Deviation" />
+                                                   </columns>
+                                                   <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                   </columnResizePolicy>
+                                                </TableView>
+                                             </children>
+                                          </AnchorPane>
+                                       </items>
+                                    </SplitPane>
+                                 </children></AnchorPane>
                           </content>
                         </Tab>
                     </tabs>
