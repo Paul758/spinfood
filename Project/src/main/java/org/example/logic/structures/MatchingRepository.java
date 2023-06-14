@@ -5,8 +5,6 @@ import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
-import org.example.logic.structures.GroupMatched;
-import org.example.logic.structures.PairMatched;
 import org.example.logic.tools.MatchingSystem;
 
 import java.util.ArrayList;
@@ -280,6 +278,27 @@ public class MatchingRepository {
         return null;
     }
 
+
+    //Method for disbanding a pair from view thing
+    public void disbandPair(PairMatched pairToDisband) {
+        System.out.println("MR: Count of solo successors now is: " + soloSuccessors.size());
+        if(pairToDisband.isPreMatched()) {
+            //cant disband pair because it is prematched
+            throw new RuntimeException("cant disband pair because it is prematched");
+        }
+
+        Solo soloA = pairToDisband.getSoloA();
+        Solo soloB = pairToDisband.getSoloB();
+
+        soloSuccessors.add(soloA);
+        soloSuccessors.add(soloB);
+
+        this.matchedPairsCollection.remove(pairToDisband);
+
+        System.out.println("MR: Count of solo successors now is: " + soloSuccessors.size());
+    }
+
+
     //Getters, Setters
     public void addMatchedPairsCollection(Collection<PairMatched> matchedPairsCollection) {
         this.matchedPairsCollection.addAll(matchedPairsCollection);
@@ -317,4 +336,6 @@ public class MatchingRepository {
     public void printPairSuccessorList(){
         pairSuccessors.forEach(x -> System.out.println(x.getFoodPreference()));
     }
+
+
 }
