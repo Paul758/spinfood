@@ -15,7 +15,9 @@
          <items>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="buttonFile" layoutY="2.0" mnemonicParsing="false" onAction="#handleButtonFileClick" text="File..." />
+                  <Button fx:id="buttonFile" layoutY="1.0" mnemonicParsing="false" onAction="#handleButtonFileClick" text="File..." />
+                  <Button fx:id="buttonRemove" layoutX="42.0" layoutY="1.0" mnemonicParsing="false" onAction="#handleButtonRemoveClick" text="Remove" />
+                  <Button fx:id="buttonUndo" layoutX="101.0" layoutY="1.0" mnemonicParsing="false" onAction="#handleButtonUndoClick" text="Undo" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="353.0" prefWidth="296.0">

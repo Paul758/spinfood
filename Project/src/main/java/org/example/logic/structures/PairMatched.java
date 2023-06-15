@@ -19,7 +19,7 @@ public class PairMatched implements Comparable<PairMatched> {
     private Solo soloB;
     private FoodPreference foodPreference;
     private Kitchen kitchen;
-    public boolean preMatched;
+    private boolean preMatched;
     private Coordinate partyLocation;
     private Double distanceToPartyLocation;
     public MealType cooksMealType;
@@ -175,5 +175,9 @@ public class PairMatched implements Comparable<PairMatched> {
         this.foodPreference = calculateFoodPreference(soloA, soloB);
         this.kitchen = calculateKitchen(soloA, soloB);
         this.preMatched = false;
+    }
+
+    public boolean isPreMatched() {
+        return preMatched;
     }
 }

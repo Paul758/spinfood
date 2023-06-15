@@ -13,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.example.data.DataManagement;
@@ -23,12 +25,22 @@ import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.MatchingRepository;
 import javafx.event.ActionEvent;
 import org.example.logic.structures.PairMatched;
+import org.example.view.tools.DisbandPair;
 import org.example.view.tools.FileSelectionManager;
 
 import java.io.File;
+import java.util.ArrayDeque;
 import java.util.List;
 
 public class ApplicationEntry extends Application {
+
+    ArrayDeque<UIAction> history = new ArrayDeque<>();
+
+    @FXML
+    private Button buttonRemove;
+
+    @FXML
+    private Button buttonUndo;
 
     @FXML
     private Button buttonFile;
@@ -103,11 +115,14 @@ public class ApplicationEntry extends Application {
     private TableColumn<GroupMatched, String> tableColumnThirdPairFoodPreference;
 
 
-
     @FXML
     private ListView<PairMatched> listViewPairs;
     Stage primaryStage;
     MatchingRepository matchingRepository;
+
+    PairMatched pairToDisband;
+
+    GroupMatched groupToDisband;
 
     public ApplicationEntry() {
     }
@@ -118,10 +133,15 @@ public class ApplicationEntry extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ApplicationScene.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root, 800, 600);
-        primaryStage.setTitle("FoodSpin");
+        primaryStage.setTitle("Spinfood");
         primaryStage.setScene(scene);
         primaryStage.show();
+        //buttonRemove.setManaged(false);
+        //Test
+    }
 
+    private void testMethod() {
+        System.out.println("Test");
     }
 
     @FXML
@@ -134,6 +154,8 @@ public class ApplicationEntry extends Application {
         populatePairMatchedTable();
         populateUnmatchedSoloTable();
         populateGroupMatchedTable();
+        setTableMouseEvents();
+
     }
 
     private void ShowParticipants() {
@@ -204,9 +226,12 @@ public class ApplicationEntry extends Application {
         tableColumnUnmatchedPersonGender.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().person.sex().toString()));
         tableColumnUnmatchedPersonAge.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().person.age())));
         tableColumnUnmatchedPersonFoodPreference.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().foodPreference.toString()));
+        tableColumnUnmatchedPersonFoodPreference.setCellFactory(column ->
+                getTableCellImage()
+        );
         ObservableList<Solo> soloObservableList = FXCollections.observableArrayList();
         soloObservableList.addAll(matchingRepository.soloSuccessors);
-
+        System.out.println("Count of solo successors now is: " + matchingRepository.soloSuccessors.size());
         tableViewUnmatchedSolos.setItems(soloObservableList);
     }
 
@@ -214,61 +239,50 @@ public class ApplicationEntry extends Application {
         tableColumnFirstPersonGender.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloA().person.sex().toString()));
         tableColumnFirstPersonAge.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getSoloA().person.age())));
         tableColumnFirstPersonFoodPreference.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloA().foodPreference.toString()));
-        tableColumnFirstPersonFoodPreference.setCellFactory(column -> {
-            return new TableCell<PairMatched, String>() {
-                private final ImageView imageView = new ImageView();
-                private final double imageWidth = 38; // Adjust the width as needed
-                private final double imageHeight = 38; // Adjust the height as needed
-
-                @Override
-                protected void updateItem(String foodPreference, boolean empty) {
-                    super.updateItem(foodPreference, empty);
-
-                    if (foodPreference == null || empty) {
-                        setGraphic(null);
-                    } else {
-                        imageView.setImage(getFoodIcon(foodPreference));
-                        imageView.setFitWidth(imageWidth);
-                        imageView.setFitHeight(imageHeight);
-                        setGraphic(imageView);
-                    }
-                }
-            };
-        });
+        tableColumnFirstPersonFoodPreference.setCellFactory(column ->
+            getTableCellImage()
+        );
 
         tableColumnSecondPersonGender.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloB().person.sex().toString()));
         tableColumnSecondPersonAge.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getSoloB().person.age())));
         tableColumnSecondPersonFoodPreference.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloB().foodPreference.toString()));
-        tableColumnSecondPersonFoodPreference.setCellFactory(column -> {
-            return new TableCell<PairMatched, String>() {
-                private final ImageView imageView = new ImageView();
-                private final double imageWidth = 38; // Adjust the width as needed
-                private final double imageHeight = 38; // Adjust the height as needed
-
-                @Override
-                protected void updateItem(String foodPreference, boolean empty) {
-                    super.updateItem(foodPreference, empty);
-
-                    if (foodPreference == null || empty) {
-                        setGraphic(null);
-                    } else {
-                        imageView.setImage(getFoodIcon(foodPreference));
-                        imageView.setFitWidth(imageWidth);
-                        imageView.setFitHeight(imageHeight);
-                        setGraphic(imageView);
-                    }
-                }
-            };
-        });
+        tableColumnSecondPersonFoodPreference.setCellFactory(column ->
+            getTableCellImage()
+        );
 
 
         tableColumnAgeDifference.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(PairMetrics.calcAgeDifference(data.getValue()))));
         tableColumnGenderDiversity.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(PairMetrics.calcGenderDiversity(data.getValue()))));
         tableColumnFoodPreferenceDeviation.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(PairMetrics.calcPreferenceDeviation(data.getValue()))));
+
         ObservableList<PairMatched> pairMatchedObservableList = FXCollections.observableArrayList();
         pairMatchedObservableList.addAll(matchingRepository.getMatchedPairsCollection());
 
         tableViewMatchedPairs.setItems(pairMatchedObservableList);
+
+    }
+
+
+    private <T,S> TableCell<T, String> getTableCellImage() {
+        return new TableCell<T, String>() {
+            private final ImageView imageView = new ImageView();
+            private final double imageWidth = 38; // Adjust the width as needed
+            private final double imageHeight = 38; // Adjust the height as needed
+
+            @Override
+            protected void updateItem(String foodPreference, boolean empty) {
+                super.updateItem(foodPreference, empty);
+
+                if (foodPreference == null || empty) {
+                    setGraphic(null);
+                } else {
+                    imageView.setImage(getFoodIcon(foodPreference));
+                    imageView.setFitWidth(imageWidth);
+                    imageView.setFitHeight(imageHeight);
+                    setGraphic(imageView);
+                }
+            }
+        };
     }
 
     private Image getFoodIcon(String foodPreference) {
@@ -286,6 +300,62 @@ public class ApplicationEntry extends Application {
     }
 
 
+    private void setTableMouseEvents() {
+        tableViewMatchedPairs.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                int index = tableViewMatchedPairs.getSelectionModel().getSelectedIndex();
+                this.pairToDisband = tableViewMatchedPairs.getItems().get(index);
+                buttonRemove.setVisible(true);
+            }
+
+        });
+
+        tableViewGroupMatched.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY)) {
+                int index = tableViewGroupMatched.getSelectionModel().getSelectedIndex();
+                this.groupToDisband = tableViewGroupMatched.getItems().get(index);
+            }
+        });
+    }
+
+    @FXML
+    private void handleButtonUndoClick(ActionEvent event) {
+        undo();
+        populateUnmatchedSoloTable();
+        populatePairMatchedTable();
+    }
+
+    @FXML
+    private void handleButtonRemoveClick(ActionEvent event) {
+        run(new DisbandPair(matchingRepository, pairToDisband));
+        populateUnmatchedSoloTable();
+        populatePairMatchedTable();
+    }
+
+
+    private void run(UIAction action) {
+        history.addLast(action);
+        action.run();
+    }
+
+    private void undo() {
+        if(history.isEmpty()) {
+            return;
+        }
+        UIAction lastAction = history.removeLast();
+        lastAction.undo();
+    }
+
+
+
+    private void disbandPair() {
+        matchingRepository.disbandPair(pairToDisband);
+
+        populatePairMatchedTable();
+        populateUnmatchedSoloTable();
+        //tableViewMatchedPairs.refresh();
+        //tableViewUnmatchedSolos.refresh();
+    }
 
     public static void main(String[] args) {
         launch(args);
