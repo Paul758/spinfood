@@ -2,6 +2,8 @@ package org.example.view;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,9 +11,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.example.data.DataManagement;
+import org.example.data.enums.FoodPreference;
 import org.example.data.structures.Solo;
 import org.example.logic.metrics.PairMetrics;
 import org.example.logic.structures.GroupMatched;
@@ -193,6 +198,8 @@ public class ApplicationEntry extends Application {
         tableViewGroupMatched.setItems(pairMatchedObservableList);
     }
 
+
+
     private void populateUnmatchedSoloTable() {
         tableColumnUnmatchedPersonGender.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().person.sex().toString()));
         tableColumnUnmatchedPersonAge.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().person.age())));
@@ -207,10 +214,53 @@ public class ApplicationEntry extends Application {
         tableColumnFirstPersonGender.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloA().person.sex().toString()));
         tableColumnFirstPersonAge.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getSoloA().person.age())));
         tableColumnFirstPersonFoodPreference.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloA().foodPreference.toString()));
+        tableColumnFirstPersonFoodPreference.setCellFactory(column -> {
+            return new TableCell<PairMatched, String>() {
+                private final ImageView imageView = new ImageView();
+                private final double imageWidth = 38; // Adjust the width as needed
+                private final double imageHeight = 38; // Adjust the height as needed
+
+                @Override
+                protected void updateItem(String foodPreference, boolean empty) {
+                    super.updateItem(foodPreference, empty);
+
+                    if (foodPreference == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        imageView.setImage(getFoodIcon(foodPreference));
+                        imageView.setFitWidth(imageWidth);
+                        imageView.setFitHeight(imageHeight);
+                        setGraphic(imageView);
+                    }
+                }
+            };
+        });
 
         tableColumnSecondPersonGender.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloB().person.sex().toString()));
         tableColumnSecondPersonAge.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getSoloB().person.age())));
         tableColumnSecondPersonFoodPreference.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getSoloB().foodPreference.toString()));
+        tableColumnSecondPersonFoodPreference.setCellFactory(column -> {
+            return new TableCell<PairMatched, String>() {
+                private final ImageView imageView = new ImageView();
+                private final double imageWidth = 38; // Adjust the width as needed
+                private final double imageHeight = 38; // Adjust the height as needed
+
+                @Override
+                protected void updateItem(String foodPreference, boolean empty) {
+                    super.updateItem(foodPreference, empty);
+
+                    if (foodPreference == null || empty) {
+                        setGraphic(null);
+                    } else {
+                        imageView.setImage(getFoodIcon(foodPreference));
+                        imageView.setFitWidth(imageWidth);
+                        imageView.setFitHeight(imageHeight);
+                        setGraphic(imageView);
+                    }
+                }
+            };
+        });
+
 
         tableColumnAgeDifference.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(PairMetrics.calcAgeDifference(data.getValue()))));
         tableColumnGenderDiversity.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(PairMetrics.calcGenderDiversity(data.getValue()))));
@@ -219,6 +269,20 @@ public class ApplicationEntry extends Application {
         pairMatchedObservableList.addAll(matchingRepository.getMatchedPairsCollection());
 
         tableViewMatchedPairs.setItems(pairMatchedObservableList);
+    }
+
+    private Image getFoodIcon(String foodPreference) {
+        System.out.println("food preference " + foodPreference);
+        //this.getClass().getResource("/images/meat.png");
+        Image image = null;
+        switch (foodPreference) {
+            case "MEAT" -> image = new Image("meat.png");
+            case "VEGGIE" -> image = new Image("veggie.png");
+            case "VEGAN" -> image = new Image("vegan.png");
+            case "NONE" -> image = new Image("none.png");
+        }
+        System.out.println(image.toString());
+        return image;
     }
 
 
