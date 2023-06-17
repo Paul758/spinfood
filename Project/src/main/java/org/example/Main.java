@@ -4,11 +4,13 @@ import org.example.data.*;
 import org.example.data.json.Serializer;
 import org.example.logic.matchingalgorithms.RandomGroupMatching;
 import org.example.logic.metrics.GroupListMetrics;
+import org.example.logic.metrics.PairListMetrics;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -48,6 +50,24 @@ public class Main {
         List<GroupMatched> randomGroups = RandomGroupMatching.match((List<PairMatched>) matchingRepository.getMatchedPairsCollection());
         GroupListMetrics.printAllMetrics(randomGroups, dataManagement.partyLocation);
 
+        //metrics for groups
+        System.out.println("Group Metrics");
+        GroupListMetrics.printAllMetrics((List<GroupMatched>) matchingRepository.getMatchedGroupsCollection(), dataManagement.partyLocation);
+
+        //metrics for pairs
+        List<PairMatched> allPairs = new ArrayList<>();
+        allPairs.addAll(GroupListMetrics.getPairsInGroups((List<GroupMatched>) matchingRepository.getMatchedGroupsCollection()));
+        allPairs.addAll(matchingRepository.getPairSuccessors());
+        System.out.println("Pair Metrics");
+        PairListMetrics.printAllMetrics(allPairs);
+
+        //count pair successors
+        System.out.println("Pair successors: " + matchingRepository.getPairSuccessors().size());
+
+        //count pair successors
+        System.out.println("Solo successors: " + matchingRepository.getSoloSuccessors().size());
+
+        //create json file
         try {
             String output = Serializer.serializeMatchingRepository(matchingRepository);
             Serializer.writeToFile(output, "C:\\Users\\felix\\Desktop\\data.json");
