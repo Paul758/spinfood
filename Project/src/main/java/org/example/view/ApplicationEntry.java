@@ -32,7 +32,7 @@ import java.io.File;
 import java.util.ArrayDeque;
 import java.util.List;
 
-public class ApplicationEntry extends Application {
+public class  ApplicationEntry extends Application {
 
     ArrayDeque<UIAction> history = new ArrayDeque<>();
 

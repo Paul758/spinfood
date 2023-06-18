@@ -6,6 +6,6 @@ import org.example.view.ApplicationEntry;
 // The only purpose of this class is to call the main Method of the Main that extends the Application class for JavaFX
 public class  SuperMain {
     public static void main(String[] args) {
-        ApplicationEntry.main(args);
+        Main.main(args);
     }
 }

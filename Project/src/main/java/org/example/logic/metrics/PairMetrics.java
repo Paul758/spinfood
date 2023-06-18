@@ -4,6 +4,7 @@ import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.enums.Sex;
+import org.example.data.structures.Solo;
 import org.example.logic.structures.PairMatched;
 import org.example.logic.tools.MatchingTools;
 
@@ -87,7 +88,11 @@ public class PairMetrics {
      * @return true if the pair is valid, otherwise false
      */
     public static boolean isValid(PairMatched pair) {
-        return isPreferenceCombinationValid(pair) && isKitchenAvailable(pair);
+        return isValid(pair.getSoloA(), pair.getSoloB());
+    }
+
+    public static boolean isValid(Solo soloA, Solo soloB) {
+        return isPreferenceCombinationValid(soloA, soloB) && isKitchenAvailable(soloA, soloB);
     }
 
     /**
@@ -97,8 +102,12 @@ public class PairMetrics {
      * @return true if the preference combination is valid, otherwise false
      */
     public static boolean isPreferenceCombinationValid(PairMatched pair) {
-        FoodPreference preferenceA = pair.getSoloA().getFoodPreference();
-        FoodPreference preferenceB = pair.getSoloB().getFoodPreference();
+        return isPreferenceCombinationValid(pair.getSoloA(), pair.getSoloB());
+    }
+
+    public static boolean isPreferenceCombinationValid(Solo soloA, Solo soloB) {
+        FoodPreference preferenceA = soloA.getFoodPreference();
+        FoodPreference preferenceB = soloB.getFoodPreference();
 
         boolean aIsMeat = preferenceA.equals(FoodPreference.MEAT);
         boolean aIsVeggieOrVegan = preferenceA.equals(FoodPreference.VEGGIE) || preferenceA.equals(FoodPreference.VEGAN);
@@ -114,10 +123,16 @@ public class PairMetrics {
      * @return true if a kitchen is available, otherwise false
      */
     public static boolean isKitchenAvailable(PairMatched pair) {
-        KitchenType kitchenTypeA = pair.getSoloA().getKitchen().getKitchenType();
-        KitchenType kitchenTypeB = pair.getSoloB().getKitchen().getKitchenType();
+        return isKitchenAvailable(pair.getSoloA(), pair.getSoloB());
+    }
+
+    public static boolean isKitchenAvailable(Solo soloA, Solo soloB) {
+        KitchenType kitchenTypeA = soloA.getKitchen().getKitchenType();
+        KitchenType kitchenTypeB = soloB.getKitchen().getKitchenType();
 
         return kitchenTypeA.equals(KitchenType.YES) || kitchenTypeA.equals(KitchenType.MAYBE)
                 || kitchenTypeB.equals(KitchenType.YES) || kitchenTypeB.equals(KitchenType.MAYBE);
     }
+
+
 }
