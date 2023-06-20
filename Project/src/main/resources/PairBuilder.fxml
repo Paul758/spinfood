@@ -6,20 +6,21 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
 <SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="465.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.view.tools.PairBuilder">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="106.0" prefWidth="598.0">
          <children>
-            <SplitPane dividerPositions="0.5050505050505051" layoutX="159.0" layoutY="18.0" prefHeight="162.0" prefWidth="427.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <SplitPane dividerPositions="0.5" layoutX="159.0" layoutY="18.0" prefHeight="162.0" prefWidth="427.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <items>
-                <AnchorPane fx:id="paneA" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                <AnchorPane fx:id="tableAPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </AnchorPane>
-                <AnchorPane fx:id="paneB" minHeight="0.0" minWidth="0.0">
+                <AnchorPane fx:id="tableBPane" minHeight="0.0" minWidth="0.0">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -40,11 +41,15 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <AnchorPane fx:id="detailViewAPane" style="-fx-background-color: blue;" />
-                  <Button fx:id="finishButton" mnemonicParsing="false" onAction="#handleFinishButton" text="Finish" GridPane.columnIndex="3" />
+                  <Button fx:id="buildPairButton" mnemonicParsing="false" onAction="#handleFinishButton" text="Finish" GridPane.columnIndex="3" />
                   <AnchorPane fx:id="detailViewBPane" layoutX="10.0" layoutY="10.0" style="-fx-background-color: red;" GridPane.columnIndex="1" />
                </children>
             </GridPane>
+            <HBox layoutY="-800.0" prefHeight="0.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane fx:id="detailViewAPane" prefHeight="228.0" prefWidth="0.0" style="-fx-background-color: blue;" />
+               </children>
+            </HBox>
          </children></AnchorPane>
   </items>
 </SplitPane>

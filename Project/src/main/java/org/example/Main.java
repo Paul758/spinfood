@@ -17,8 +17,9 @@ import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
 
-import java.util.List;
-import java.util.Random;
+import java.time.LocalDateTime;
+import java.util.*;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,25 +41,30 @@ import org.example.data.factory.Person;
 import org.example.data.structures.EventParticipant;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
+import org.example.view.DataTabController;
+import org.example.view.PairListTabController;
 import org.example.view.tools.PairBuilder;
 import org.example.view.tools.SoloTable;
 import org.example.view.tools.SoloTableListener;
 
 import javafx.stage.Popup;
+import org.example.view.tools.ViewTools;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class Main extends Application implements SoloTableListener {
 
     @FXML
+    private MenuBar menuBar;
+    @FXML
     private AnchorPane pane;
     @FXML
-    private Button pairBuilderButton;
+    private Button defaultButton;
+    @FXML
+    private TabPane tabPane;
 
     DataManagement dataManagement;
     Parent root;
@@ -77,21 +83,44 @@ public class Main extends Application implements SoloTableListener {
         stage.setTitle("Project");
         stage.setScene(new Scene(root));
         stage.show();
-
-        System.out.println(pairBuilderButton == null);
     }
 
     @FXML
     private void initialize() {
-        String participants = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        String party = "src/main/java/org/example/artifacts/partylocation.csv";
-        dataManagement = new DataManagement(participants, party);
-        List<Solo> solos = dataManagement.soloParticipants;
 
-        soloTable = new SoloTable(solos, pane);
-        soloTable.addListener(this);
+    }
 
-        System.out.println(pairBuilderButton == null);
+    @FXML
+    private void createDataTab() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/DataTabController.fxml"));
+        root = fxmlLoader.load();
+        DataTabController dataTabController = fxmlLoader.getController();
+        dataTabController.setup(this);
+
+        LocalDateTime timeStamp = LocalDateTime.now();
+        Tab tab = new Tab("Data " + ViewTools.getTimeStamp());
+        tab.setContent(root);
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().select(tab);
+    }
+
+    public void createPairTab(DataTabController dataTabController) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/PairListTabController.fxml"));
+        root = fxmlLoader.load();
+        PairListTabController pairListTabController = fxmlLoader.getController();
+        pairListTabController.setup(dataTabController);
+
+        Tab tab = new Tab("Pair " + ViewTools.getTimeStamp());
+        tab.setContent(root);
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().select(tab);
+    }
+
+    @FXML
+    private void loadDefaultValues() {
+
     }
 
     @FXML

@@ -1,12 +1,8 @@
 package org.example.view.tools;
 
-import javafx.application.Application;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 import org.example.data.structures.Solo;
 import org.example.logic.metrics.PairMetrics;
 import org.example.view.SoloDetailView;
@@ -18,18 +14,22 @@ import java.util.List;
 public class PairBuilder implements SoloTableListener {
 
     @FXML
-    private AnchorPane paneA;
+    private AnchorPane tableAPane;
     @FXML
-    private AnchorPane paneB;
+    private AnchorPane tableBPane;
     @FXML
     private AnchorPane detailViewAPane;
     @FXML
     private AnchorPane detailViewBPane;
+    @FXML
+    private Button buildPairButton;
 
     SoloTable soloTableA;
     SoloTable soloTableB;
     SoloDetailView detailViewA;
     SoloDetailView detailViewB;
+    Solo selectedSoloA;
+    Solo selectedSoloB;
 
     private List<Solo> soloList;
 
@@ -40,7 +40,7 @@ public class PairBuilder implements SoloTableListener {
 
     public void setup(List<Solo> soloList) {
         this.soloList = new ArrayList<>(soloList);
-        soloTableA = new SoloTable(this.soloList, paneA);
+        soloTableA = new SoloTable(this.soloList, tableAPane);
         soloTableA.addListener(this);
 
         try {
@@ -51,6 +51,8 @@ public class PairBuilder implements SoloTableListener {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        checkBuildPairButton();
     }
 
     public void showPossibleMatches(Solo solo) {
@@ -58,18 +60,34 @@ public class PairBuilder implements SoloTableListener {
                 .filter(s -> PairMetrics.isValid(s, solo))
                 .toList();
 
-        soloTableB = new SoloTable(possibleMatches, paneB);
+        soloTableB = new SoloTable(possibleMatches, tableBPane);
         soloTableB.addListener(this);
+    }
+
+    public void checkBuildPairButton() {
+        boolean isDisabled = selectedSoloA == null || selectedSoloB == null;
+        buildPairButton.setDisable(isDisabled);
+    }
+
+    public void setSoloA(Solo solo) {
+        selectedSoloA = solo;
+        showPossibleMatches(solo);
+        detailViewA.displaySolo(solo);
+    }
+
+    public void setSoloB(Solo solo) {
+        selectedSoloB = solo;
+        detailViewB.displaySolo(solo);
     }
 
     @Override
     public void onSelectItemLeftClick(Solo solo, SoloTable soloTable) {
         System.out.println("called");
         if (soloTableA != null && soloTableA.equals(soloTable)) {
-            showPossibleMatches(solo);
-            detailViewA.displaySolo(solo);
+            setSoloA(solo);
         } else if (soloTableB != null && soloTableB.equals(soloTable)) {
-            detailViewB.displaySolo(solo);
+            setSoloB(solo);
         }
+        checkBuildPairButton();
     }
 }

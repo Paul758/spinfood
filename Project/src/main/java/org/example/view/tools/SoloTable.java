@@ -6,14 +6,11 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import org.example.data.enums.FoodPreference;
 import org.example.data.structures.Solo;
+import org.example.view.properties.SoloProperty;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,39 +97,5 @@ public class SoloTable {
         }
 
         return soloProperties;
-    }
-
-    public static class SoloProperty {
-        private final String gender;
-        private final String age;
-        private final FoodPreference foodPreference;
-        private final String kitchenType;
-
-        public SoloProperty(Solo solo) {
-            this.gender = solo.getPerson().sex().toString();
-            this.age = String.valueOf(solo.getPerson().age());
-            this.foodPreference = solo.getFoodPreference();
-            this.kitchenType = solo.kitchen.getKitchenType().toString();
-        }
-
-        public String getGender() {
-            return gender;
-        }
-
-        public String getAge() {
-            return age;
-        }
-
-        public String getFoodPreference() {
-            return foodPreference.toString();
-        }
-
-        public ImageView getFoodPreferenceIcon() {
-            return ViewTools.getFoodPreferenceIcon(foodPreference);
-        }
-
-        public String getKitchenType() {
-            return kitchenType;
-        }
     }
 }

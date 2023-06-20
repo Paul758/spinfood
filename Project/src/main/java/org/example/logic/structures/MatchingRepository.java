@@ -42,20 +42,20 @@ public class MatchingRepository {
         this.dataManagement = dataManagement;
         addSoloCollection(dataManagement.soloParticipants);
         addPairCollection(dataManagement.pairParticipants);
+    }
 
+    public void matchPairs() {
         createAndAddPrematchedPairs();
-
         Collection<PairMatched> matchedPairs = MatchingSystem.matchPairs((List<Solo>) this.getSoloDataCollection());
         this.addMatchedPairsCollection(matchedPairs);
+        UpdateSoloSuccessors();
+    }
 
+    public void matchGroups() {
         setDistanceToPartyLocationForPairs();
-
         Collection<GroupMatched> matchedGroups = MatchingSystem.matchGroups((List<PairMatched>) this.getMatchedPairsCollection());
         this.addMatchedGroupsCollection(matchedGroups);
-
-        UpdateSoloSuccessors();
         UpdatePairSuccessors();
-        
     }
 
     /**

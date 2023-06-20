@@ -4,6 +4,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.example.data.enums.FoodPreference;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class ViewTools {
     public static ImageView getFoodPreferenceIcon(FoodPreference foodPreference) {
         String path = switch (foodPreference) {
@@ -18,5 +21,11 @@ public class ViewTools {
         imageView.setFitHeight(40);
         imageView.setFitWidth(40);
         return imageView;
+    }
+
+    public static String getTimeStamp() {
+        LocalDateTime timestamp = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return timestamp.format(formatter);
     }
 }
