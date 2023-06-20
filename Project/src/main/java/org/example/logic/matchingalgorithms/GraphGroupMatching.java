@@ -24,23 +24,67 @@ public class GraphGroupMatching {
     public static List<GroupMatched> match(List<PairMatched> matchedPairs, MatchCosts matchCosts) {
 
         //Split pairs based on foodPreference
-        List<PairMatched> meatNonePairs = getMeatNonePairs(matchedPairs);
-        List<PairMatched> veggieVeganPairs = getVeggieVeganPairs(matchedPairs);
+        ArrayList<PairMatched> nonePairs = new ArrayList<>(getPairsByFoodPreference(matchedPairs, List.of(FoodPreference.NONE)));
+        ArrayList<PairMatched> meatPairs = new ArrayList<>(getPairsByFoodPreference(matchedPairs, List.of(FoodPreference.MEAT))) ;
+        ArrayList<PairMatched> veggieVeganPairs = new ArrayList<>(getPairsByFoodPreference(matchedPairs, List.of(FoodPreference.VEGGIE, FoodPreference.VEGAN)));
+        System.out.println("");
+        //Fill meatPairs and veggie/vegan pairs with none food preference pairs
+        while (meatPairs.size() % 9 != 0) {
+
+            if (nonePairs.size() == 0) {
+                break;
+            }
+
+            PairMatched nextNonePair = nonePairs.get(0);
+            nonePairs.remove(0);
+            meatPairs.add(nextNonePair);
+        }
+
+        while (veggieVeganPairs.size() % 9 != 0) {
+            if(nonePairs.size() == 0) {
+                break;
+            }
+
+            PairMatched nextNonePair = nonePairs.get(0);
+            nonePairs.remove(0);
+            veggieVeganPairs.add(nextNonePair);
+        }
+        System.out.println("meat pairs size " + meatPairs.size());
+        System.out.println("veggie vegan pairs size " + veggieVeganPairs.size());
 
         //Create graphs
-        Graph<PairMatched> meatGraph = createGraph(meatNonePairs, matchCosts);
+        Graph<PairMatched> meatGraph = createGraph(meatPairs, matchCosts);
         Graph<PairMatched> veganGraph = createGraph(veggieVeganPairs, matchCosts);
+        Graph<PairMatched> noneGraph = createGraph(nonePairs, matchCosts);
 
         //find superGroups (9 pairs)
         List<List<PairMatched>> superGroups = new ArrayList<>();
-        superGroups.addAll(findSuperGroups(meatNonePairs, meatGraph));
+        superGroups.addAll(findSuperGroups(meatPairs, meatGraph));
         superGroups.addAll(findSuperGroups(veggieVeganPairs, veganGraph));
+        superGroups.addAll(findSuperGroups(nonePairs, noneGraph));
+
+        System.out.println("super groups size is " + superGroups.size());
 
         //Split superGroups in corresponding dinner groups and assign cook (starters, mainCourse, dessert)
         List<GroupMatched> groupMatchedList;
         groupMatchedList = createDinnerGroupsFromSuperGroups(superGroups);
 
         return groupMatchedList;
+    }
+
+    private static List<PairMatched> getPairsByFoodPreference(List<PairMatched> matchedPairs, List<FoodPreference> foodPreferences) {
+        List<PairMatched> requestedPairs = new ArrayList<>();
+
+        for (PairMatched pair : matchedPairs) {
+            for (FoodPreference foodPreference: foodPreferences ) {
+                if(pair.getFoodPreference().equals(foodPreference)){
+                    requestedPairs.add(pair);
+
+                }
+            }
+        }
+        List<PairMatched> distinctPairs = requestedPairs.stream().distinct().toList();
+        return distinctPairs;
     }
 
 
@@ -59,10 +103,11 @@ public class GraphGroupMatching {
 
         for (int i = 0; i < matchedPairs.size(); i++) {
             try {
+
                 List<PairMatched> superGroup = new ArrayList<>();
                 PairMatched currentPair = graph.getVertexWithLeastEdges(8);
-
-                for(int j = 0; j < superGroupSize; j++) {
+                superGroup.add(currentPair);
+                for(int j = 0; j < superGroupSize - 1; j++) {
                     PairMatched possibleMatch = graph.getEdgeWithLeastWeight(currentPair).participant;
                     superGroup.add(possibleMatch);
                     graph.removeVertex(possibleMatch);
@@ -145,7 +190,7 @@ public class GraphGroupMatching {
      * @param matchedPairs a list of pairs that have been matched
      * @return the pairs that have a meat or none food preference
      */
-    private static List<PairMatched> getMeatNonePairs(List<PairMatched> matchedPairs) {
+    private static List<PairMatched> getMeatPairs(List<PairMatched> matchedPairs) {
         List<PairMatched> meatNonePairs = new ArrayList<>();
         for (PairMatched pair : matchedPairs) {
             if (pair.getFoodPreference().equals(FoodPreference.MEAT) || pair.getFoodPreference().equals(FoodPreference.NONE)) {

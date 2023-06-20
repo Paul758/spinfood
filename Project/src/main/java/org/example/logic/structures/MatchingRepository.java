@@ -58,6 +58,14 @@ public class MatchingRepository {
         UpdatePairSuccessors();
     }
 
+    public void matchGroups(Collection<PairMatched> pairList) {
+        setDistanceToPartyLocationForPairs();
+        Collection<GroupMatched> matchedGroups = MatchingSystem.matchGroups((List<PairMatched>) pairList);
+        this.addMatchedGroupsCollection(matchedGroups);
+        UpdatePairSuccessors();
+    }
+
+
     /**
      * The pairs from the DataManagement object are transferred into PairMatched objects
      * @author Paul Groß
