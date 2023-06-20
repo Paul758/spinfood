@@ -3,6 +3,7 @@ package org.example.view.tools;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.example.data.enums.FoodPreference;
+import org.example.data.structures.Solo;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,5 +28,12 @@ public class ViewTools {
         LocalDateTime timestamp = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         return timestamp.format(formatter);
+    }
+
+    public static String getSoloData(Solo solo) {
+        return solo.getPerson().name() + "\n"
+                + solo.getPerson().age() + "\n"
+                + solo.getPerson().sex() + "\n";
+
     }
 }

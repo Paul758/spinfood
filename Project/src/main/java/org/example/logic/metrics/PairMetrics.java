@@ -84,6 +84,7 @@ public class PairMetrics {
      * A pair is valid when:
      * 1. the pair has a valid food preference combination
      * 2. there is at least one kitchen available
+     * 3. the participants in the pair are different
      * @param pair a PairMatched object
      * @return true if the pair is valid, otherwise false
      */
@@ -92,7 +93,9 @@ public class PairMetrics {
     }
 
     public static boolean isValid(Solo soloA, Solo soloB) {
-        return isPreferenceCombinationValid(soloA, soloB) && isKitchenAvailable(soloA, soloB);
+        return isPreferenceCombinationValid(soloA, soloB)
+                && isKitchenAvailable(soloA, soloB)
+                && !soloA.equals(soloB);
     }
 
     /**

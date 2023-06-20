@@ -125,18 +125,7 @@ public class Main extends Application implements SoloTableListener {
 
     @FXML
     private void clickPairBuilderButton() throws Exception {
-        System.out.println("Open pair builder");
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(PairBuilder.class.getResource("/PairBuilder.fxml"));
-        Parent root = fxmlLoader.load();
 
-        PairBuilder pairBuilder = fxmlLoader.getController();
-        pairBuilder.setup(dataManagement.soloParticipants);
-
-        Stage stage = new Stage();
-        stage.setTitle("Pair Builder");
-        stage.setScene(new Scene(root));
-        stage.show();
     }
 
     @Override

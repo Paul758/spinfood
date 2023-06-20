@@ -2,8 +2,6 @@ package org.example.view;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,14 +16,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.example.data.DataManagement;
-import org.example.data.enums.FoodPreference;
 import org.example.data.structures.Solo;
 import org.example.logic.metrics.PairMetrics;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.MatchingRepository;
 import javafx.event.ActionEvent;
 import org.example.logic.structures.PairMatched;
-import org.example.view.tools.DisbandPair;
+import org.example.view.commands.DisbandPair;
 import org.example.view.tools.FileSelectionManager;
 
 import java.io.File;

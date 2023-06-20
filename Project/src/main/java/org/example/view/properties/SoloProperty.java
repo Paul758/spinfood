@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SoloProperty {
+    private Solo solo;
     private final String gender;
     private final String age;
     private final FoodPreference foodPreference;
     private final String kitchenType;
 
     public SoloProperty(Solo solo) {
+        this.solo = solo;
         this.gender = solo.getPerson().sex().toString();
         this.age = String.valueOf(solo.getPerson().age());
         this.foodPreference = solo.getFoodPreference();
@@ -25,6 +27,9 @@ public class SoloProperty {
         return List.of("gender", "age", "foodPreference", "kitchenType");
     }
 
+    public Solo getSolo() {
+        return solo;
+    }
     public String getGender() {
         return gender;
     }

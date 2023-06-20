@@ -1,17 +1,25 @@
 package org.example.view;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.example.data.structures.Solo;
 import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
+import org.example.view.commands.CreatePairCommand;
 import org.example.view.properties.PairMatchedProperty;
 import org.example.view.properties.SoloProperty;
-import org.example.view.tools.DisbandPair;
-import org.example.view.tools.SoloTable;
+import org.example.view.commands.DisbandPair;
+import org.example.view.tools.PairBuilder;
 import org.example.view.tools.TableViewTools;
 
+import java.io.IOException;
 import java.util.List;
 
 public class PairListTabController {
@@ -22,8 +30,11 @@ public class PairListTabController {
     private TableView<SoloProperty> successorTableView;
     @FXML
     private TableView<PairMatchedProperty> matchedPairsTableView;
+    @FXML
+    private Button createPairButton;
     DataTabController dataTabController;
     private MatchingRepository matchingRepository;
+    private Stage pairBuilderStage;
 
     public void setup(DataTabController dataTabController) {
         this.dataTabController = dataTabController;
@@ -40,6 +51,32 @@ public class PairListTabController {
         DisbandPair disbandPair = new DisbandPair(matchingRepository, pairMatched);
         disbandPair.run();
         updateTables();
+    }
+
+    @FXML
+    public void openPairBuilder() throws IOException {
+        System.out.println("Open pair builder");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(PairBuilder.class.getResource("/PairBuilder.fxml"));
+        Parent root = fxmlLoader.load();
+
+        PairBuilder pairBuilder = fxmlLoader.getController();
+        pairBuilder.setup((List<Solo>) matchingRepository.soloSuccessors, this);
+
+        pairBuilderStage = new Stage();
+        pairBuilderStage.setTitle("Pair Builder");
+        pairBuilderStage.setScene(new Scene(root));
+        pairBuilderStage.initModality(Modality.APPLICATION_MODAL);
+        pairBuilderStage.showAndWait();
+    }
+
+    public void closePairBuilder(Solo soloA, Solo soloB) {
+        if (soloA != null && soloB != null) {
+            CreatePairCommand createPairCommand = new CreatePairCommand(soloA, soloB, matchingRepository);
+            createPairCommand.run();
+            updateTables();
+        }
+        pairBuilderStage.close();
     }
 
     private void updateTables() {

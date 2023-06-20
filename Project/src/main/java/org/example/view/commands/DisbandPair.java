@@ -1,4 +1,4 @@
-package org.example.view.tools;
+package org.example.view.commands;
 
 import org.example.data.structures.Solo;
 import org.example.logic.structures.MatchingRepository;

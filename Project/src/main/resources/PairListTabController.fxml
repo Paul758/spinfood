@@ -37,5 +37,6 @@
         </items>
       </SplitPane>
       <Button layoutX="40.0" layoutY="28.0" mnemonicParsing="false" text="Button" />
+      <Button fx:id="createPairButton" layoutX="493.0" layoutY="28.0" mnemonicParsing="false" onAction="#openPairBuilder" text="Create pair" />
    </children>
 </AnchorPane>
