@@ -17,6 +17,9 @@ import java.util.*;
 
 public class TableViewTools {
     public static void fillSoloTable(List<Solo> solos, TableView<SoloProperty> tableView) {
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("SoloTableView", Settings.getInstance().getLocale());
+
         List<SoloProperty> soloProperties = solos.stream()
                 .map(SoloProperty::new)
                 .toList();
@@ -26,6 +29,9 @@ public class TableViewTools {
             TableColumn<SoloProperty, String> column = new TableColumn<>(columnName);
             column.setCellValueFactory(new PropertyValueFactory<>(columnName));
             tableView.getColumns().add(column);
+
+            //Change column name based on selected language
+            column.setText(bundle.getString(columnName));
         }
 
         tableView.setItems(data);
@@ -33,7 +39,8 @@ public class TableViewTools {
     }
 
     public static void fillPairTable(List<Pair> pairs, TableView<PairProperty> tableView) {
-
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("PairTableView", Settings.getInstance().getLocale());
 
 
         List<PairProperty> pairProperties = pairs.stream()
@@ -50,10 +57,16 @@ public class TableViewTools {
                 column.setCellValueFactory(new PropertyValueFactory<>(columnName));
                 topColumn.getColumns().add(column);
 
+                //Change column name based on selected language
+                column.setText(bundle.getString(columnName));
+
             }
 
 
             tableView.getColumns().add(topColumn);
+
+            //Change column name based on selected language
+            topColumn.setText(bundle.getString(entry.getKey()));
         }
 
         tableView.setItems(data);
@@ -62,7 +75,7 @@ public class TableViewTools {
 
     public static void fillPairMatchedTable(List<PairMatched> pairs, TableView<PairMatchedProperty> tableView) {
         //Specify locale resources
-        ResourceBundle bundle = ResourceBundle.getBundle("PairTableView", Settings.getInstance().getLocale());
+        ResourceBundle bundle = ResourceBundle.getBundle("PairMatchedTableView", Settings.getInstance().getLocale());
 
         List<PairMatchedProperty> pairProperties = pairs.stream()
                 .map(PairMatchedProperty::new)
@@ -79,27 +92,15 @@ public class TableViewTools {
                 topColumn.getColumns().add(column);
 
                 //Change column name based on selected language
-                try {
-                    System.out.println("The column name is " + columnName);
-                    String specifiedColumnName = bundle.getString(columnName);
-                    column.setText(bundle.getString(columnName));
-                } catch (Exception e) {
-                    System.out.println("couldnt find key in resources bundle");
-                    continue;
-                }
+                column.setText(bundle.getString(columnName));
 
             }
 
             tableView.getColumns().add(topColumn);
+
             //Change column name based on selected language
-            try {
-                System.out.println("The column name is " + entry.getKey());
-                String specifiedColumnName = bundle.getString(entry.getKey());
-                topColumn.setText(bundle.getString(entry.getKey()));
-            } catch (Exception e) {
-                System.out.println("couldnt find key in resources bundle");
-                continue;
-            }
+            topColumn.setText(bundle.getString(entry.getKey()));
+
         }
 
         tableView.setItems(data);

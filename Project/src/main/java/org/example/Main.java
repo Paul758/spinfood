@@ -41,10 +41,7 @@ import org.example.data.factory.Person;
 import org.example.data.structures.EventParticipant;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
-import org.example.view.DataTabController;
-import org.example.view.PairListTabController;
-import org.example.view.TabController;
-import org.example.view.UIAction;
+import org.example.view.*;
 import org.example.view.tools.PairBuilder;
 import org.example.view.tools.SoloTable;
 import org.example.view.tools.SoloTableListener;
@@ -86,8 +83,7 @@ public class Main extends Application implements SoloTableListener {
         fxmlLoader.setLocation(getClass().getResource("/Main.fxml"));
 
         //Specify locale resources
-        Locale locale = Locale.GERMAN;
-        ResourceBundle bundle = ResourceBundle.getBundle("MenuBarItemsBundle", locale);
+        ResourceBundle bundle = ResourceBundle.getBundle("MenuBarItemsBundle", Settings.getInstance().getLocale());
         fxmlLoader.setResources(bundle);
 
 
@@ -107,6 +103,11 @@ public class Main extends Application implements SoloTableListener {
     private void createDataTab() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/DataTabController.fxml"));
+
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("DataTabBundle", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
+
         root = fxmlLoader.load();
         DataTabController dataTabController = fxmlLoader.getController();
         dataTabController.setup(this);
@@ -123,8 +124,7 @@ public class Main extends Application implements SoloTableListener {
         fxmlLoader.setLocation(getClass().getResource("/PairListTabController.fxml"));
 
         //Specify locale resources
-        Locale locale = Locale.GERMAN;
-        ResourceBundle bundle = ResourceBundle.getBundle("MenuBarItemsBundle", locale);
+        ResourceBundle bundle = ResourceBundle.getBundle("MenuBarItemsBundle", Settings.getInstance().getLocale());
         fxmlLoader.setResources(bundle);
 
         root = fxmlLoader.load();
