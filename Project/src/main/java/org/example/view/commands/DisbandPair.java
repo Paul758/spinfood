@@ -8,7 +8,7 @@ import org.example.view.UIAction;
 public class DisbandPair implements UIAction {
 
     MatchingRepository matchingRepository;
-    PairMatched pairToDisband;
+    public PairMatched pairToDisband;
     public DisbandPair(MatchingRepository matchingRepository, PairMatched pairToDisband) {
         this.matchingRepository = matchingRepository;
         this.pairToDisband = pairToDisband;
@@ -16,6 +16,7 @@ public class DisbandPair implements UIAction {
 
     @Override
     public void run() {
+        System.out.println("now disbanding pair " + pairToDisband.getSoloA().getPerson().id() + " " + pairToDisband.getSoloB().getPerson().id());
         matchingRepository.disbandPair(pairToDisband);
     }
 

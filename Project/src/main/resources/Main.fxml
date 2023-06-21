@@ -35,7 +35,7 @@
                 <MenuItem mnemonicParsing="false" onAction="#undo" text="undo" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" onAction="#undo" text="Redo">
+            <Menu mnemonicParsing="false" text="Redo">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#redo" text="redo" />
               </items>
