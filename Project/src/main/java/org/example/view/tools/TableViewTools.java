@@ -8,13 +8,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 import org.example.logic.structures.PairMatched;
+import org.example.view.Settings;
 import org.example.view.properties.PairMatchedProperty;
 import org.example.view.properties.PairProperty;
 import org.example.view.properties.SoloProperty;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TableViewTools {
     public static void fillSoloTable(List<Solo> solos, TableView<SoloProperty> tableView) {
@@ -34,6 +33,9 @@ public class TableViewTools {
     }
 
     public static void fillPairTable(List<Pair> pairs, TableView<PairProperty> tableView) {
+
+
+
         List<PairProperty> pairProperties = pairs.stream()
                 .map(PairProperty::new)
                 .toList();
@@ -47,7 +49,9 @@ public class TableViewTools {
                 TableColumn<PairProperty, String> column = new TableColumn<>(columnName);
                 column.setCellValueFactory(new PropertyValueFactory<>(columnName));
                 topColumn.getColumns().add(column);
+
             }
+
 
             tableView.getColumns().add(topColumn);
         }
@@ -57,6 +61,9 @@ public class TableViewTools {
     }
 
     public static void fillPairMatchedTable(List<PairMatched> pairs, TableView<PairMatchedProperty> tableView) {
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("PairTableView", Settings.getInstance().getLocale());
+
         List<PairMatchedProperty> pairProperties = pairs.stream()
                 .map(PairMatchedProperty::new)
                 .toList();
@@ -70,9 +77,29 @@ public class TableViewTools {
                 TableColumn<PairMatchedProperty, String> column = new TableColumn<>(columnName);
                 column.setCellValueFactory(new PropertyValueFactory<>(columnName));
                 topColumn.getColumns().add(column);
+
+                //Change column name based on selected language
+                try {
+                    System.out.println("The column name is " + columnName);
+                    String specifiedColumnName = bundle.getString(columnName);
+                    column.setText(bundle.getString(columnName));
+                } catch (Exception e) {
+                    System.out.println("couldnt find key in resources bundle");
+                    continue;
+                }
+
             }
 
             tableView.getColumns().add(topColumn);
+            //Change column name based on selected language
+            try {
+                System.out.println("The column name is " + entry.getKey());
+                String specifiedColumnName = bundle.getString(entry.getKey());
+                topColumn.setText(bundle.getString(entry.getKey()));
+            } catch (Exception e) {
+                System.out.println("couldnt find key in resources bundle");
+                continue;
+            }
         }
 
         tableView.setItems(data);

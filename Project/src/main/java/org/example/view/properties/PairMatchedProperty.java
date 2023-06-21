@@ -5,6 +5,8 @@ import org.example.logic.structures.PairMatched;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class PairMatchedProperty {
     private final PairMatched pairMatched;

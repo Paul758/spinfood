@@ -14,28 +14,28 @@
          </children></AnchorPane>
       <MenuBar maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" text="%menuBarFile">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
-                  <MenuItem mnemonicParsing="false" onAction="#createDataTab" text="New" />
+              <MenuItem mnemonicParsing="false" text="%menuBarFileClose" />
+                  <MenuItem mnemonicParsing="false" onAction="#createDataTab" text="%menuBarFileNew" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu mnemonicParsing="false" text="%menuBarEdit">
             <items>
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="%menuBarHelp">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Undo">
+            <Menu mnemonicParsing="false" text="%menuBarUndo">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#undo" text="undo" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Redo">
+            <Menu mnemonicParsing="false" text="%menuBarRedo">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#redo" text="redo" />
               </items>

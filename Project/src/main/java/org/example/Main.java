@@ -84,6 +84,13 @@ public class Main extends Application implements SoloTableListener {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/Main.fxml"));
+
+        //Specify locale resources
+        Locale locale = Locale.GERMAN;
+        ResourceBundle bundle = ResourceBundle.getBundle("MenuBarItemsBundle", locale);
+        fxmlLoader.setResources(bundle);
+
+
         root = fxmlLoader.load();
 
         stage.setTitle("Project");
@@ -114,6 +121,12 @@ public class Main extends Application implements SoloTableListener {
     public void createPairTab(DataTabController dataTabController) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/PairListTabController.fxml"));
+
+        //Specify locale resources
+        Locale locale = Locale.GERMAN;
+        ResourceBundle bundle = ResourceBundle.getBundle("MenuBarItemsBundle", locale);
+        fxmlLoader.setResources(bundle);
+
         root = fxmlLoader.load();
         PairListTabController pairListTabController = fxmlLoader.getController();
         pairListTabController.setup(dataTabController);
