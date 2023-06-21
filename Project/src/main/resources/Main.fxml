@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Main">
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Main">
    <children>
       <AnchorPane fx:id="pane" layoutY="25.0" prefHeight="554.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
          <children>
@@ -30,6 +30,16 @@
               <MenuItem mnemonicParsing="false" text="About" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Undo">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#undo" text="undo" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" onAction="#undo" text="Redo">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#redo" text="redo" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </children>

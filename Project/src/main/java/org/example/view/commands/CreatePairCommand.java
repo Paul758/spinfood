@@ -28,4 +28,9 @@ public class CreatePairCommand implements UIAction {
         matchingRepository.soloSuccessors.add(pairMatched.getSoloB());
         matchingRepository.getMatchedPairsCollection().remove(pairMatched);
     }
+
+    @Override
+    public void redo() {
+        run();
+    }
 }

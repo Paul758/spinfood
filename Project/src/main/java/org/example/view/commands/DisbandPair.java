@@ -14,7 +14,6 @@ public class DisbandPair implements UIAction {
         this.pairToDisband = pairToDisband;
     }
 
-
     @Override
     public void run() {
         matchingRepository.disbandPair(pairToDisband);
@@ -29,5 +28,10 @@ public class DisbandPair implements UIAction {
         matchingRepository.soloSuccessors.remove(soloB);
 
         matchingRepository.getMatchedPairsCollection().add(pairToDisband);
+    }
+
+    @Override
+    public void redo() {
+        run();
     }
 }

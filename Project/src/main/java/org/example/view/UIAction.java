@@ -5,4 +5,6 @@ public interface UIAction {
     void run();
 
     void undo();
+
+    void redo();
 }

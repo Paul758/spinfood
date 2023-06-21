@@ -43,6 +43,8 @@ import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 import org.example.view.DataTabController;
 import org.example.view.PairListTabController;
+import org.example.view.TabController;
+import org.example.view.UIAction;
 import org.example.view.tools.PairBuilder;
 import org.example.view.tools.SoloTable;
 import org.example.view.tools.SoloTableListener;
@@ -57,8 +59,11 @@ import java.util.List;
 
 public class Main extends Application implements SoloTableListener {
 
+    HashMap<Tab, TabController> tabControllerHashMap = new HashMap<>();
+
     @FXML
     private MenuBar menuBar;
+
     @FXML
     private AnchorPane pane;
     @FXML
@@ -69,6 +74,7 @@ public class Main extends Application implements SoloTableListener {
     DataManagement dataManagement;
     Parent root;
     SoloTable soloTable;
+
 
     public static void main(String[] args) {
         launch();
@@ -116,6 +122,7 @@ public class Main extends Application implements SoloTableListener {
         tab.setContent(root);
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
+        tabControllerHashMap.put(tab, pairListTabController);
     }
 
     @FXML
@@ -138,4 +145,23 @@ public class Main extends Application implements SoloTableListener {
     public void contextMenuClicked() {
         System.out.println("context menu clicked");
     }
+
+    @FXML
+    public void undo(){
+        Tab tab = tabPane.getSelectionModel().getSelectedItem();
+        TabController selectedTab = tabControllerHashMap.get(tab);
+        System.out.println("called");
+        selectedTab.undo();
+
+    }
+
+    @FXML
+    public void redo(){
+        Tab tab = tabPane.getSelectionModel().getSelectedItem();
+        TabController selectedTab = tabControllerHashMap.get(tab);
+        System.out.println("called");
+        selectedTab.redo();
+
+    }
+
 }

@@ -22,7 +22,7 @@ import org.example.view.tools.TableViewTools;
 import java.io.IOException;
 import java.util.List;
 
-public class PairListTabController {
+public class PairListTabController extends TabController {
 
     @FXML
     private AnchorPane successorTablePane;
@@ -49,7 +49,12 @@ public class PairListTabController {
         PairMatchedProperty pairMatchedProperty = matchedPairsTableView.getSelectionModel().getSelectedItem();
         PairMatched pairMatched = pairMatchedProperty.getPairMatched();
         DisbandPair disbandPair = new DisbandPair(matchingRepository, pairMatched);
-        disbandPair.run();
+        run(disbandPair);
+        updateTables();
+    }
+
+    @Override
+    public void updateUI() {
         updateTables();
     }
 
@@ -73,7 +78,7 @@ public class PairListTabController {
     public void closePairBuilder(Solo soloA, Solo soloB) {
         if (soloA != null && soloB != null) {
             CreatePairCommand createPairCommand = new CreatePairCommand(soloA, soloB, matchingRepository);
-            createPairCommand.run();
+            run(createPairCommand);
             updateTables();
         }
         pairBuilderStage.close();
@@ -96,4 +101,5 @@ public class PairListTabController {
         successorTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         matchedPairsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
+
 }
