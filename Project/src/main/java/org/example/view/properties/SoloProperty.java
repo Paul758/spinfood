@@ -6,6 +6,7 @@ import org.example.data.structures.Solo;
 import org.example.view.tools.ViewTools;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class SoloProperty {
@@ -23,8 +24,17 @@ public class SoloProperty {
         this.kitchenType = solo.kitchen.getKitchenType().toString();
     }
 
-    public static List<String> simpleData() {
-        return List.of("gender", "age", "foodPreference", "kitchenType");
+    public static LinkedHashMap<String, List<Entry>> getColumnNames() {
+        List<Entry> data = List.of(
+                new Entry("gender"),
+                new Entry("age"),
+                new Entry("foodPreference"),
+                new Entry("foodPreferenceIcon"),
+                new Entry("kitchenType"));
+
+        LinkedHashMap<String, List<Entry>> map = new LinkedHashMap<>();
+        map.put("", data);
+        return map;
     }
 
     public Solo getSolo() {

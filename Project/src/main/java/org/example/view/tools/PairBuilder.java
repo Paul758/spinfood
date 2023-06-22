@@ -37,8 +37,8 @@ public class PairBuilder {
         this.pairListTabController = pairListTabController;
         List<Solo> emptyList = new ArrayList<>();
 
-        TableViewTools.fillSoloTable(soloList, tableViewA);
-        TableViewTools.fillSoloTable(emptyList, tableViewB);
+        TableViewTools.fillTable(soloList, tableViewA, SoloProperty::new, SoloProperty.getColumnNames());
+        TableViewTools.fillTable(emptyList, tableViewB, SoloProperty::new, SoloProperty.getColumnNames());
 
         setupMouseEvents();
         checkBuildPairButton();
@@ -77,7 +77,7 @@ public class PairBuilder {
         tableViewB.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
         tableViewB.getItems().clear();
         tableViewB.getColumns().clear();
-        TableViewTools.fillSoloTable(possibleMatches, tableViewB);
+        TableViewTools.fillTable(possibleMatches, tableViewB, SoloProperty::new, SoloProperty.getColumnNames());
         tableViewB.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 

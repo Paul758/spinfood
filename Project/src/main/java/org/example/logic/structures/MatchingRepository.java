@@ -5,6 +5,8 @@ import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
+import org.example.logic.matchingalgorithms.GraphPairMatching;
+import org.example.logic.matchingalgorithms.MatchCosts;
 import org.example.logic.tools.MatchingSystem;
 
 import java.util.ArrayList;
@@ -47,6 +49,19 @@ public class MatchingRepository {
     public void matchPairs() {
         createAndAddPrematchedPairs();
         Collection<PairMatched> matchedPairs = MatchingSystem.matchPairs((List<Solo>) this.getSoloDataCollection());
+        this.addMatchedPairsCollection(matchedPairs);
+        UpdateSoloSuccessors();
+    }
+
+    public void matchPairs(MatchCosts matchCosts) {
+        if (matchCosts == null) {
+            matchPairs();
+            return;
+        }
+
+        createAndAddPrematchedPairs();
+        List<Solo> solosToMatch = (List<Solo>) this.getSoloDataCollection();
+        List<PairMatched> matchedPairs = GraphPairMatching.match(solosToMatch, matchCosts);
         this.addMatchedPairsCollection(matchedPairs);
         UpdateSoloSuccessors();
     }

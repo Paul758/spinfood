@@ -43,6 +43,14 @@ public class MatchCosts {
         }
     }
 
+    public MatchCosts(List<Criteria> ranking) {
+        for (int i = 0; i < ranking.size(); i++) {
+            float weightMultiplier = ranking.size() + 1 - i;
+            Criteria criteria = ranking.get(i);
+            calculateValue(criteria, weightMultiplier);
+        }
+    }
+
 
 
     /**

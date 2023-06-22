@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import org.example.data.*;
 import org.example.data.structures.Solo;
+import org.example.logic.matchingalgorithms.MatchCosts;
 import org.example.logic.matchingalgorithms.RandomGroupMatching;
 import org.example.logic.metrics.GroupListMetrics;
 import org.example.logic.structures.GroupMatched;
@@ -45,6 +46,7 @@ import org.example.view.DataTabController;
 import org.example.view.PairListTabController;
 import org.example.view.TabController;
 import org.example.view.UIAction;
+import org.example.view.controller.GroupListTabController;
 import org.example.view.tools.PairBuilder;
 import org.example.view.tools.SoloTable;
 import org.example.view.tools.SoloTableListener;
@@ -57,7 +59,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class Main extends Application implements SoloTableListener {
+public class Main extends Application {
 
     HashMap<Tab, TabController> tabControllerHashMap = new HashMap<>();
 
@@ -111,18 +113,32 @@ public class Main extends Application implements SoloTableListener {
         tabPane.getSelectionModel().select(tab);
     }
 
-    public void createPairTab(DataTabController dataTabController) throws IOException {
+    public void createPairTab(DataTabController dataTabController, MatchCosts matchCosts) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/PairListTabController.fxml"));
         root = fxmlLoader.load();
         PairListTabController pairListTabController = fxmlLoader.getController();
-        pairListTabController.setup(dataTabController);
+        pairListTabController.setup(dataTabController, this, matchCosts);
 
         Tab tab = new Tab("Pair " + ViewTools.getTimeStamp());
         tab.setContent(root);
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
         tabControllerHashMap.put(tab, pairListTabController);
+    }
+
+    public void createGroupTab(MatchingRepository matchingRepository) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/GroupListTabController.fxml"));
+        root = fxmlLoader.load();
+        GroupListTabController groupListTabController = fxmlLoader.getController();
+        groupListTabController.setup(matchingRepository);
+
+        Tab tab = new Tab("Group " + ViewTools.getTimeStamp());
+        tab.setContent(root);
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().select(tab);
+        tabControllerHashMap.put(tab, groupListTabController);
     }
 
     @FXML
@@ -135,13 +151,6 @@ public class Main extends Application implements SoloTableListener {
 
     }
 
-    @Override
-    public void onSelectItemLeftClick(Solo solo, SoloTable soloTableView) {
-        if (soloTableView.equals(soloTable)) {
-
-        }
-    }
-
     public void contextMenuClicked() {
         System.out.println("context menu clicked");
     }
@@ -152,7 +161,6 @@ public class Main extends Application implements SoloTableListener {
         TabController selectedTab = tabControllerHashMap.get(tab);
         System.out.println("called");
         selectedTab.undo();
-
     }
 
     @FXML
@@ -161,7 +169,6 @@ public class Main extends Application implements SoloTableListener {
         TabController selectedTab = tabControllerHashMap.get(tab);
         System.out.println("called");
         selectedTab.redo();
-
     }
 
 }

@@ -7,6 +7,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.view.PairListTabController">
    <children>
@@ -36,7 +37,8 @@
                </padding></AnchorPane>
         </items>
       </SplitPane>
-      <Button layoutX="40.0" layoutY="28.0" mnemonicParsing="false" text="Button" />
+      <Button fx:id="matchGroupsButton" layoutX="383.0" layoutY="28.0" mnemonicParsing="false" onAction="#createGroupTab" text="Match groups" />
       <Button fx:id="createPairButton" layoutX="493.0" layoutY="28.0" mnemonicParsing="false" onAction="#openPairBuilder" text="Create pair" />
+      <Text fx:id="pairListMetricsText" layoutX="14.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
    </children>
 </AnchorPane>

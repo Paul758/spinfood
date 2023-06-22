@@ -28,5 +28,6 @@
       </SplitPane>
       <Button fx:id="defaultButton" layoutX="22.0" layoutY="32.0" mnemonicParsing="false" onAction="#loadDefaultValues" text="Load default values" />
       <Button layoutX="492.0" layoutY="32.0" mnemonicParsing="false" onAction="#createPairList" text="Match pairs" />
+      <Button mnemonicParsing="false" onAction="#showMatchCostChooserWindow" text="Button" />
    </children>
 </AnchorPane>

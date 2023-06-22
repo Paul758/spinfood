@@ -7,9 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.example.Main;
 import org.example.data.structures.Solo;
+import org.example.logic.matchingalgorithms.MatchCosts;
 import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
 import org.example.view.commands.CreatePairCommand;
@@ -18,6 +21,7 @@ import org.example.view.properties.SoloProperty;
 import org.example.view.commands.DisbandPair;
 import org.example.view.tools.PairBuilder;
 import org.example.view.tools.TableViewTools;
+import org.example.view.tools.ViewTools;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,23 +35,29 @@ public class PairListTabController extends TabController {
     @FXML
     private TableView<PairMatchedProperty> matchedPairsTableView;
     @FXML
+    private Text pairListMetricsText;
+    @FXML
     private Button createPairButton;
+    @FXML
+    private Button matchGroupsButton;
     DataTabController dataTabController;
+    private Main main;
     private MatchingRepository matchingRepository;
     private Stage pairBuilderStage;
 
-    public void setup(DataTabController dataTabController) {
+    public void setup(DataTabController dataTabController, Main main, MatchCosts matchCosts) {
         this.dataTabController = dataTabController;
+        this.main = main;
         matchingRepository = new MatchingRepository(dataTabController.getDataManagement());
-        matchingRepository.matchPairs();
-        updateTables();
+        matchingRepository.matchPairs(matchCosts);
+        updateUI();
     }
 
     @FXML
     public void dissolvePair() {
         System.out.println("called");
         PairMatchedProperty pairMatchedProperty = matchedPairsTableView.getSelectionModel().getSelectedItem();
-        PairMatched pairMatched = pairMatchedProperty.getPairMatched();
+        PairMatched pairMatched = pairMatchedProperty.pairMatched();
         DisbandPair disbandPair = new DisbandPair(matchingRepository, pairMatched);
         run(disbandPair);
         updateTables();
@@ -55,6 +65,8 @@ public class PairListTabController extends TabController {
 
     @Override
     public void updateUI() {
+        List<PairMatched> pairs = (List<PairMatched>) matchingRepository.getMatchedPairsCollection();
+        pairListMetricsText.setText(ViewTools.getPairListMetrics(pairs));
         updateTables();
     }
 
@@ -84,6 +96,12 @@ public class PairListTabController extends TabController {
         pairBuilderStage.close();
     }
 
+    @FXML
+    public void createGroupTab() throws IOException {
+        matchingRepository.matchGroups();
+        main.createGroupTab(matchingRepository);
+    }
+
     private void updateTables() {
         successorTableView.getItems().clear();
         successorTableView.getColumns().clear();
@@ -94,12 +112,11 @@ public class PairListTabController extends TabController {
         matchedPairsTableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
         List<Solo> soloSuccessors = (List<Solo>) matchingRepository.soloSuccessors;
-        TableViewTools.fillSoloTable(soloSuccessors, successorTableView);
+        TableViewTools.fillTable(soloSuccessors, successorTableView, SoloProperty::new, SoloProperty.getColumnNames());
         List<PairMatched> pairs = (List<PairMatched>) matchingRepository.getMatchedPairsCollection();
-        TableViewTools.fillPairMatchedTable(pairs, matchedPairsTableView);
+        TableViewTools.fillTable(pairs, matchedPairsTableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());
 
         successorTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         matchedPairsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
-
 }
