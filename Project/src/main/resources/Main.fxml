@@ -40,6 +40,12 @@
                 <MenuItem mnemonicParsing="false" onAction="#redo" text="redo" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="%menuBarLanguage">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#handleEnglishItemClicked" text="%menuItemEnglish" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleGermanItemClicked" text="%menuItemGerman" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </children>

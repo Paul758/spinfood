@@ -29,4 +29,12 @@ public class Settings {
     public Locale getLocale() {
         return this.locale;
     }
+
+    public void savePreferences() {
+        
+    }
+
+    public void setPreferences() {
+
+    }
 }

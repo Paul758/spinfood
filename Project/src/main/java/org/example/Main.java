@@ -159,6 +159,19 @@ public class Main extends Application implements SoloTableListener {
         System.out.println("context menu clicked");
     }
 
+
+    @FXML
+    public void handleEnglishItemClicked() {
+        Settings.getInstance().setLocale(Locale.US);
+    }
+
+    @FXML
+    public void handleGermanItemClicked() {
+        Settings.getInstance().setLocale(Locale.GERMAN);
+    }
+
+
+
     @FXML
     public void undo(){
         Tab tab = tabPane.getSelectionModel().getSelectedItem();
