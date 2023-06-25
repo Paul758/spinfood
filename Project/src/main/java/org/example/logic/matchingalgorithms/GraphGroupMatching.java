@@ -3,15 +3,18 @@ package org.example.logic.matchingalgorithms;
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.Sex;
+import org.example.data.factory.Kitchen;
 import org.example.logic.enums.MealType;
 import org.example.logic.graph.Graph;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GraphGroupMatching {
+
 
 
     /**
@@ -101,6 +104,9 @@ public class GraphGroupMatching {
         int superGroupSize = 9;
         List<List<PairMatched>> superGroups = new ArrayList<>();
 
+        //Setup Hashmap to track kitchen usage
+        HashMap<Kitchen, List<MealType>> kitchenUsageHashmap = new HashMap<>();
+
         for (int i = 0; i < matchedPairs.size(); i++) {
             try {
 
@@ -108,18 +114,92 @@ public class GraphGroupMatching {
                 PairMatched currentPair = graph.getVertexWithLeastEdges(8);
                 superGroup.add(currentPair);
                 for(int j = 0; j < superGroupSize - 1; j++) {
-                    PairMatched possibleMatch = graph.getEdgeWithLeastWeight(currentPair).participant;
+                    //Get distinct participant with the least edge weight
+                    PairMatched possibleMatch = graph.getEdgeWithLeastWeight(currentPair, superGroup).participant;
                     superGroup.add(possibleMatch);
-                    graph.removeVertex(possibleMatch);
+                    //graph.removeVertex(possibleMatch);
                 }
-                superGroups.add(superGroup);
-                graph.removeVertex(currentPair);
+
+                //graph.removeVertex(currentPair);
+
+                //if superGroup is feasible, add it to superGroups and delete vertices
+                if(isFeasible(superGroup, kitchenUsageHashmap)) {
+                    superGroups.add(superGroup);
+                    for (PairMatched pair: superGroup) {
+                        graph.removeVertex(pair);
+                    }
+                } else {
+                    continue;
+                }
+
 
             } catch (Exception e) {
                 break;
             }
         }
         return superGroups;
+    }
+
+    private static boolean isFeasible(List<PairMatched> superGroup, HashMap<Kitchen, List<MealType>> kitchenUsageHashmap) {
+
+        //check if kitchen is already used for a meal
+        for(int i = 0; i < superGroup.size(); i++) {
+            PairMatched cookingPair = superGroup.get(i);
+            Kitchen pairKitchen = cookingPair.getKitchen();
+
+            if(!kitchenUsageHashmap.containsKey(pairKitchen)) {
+                kitchenUsageHashmap.put(pairKitchen, new ArrayList<>());
+            }
+            List<MealType> mealsCookedInKitchen = kitchenUsageHashmap.get(pairKitchen);
+            //i < 3, starter pair
+            if(i < 3) {
+                if(mealsCookedInKitchen.contains(MealType.STARTER)) {
+                    return false;
+                } else {
+                    mealsCookedInKitchen.add(MealType.STARTER);
+                    kitchenUsageHashmap.put(pairKitchen, mealsCookedInKitchen);
+                }
+            }
+            //i < 6, main pair
+            if(i < 6) {
+                if(mealsCookedInKitchen.contains(MealType.MAIN)) {
+                    return false;
+                }
+            }
+            //else, dessert pair
+            if(mealsCookedInKitchen.contains(MealType.DESSERT)) {
+                return false;
+            }
+        }
+
+        //add meals to the corresponding kitchen
+        for(int i = 0; i < superGroup.size(); i++) {
+            PairMatched cookingPair = superGroup.get(i);
+            Kitchen pairKitchen = cookingPair.getKitchen();
+
+            List<MealType> mealsCookedInKitchen = kitchenUsageHashmap.get(pairKitchen);
+            //i < 3, starter pair
+            if (i < 3) {
+                mealsCookedInKitchen.add(MealType.STARTER);
+                kitchenUsageHashmap.put(pairKitchen, mealsCookedInKitchen);
+            }
+            //i < 6, main pair
+            if (i < 6) {
+                if (mealsCookedInKitchen.contains(MealType.MAIN)) {
+                    mealsCookedInKitchen.add(MealType.MAIN);
+                    kitchenUsageHashmap.put(pairKitchen, mealsCookedInKitchen);
+                }
+            }
+            if (i > 6) {
+                //else, dessert pair
+                if (mealsCookedInKitchen.contains(MealType.DESSERT)) {
+                    mealsCookedInKitchen.add(MealType.DESSERT);
+                    kitchenUsageHashmap.put(pairKitchen, mealsCookedInKitchen);
+                }
+            }
+        }
+
+        return true;
     }
 
 

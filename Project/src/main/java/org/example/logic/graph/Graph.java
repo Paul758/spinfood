@@ -137,4 +137,20 @@ public class Graph <T> {
         }
         return minEdge;
     }
+
+
+    public Edge<T> getEdgeWithLeastWeight(T participant, List<T> possibleMatchParticipants) {
+        List<Edge<T>> edges = adjacencyList.get(participant);
+        Edge<T> minEdge = null;
+        float minWeight = Float.MAX_VALUE;
+
+        for (Edge<T> edge : edges) {
+            if (edge.weight < minWeight && !possibleMatchParticipants.contains(edge.participant)) {
+                minEdge = edge;
+                minWeight = edge.weight;
+            }
+        }
+        return minEdge;
+    }
+
 }
