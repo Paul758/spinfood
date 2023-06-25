@@ -79,6 +79,7 @@ public class Main extends Application implements SoloTableListener {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Settings.getInstance().setPreferences();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/Main.fxml"));
 
@@ -162,12 +163,13 @@ public class Main extends Application implements SoloTableListener {
 
     @FXML
     public void handleEnglishItemClicked() {
-        Settings.getInstance().setLocale(Locale.US);
+        Settings.getInstance().saveLanguage(Locale.US);
+
     }
 
     @FXML
     public void handleGermanItemClicked() {
-        Settings.getInstance().setLocale(Locale.GERMAN);
+        Settings.getInstance().saveLanguage(Locale.GERMAN);
     }
 
 
