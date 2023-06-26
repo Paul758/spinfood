@@ -117,10 +117,7 @@ public class GraphGroupMatching {
                     //Get distinct participant with the least edge weight
                     PairMatched possibleMatch = graph.getEdgeWithLeastWeight(currentPair, superGroup).participant;
                     superGroup.add(possibleMatch);
-                    //graph.removeVertex(possibleMatch);
                 }
-
-                //graph.removeVertex(currentPair);
 
                 //if superGroup is feasible, add it to superGroups and delete vertices
                 if(isFeasible(superGroup, kitchenUsageHashmap)) {
@@ -198,7 +195,6 @@ public class GraphGroupMatching {
                 }
             }
         }
-
         return true;
     }
 
@@ -246,39 +242,6 @@ public class GraphGroupMatching {
         return dinnerGroups;
     }
 
-
-    /**
-     * Filters the vegan and veggie pairs of all matched pairs
-     * @author Paul Groß
-     * @param matchedPairs a list of pairs that have been matched
-     * @return the pairs that have a vegan or veggie food preference
-     */
-    private static List<PairMatched> getVeggieVeganPairs(List<PairMatched> matchedPairs) {
-        List<PairMatched> veggieVeganPairs = new ArrayList<>();
-        for (PairMatched pair : matchedPairs) {
-            if (pair.getFoodPreference().equals(FoodPreference.VEGGIE) || pair.getFoodPreference().equals(FoodPreference.VEGAN)) {
-                veggieVeganPairs.add(pair);
-            }
-        }
-        return veggieVeganPairs;
-
-    }
-
-    /**
-     * Filters the meat and none pairs of all matched pairs
-     * @author Paul Groß
-     * @param matchedPairs a list of pairs that have been matched
-     * @return the pairs that have a meat or none food preference
-     */
-    private static List<PairMatched> getMeatPairs(List<PairMatched> matchedPairs) {
-        List<PairMatched> meatNonePairs = new ArrayList<>();
-        for (PairMatched pair : matchedPairs) {
-            if (pair.getFoodPreference().equals(FoodPreference.MEAT) || pair.getFoodPreference().equals(FoodPreference.NONE)) {
-                meatNonePairs.add(pair);
-            }
-        }
-        return meatNonePairs;
-    }
 
     /**
      * Creates a graph based on the pairs as vertices. Calculates the costs to match two pairs and adds these costs as
