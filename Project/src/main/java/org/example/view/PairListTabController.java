@@ -27,6 +27,7 @@ import org.example.view.tools.ViewTools;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class PairListTabController extends TabController {
 
@@ -92,6 +93,11 @@ public class PairListTabController extends TabController {
         System.out.println("Open pair builder");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(PairBuilder.class.getResource("/PairBuilder.fxml"));
+
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("PairBuilderBundle", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
+
         Parent root = fxmlLoader.load();
 
         PairBuilder pairBuilder = fxmlLoader.getController();

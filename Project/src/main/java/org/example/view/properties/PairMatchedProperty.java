@@ -7,6 +7,8 @@ import org.example.view.tools.ViewTools;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public record PairMatchedProperty(PairMatched pairMatched) {
 

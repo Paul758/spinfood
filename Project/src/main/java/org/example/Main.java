@@ -43,13 +43,11 @@ import org.example.data.factory.Person;
 import org.example.data.structures.EventParticipant;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
-import org.example.view.DataTabController;
-import org.example.view.PairListTabController;
-import org.example.view.TabController;
-import org.example.view.UIAction;
+import org.example.view.*;
 import org.example.view.comparer.GroupComparer;
 import org.example.view.comparer.PairComparer;
 import org.example.view.controller.GroupListTabController;
+
 import org.example.view.tools.PairBuilder;
 import org.example.view.tools.SoloTable;
 import org.example.view.tools.SoloTableListener;
@@ -90,8 +88,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Settings.getInstance().setPreferences();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/Main.fxml"));
+
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("MenuBarItemsBundle", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
+
+
         root = fxmlLoader.load();
 
         stage.setTitle("Project");
@@ -109,7 +114,13 @@ public class Main extends Application {
     private void createDataTab() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/DataTabController.fxml"));
-        Parent root = fxmlLoader.load();
+
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("DataTabBundle", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
+
+        root = fxmlLoader.load();
+
         DataTabController dataTabController = fxmlLoader.getController();
         dataTabController.setup(this);
 
@@ -122,10 +133,15 @@ public class Main extends Application {
     public void createPairTab(DataTabController dataTabController, MatchCosts matchCosts) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/PairListTabController.fxml"));
-        Parent root = fxmlLoader.load();
 
         String tabName = "Pair " + ViewTools.getTimeStamp();
 
+
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("MenuBarItemsBundle", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
+
+        root = fxmlLoader.load();
         PairListTabController pairListTabController = fxmlLoader.getController();
         pairListTabController.setup(dataTabController, this, matchCosts, tabName);
         pairListTabControllers.add(pairListTabController);
@@ -180,6 +196,18 @@ public class Main extends Application {
         stage.setTitle("Pair Comparer");
         stage.setScene(new Scene(root));
         stage.show();
+    }
+
+
+
+    @FXML
+    public void handleEnglishItemClicked() {
+        Settings.getInstance().saveLanguage(Locale.US);
+    }
+
+    @FXML
+    public void handleGermanItemClicked() {
+        Settings.getInstance().saveLanguage(Locale.GERMAN);
     }
 
 

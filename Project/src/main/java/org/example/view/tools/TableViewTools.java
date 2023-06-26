@@ -10,10 +10,19 @@ import javafx.scene.image.ImageView;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 import org.example.logic.structures.PairMatched;
+
 import org.example.view.properties.*;
 
 import java.util.*;
 import java.util.function.Function;
+
+import org.example.view.Settings;
+import org.example.view.properties.PairMatchedProperty;
+import org.example.view.properties.PairProperty;
+import org.example.view.properties.SoloProperty;
+
+import java.util.*;
+
 
 public class TableViewTools {
 
@@ -22,26 +31,7 @@ public class TableViewTools {
                 .map(mapper)
                 .toList();
     }
-
-    /*
-    public static void fillSoloTable(List<Solo> solos, TableView<SoloProperty> tableView) {
-        List<SoloProperty> soloProperties = solos.stream()
-                .map(SoloProperty::new)
-                .toList();
-        ObservableList<SoloProperty> data = FXCollections.observableArrayList(soloProperties);
-
-        for (String columnName : SoloProperty.getColumnNames()) {
-            TableColumn<SoloProperty, String> column = new TableColumn<>(columnName);
-            column.setCellValueFactory(new PropertyValueFactory<>(columnName));
-            tableView.getColumns().add(column);
-        }
-
-        tableView.setItems(data);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-    }
-
-     */
-
+    
     public static <T, R> void fillTable(List<T> objects, TableView<R> tableView,
                                         Function<T,R> mapper, LinkedHashMap<String, List<Entry>> columnsMap) {
 
@@ -64,6 +54,7 @@ public class TableViewTools {
                 topColumn.getColumns().addAll(columns);
                 tableView.getColumns().add(topColumn);
             }
+
         }
 
         tableView.setItems(data);
@@ -90,6 +81,7 @@ public class TableViewTools {
         column.setComparator(Comparator.comparing(imageView -> imageView.getUserData().toString()));
         return column;
     }
+
 
     private static <T> void clearTable(TableView<T> tableView) {
         tableView.getItems().clear();

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.view.DataTabController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.view.DataTabController">
    <children>
       <SplitPane dividerPositions="0.49216300940438873" layoutX="68.0" layoutY="75.0" orientation="VERTICAL" prefHeight="325.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="75.0">
         <items>
@@ -33,5 +33,6 @@
       <Button layoutX="14.0" layoutY="40.0" mnemonicParsing="false" onAction="#loadPartyLocation" text="Load Partylocation" />
       <Text fx:id="participantPathText" layoutX="141.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="..." />
       <Text fx:id="partyLocationPathText" layoutX="141.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="..." />
+
    </children>
 </AnchorPane>
