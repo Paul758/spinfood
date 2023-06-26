@@ -16,6 +16,7 @@ import org.example.logic.matchingalgorithms.MatchCosts;
 import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
 import org.example.view.commands.CreatePairCommand;
+import org.example.view.properties.PairListProperty;
 import org.example.view.properties.PairMatchedProperty;
 import org.example.view.properties.SoloProperty;
 import org.example.view.commands.DisbandPair;
@@ -24,6 +25,7 @@ import org.example.view.tools.TableViewTools;
 import org.example.view.tools.ViewTools;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PairListTabController extends TabController {
@@ -35,6 +37,8 @@ public class PairListTabController extends TabController {
     @FXML
     private TableView<PairMatchedProperty> matchedPairsTableView;
     @FXML
+    private TableView<PairListProperty> metricsTableView;
+    @FXML
     private Text pairListMetricsText;
     @FXML
     private Button createPairButton;
@@ -43,14 +47,20 @@ public class PairListTabController extends TabController {
     DataTabController dataTabController;
     private Main main;
     private MatchingRepository matchingRepository;
+    private String name;
     private Stage pairBuilderStage;
 
-    public void setup(DataTabController dataTabController, Main main, MatchCosts matchCosts) {
+    public void setup(DataTabController dataTabController, Main main, MatchCosts matchCosts, String name) {
         this.dataTabController = dataTabController;
         this.main = main;
-        matchingRepository = new MatchingRepository(dataTabController.getDataManagement());
-        matchingRepository.matchPairs(matchCosts);
+        this.matchingRepository = dataTabController.getMatchingRepository();
+        this.matchingRepository.matchPairs(matchCosts);
+        this.name = name;
         updateUI();
+    }
+
+    public String getName() {
+        return name;
     }
 
     @FXML
@@ -60,14 +70,21 @@ public class PairListTabController extends TabController {
         PairMatched pairMatched = pairMatchedProperty.pairMatched();
         DisbandPair disbandPair = new DisbandPair(matchingRepository, pairMatched);
         run(disbandPair);
-        updateTables();
     }
 
     @Override
     public void updateUI() {
-        List<PairMatched> pairs = (List<PairMatched>) matchingRepository.getMatchedPairsCollection();
-        pairListMetricsText.setText(ViewTools.getPairListMetrics(pairs));
-        updateTables();
+        List<Solo> soloSuccessors = new ArrayList<>(matchingRepository.soloSuccessors);
+        TableViewTools.fillTable(soloSuccessors, successorTableView, SoloProperty::new, SoloProperty.getColumnNames());
+        List<PairMatched> pairs = new ArrayList<>(matchingRepository.getMatchedPairsCollection());
+        TableViewTools.fillTable(pairs, matchedPairsTableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());
+        List<PairListTabController> controllers = List.of(this);
+        TableViewTools.fillTable(controllers, metricsTableView, PairListProperty::new, PairListProperty.getColumnNames());
+    }
+
+    @Override
+    public void closeMatchCost(MatchCosts matchCosts) {
+
     }
 
     @FXML
@@ -91,7 +108,6 @@ public class PairListTabController extends TabController {
         if (soloA != null && soloB != null) {
             CreatePairCommand createPairCommand = new CreatePairCommand(soloA, soloB, matchingRepository);
             run(createPairCommand);
-            updateTables();
         }
         pairBuilderStage.close();
     }
@@ -102,21 +118,7 @@ public class PairListTabController extends TabController {
         main.createGroupTab(matchingRepository);
     }
 
-    private void updateTables() {
-        successorTableView.getItems().clear();
-        successorTableView.getColumns().clear();
-        matchedPairsTableView.getItems().clear();
-        matchedPairsTableView.getColumns().clear();
-
-        successorTableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        matchedPairsTableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-
-        List<Solo> soloSuccessors = (List<Solo>) matchingRepository.soloSuccessors;
-        TableViewTools.fillTable(soloSuccessors, successorTableView, SoloProperty::new, SoloProperty.getColumnNames());
-        List<PairMatched> pairs = (List<PairMatched>) matchingRepository.getMatchedPairsCollection();
-        TableViewTools.fillTable(pairs, matchedPairsTableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());
-
-        successorTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
-        matchedPairsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+    public MatchingRepository getMatchingRepository() {
+        return matchingRepository;
     }
 }

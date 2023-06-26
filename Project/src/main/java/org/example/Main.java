@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import org.example.data.*;
 import org.example.data.structures.Solo;
 import org.example.logic.matchingalgorithms.MatchCosts;
@@ -46,6 +47,8 @@ import org.example.view.DataTabController;
 import org.example.view.PairListTabController;
 import org.example.view.TabController;
 import org.example.view.UIAction;
+import org.example.view.comparer.GroupComparer;
+import org.example.view.comparer.PairComparer;
 import org.example.view.controller.GroupListTabController;
 import org.example.view.tools.PairBuilder;
 import org.example.view.tools.SoloTable;
@@ -73,6 +76,9 @@ public class Main extends Application {
     @FXML
     private TabPane tabPane;
 
+    List<PairListTabController> pairListTabControllers;
+    List<GroupListTabController> groupListTabControllers;
+
     DataManagement dataManagement;
     Parent root;
     SoloTable soloTable;
@@ -95,18 +101,18 @@ public class Main extends Application {
 
     @FXML
     private void initialize() {
-
+        pairListTabControllers = new ArrayList<>();
+        groupListTabControllers = new ArrayList<>();
     }
 
     @FXML
     private void createDataTab() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/DataTabController.fxml"));
-        root = fxmlLoader.load();
+        Parent root = fxmlLoader.load();
         DataTabController dataTabController = fxmlLoader.getController();
         dataTabController.setup(this);
 
-        LocalDateTime timeStamp = LocalDateTime.now();
         Tab tab = new Tab("Data " + ViewTools.getTimeStamp());
         tab.setContent(root);
         tabPane.getTabs().add(tab);
@@ -116,11 +122,15 @@ public class Main extends Application {
     public void createPairTab(DataTabController dataTabController, MatchCosts matchCosts) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/PairListTabController.fxml"));
-        root = fxmlLoader.load();
-        PairListTabController pairListTabController = fxmlLoader.getController();
-        pairListTabController.setup(dataTabController, this, matchCosts);
+        Parent root = fxmlLoader.load();
 
-        Tab tab = new Tab("Pair " + ViewTools.getTimeStamp());
+        String tabName = "Pair " + ViewTools.getTimeStamp();
+
+        PairListTabController pairListTabController = fxmlLoader.getController();
+        pairListTabController.setup(dataTabController, this, matchCosts, tabName);
+        pairListTabControllers.add(pairListTabController);
+
+        Tab tab = new Tab(tabName);
         tab.setContent(root);
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
@@ -130,9 +140,10 @@ public class Main extends Application {
     public void createGroupTab(MatchingRepository matchingRepository) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/GroupListTabController.fxml"));
-        root = fxmlLoader.load();
+        Parent root = fxmlLoader.load();
         GroupListTabController groupListTabController = fxmlLoader.getController();
         groupListTabController.setup(matchingRepository);
+        groupListTabControllers.add(groupListTabController);
 
         Tab tab = new Tab("Group " + ViewTools.getTimeStamp());
         tab.setContent(root);
@@ -142,18 +153,35 @@ public class Main extends Application {
     }
 
     @FXML
-    private void loadDefaultValues() {
+    private void openPairComparer() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(PairBuilder.class.getResource("/PairComparer.fxml"));
+        Parent root = fxmlLoader.load();
 
+        PairComparer pairComparer = fxmlLoader.getController();
+        pairComparer.update(pairListTabControllers);
+
+        Stage stage = new Stage();
+        stage.setTitle("Pair Comparer");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
     @FXML
-    private void clickPairBuilderButton() throws Exception {
+    private void openGroupComparer() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(PairBuilder.class.getResource("/GroupComparer.fxml"));
+        Parent root = fxmlLoader.load();
 
+        GroupComparer groupComparer = fxmlLoader.getController();
+        groupComparer.update(groupListTabControllers);
+
+        Stage stage = new Stage();
+        stage.setTitle("Pair Comparer");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
-    public void contextMenuClicked() {
-        System.out.println("context menu clicked");
-    }
 
     @FXML
     public void undo(){

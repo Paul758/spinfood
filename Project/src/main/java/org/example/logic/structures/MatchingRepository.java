@@ -250,8 +250,7 @@ public class MatchingRepository {
             replacePairInGroups(pair, newPair, affectedGroups);
         } else {
             affectedGroups.forEach(g -> {g.removePair(pair);
-                                            disbandGroup(g);
-                                            getMatchedGroupsCollection().remove(g);});
+                                            disbandGroup(g);});
         }
 
         getMatchedPairsCollection().remove(pair);
@@ -262,7 +261,8 @@ public class MatchingRepository {
      * Adds all remaining pairs of a group to the successor list
      * @param group a group that needs to be deleted
      */
-    private void disbandGroup(GroupMatched group) {
+    public void disbandGroup(GroupMatched group) {
+        matchedGroupsCollection.remove(group);
         pairSuccessors.addAll(group.getPairList());
     }
 

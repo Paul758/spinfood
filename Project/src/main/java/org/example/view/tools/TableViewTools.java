@@ -12,10 +12,7 @@ import org.example.data.structures.Solo;
 import org.example.logic.structures.PairMatched;
 import org.example.view.properties.*;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public class TableViewTools {
@@ -45,90 +42,58 @@ public class TableViewTools {
 
      */
 
-    public static void fillPairTable(List<Pair> pairs, TableView<PairProperty> tableView) {
-        List<PairProperty> pairProperties = pairs.stream()
-                .map(PairProperty::new)
-                .toList();
-        ObservableList<PairProperty> data = FXCollections.observableArrayList(pairProperties);
+    public static <T, R> void fillTable(List<T> objects, TableView<R> tableView,
+                                        Function<T,R> mapper, LinkedHashMap<String, List<Entry>> columnsMap) {
 
-        LinkedHashMap<String, List<String>> map = PairProperty.getColumnNames();
-        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-            TableColumn<PairProperty, String> topColumn = new TableColumn<>(entry.getKey());
+        clearTable(tableView);
+        List<R> properties = map(objects,mapper);
+        ObservableList<R> data = FXCollections.observableArrayList(properties);
 
-            for (String columnName : entry.getValue()) {
-                TableColumn<PairProperty, String> column = new TableColumn<>(columnName);
-                column.setCellValueFactory(new PropertyValueFactory<>(columnName));
-                topColumn.getColumns().add(column);
+        for (Map.Entry<String, List<Entry>> entry : columnsMap.entrySet()) {
+            List<TableColumn<R, ?>> columns = new ArrayList<>();
+
+            for (Entry listEntry : entry.getValue()) {
+                TableColumn<R, ?> column = createColumn(listEntry);
+                columns.add(column);
             }
 
-            tableView.getColumns().add(topColumn);
+            if (entry.getKey().equals("")) {
+                tableView.getColumns().addAll(columns);
+            } else {
+                TableColumn<R, String> topColumn = new TableColumn<>(entry.getKey());
+                topColumn.getColumns().addAll(columns);
+                tableView.getColumns().add(topColumn);
+            }
         }
 
         tableView.setItems(data);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 
-    public static void fillPairMatchedTable(List<PairMatched> pairs, TableView<PairMatchedProperty> tableView) {
-        List<PairMatchedProperty> pairProperties = pairs.stream()
-                .map(PairMatchedProperty::new)
-                .toList();
-        ObservableList<PairMatchedProperty> data = FXCollections.observableArrayList(pairProperties);
-
-        LinkedHashMap<String, List<Entry>> map = PairMatchedProperty.getColumnNames();
-        for (Map.Entry<String, List<Entry>> entry : map.entrySet()) {
-            TableColumn<PairMatchedProperty, String> topColumn = new TableColumn<>(entry.getKey());
-
-            for (Entry listEntry : entry.getValue()) {
-                if (listEntry.entryType.equals(EntryType.STRING)) {
-                    String name = listEntry.name;
-                    TableColumn<PairMatchedProperty, String> column = new TableColumn<>(name);
-                    column.setCellValueFactory(new PropertyValueFactory<>(name));
-                    topColumn.getColumns().add(column);
-                } else if (listEntry.entryType.equals(EntryType.IMAGE)) {
-                    String name = listEntry.name;
-                    TableColumn<PairMatchedProperty, ImageView> column = new TableColumn<>(name);
-                    column.setCellValueFactory(new PropertyValueFactory<>(name));
-                    topColumn.getColumns().add(column);
-                }
-            }
-
-            tableView.getColumns().add(topColumn);
-        }
-
-        tableView.setItems(data);
+    private static <R> TableColumn<R, ?> createColumn(Entry listEntry) {
+        return switch (listEntry.entryType) {
+            case STRING -> createStringColumn(listEntry.name);
+            case IMAGE -> createImageViewColumn(listEntry.name);
+            case INDEX -> throw new RuntimeException();
+        };
     }
 
-    public static <T, R> void fillTable(List<T> objects, TableView<R> tableView,
-                                        Function<T,R> mapper, LinkedHashMap<String, List<Entry>> columnsMap) {
-        List<R> properties = map(objects,mapper);
-        ObservableList<R> data = FXCollections.observableArrayList(properties);
+    private static <R> TableColumn<R, String> createStringColumn(String name) {
+        TableColumn<R, String> column = new TableColumn<>(name);
+        column.setCellValueFactory(new PropertyValueFactory<>(name));
+        return column;
+    }
 
-        for (Map.Entry<String, List<Entry>> entry : columnsMap.entrySet()) {
-            TableColumn<R, String> topColumn = new TableColumn<>(entry.getKey());
+    private static <R> TableColumn<R, ImageView> createImageViewColumn(String name) {
+        TableColumn<R, ImageView> column = new TableColumn<>(name);
+        column.setCellValueFactory(new PropertyValueFactory<>(name));
+        column.setComparator(Comparator.comparing(imageView -> imageView.getUserData().toString()));
+        return column;
+    }
 
-            for (Entry listEntry : entry.getValue()) {
-                if (listEntry.entryType.equals(EntryType.STRING)) {
-                    String name = listEntry.name;
-                    TableColumn<R, String> column = new TableColumn<>(name);
-                    column.setCellValueFactory(new PropertyValueFactory<>(name));
-                    topColumn.getColumns().add(column);
-                } else if (listEntry.entryType.equals(EntryType.IMAGE)) {
-                    String name = listEntry.name;
-                    TableColumn<R, ImageView> column = new TableColumn<>(name);
-                    column.setCellValueFactory(new PropertyValueFactory<>(name));
-                    column.setComparator(Comparator.comparing(imageView -> imageView.getUserData().toString()));
-                    topColumn.getColumns().add(column);
-                } else if (listEntry.entryType.equals(EntryType.INDEX)) {
-                    String name = listEntry.name;
-                    TableColumn<R, Integer> column = new TableColumn<>(name);
-                    column.setCellValueFactory(c -> new ReadOnlyObjectWrapper<>(tableView.getItems().indexOf(c.getValue()) + 1));
-                    topColumn.getColumns().add(column);
-                }
-            }
-
-            tableView.getColumns().add(topColumn);
-        }
-
-        tableView.setItems(data);
+    private static <T> void clearTable(TableView<T> tableView) {
+        tableView.getItems().clear();
+        tableView.getColumns().clear();
+        tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
     }
 }

@@ -14,12 +14,20 @@ public record PairMatchedProperty(PairMatched pairMatched) {
         List<Entry> soloA = List.of(
                 new Entry("genderA"),
                 new Entry("ageA"),
-                new Entry(EntryType.IMAGE, "foodPreferenceAIcon"));
+                new Entry(EntryType.IMAGE, "foodPreferenceAIcon")
+        );
 
         List<Entry> soloB = List.of(
                 new Entry("genderB"),
                 new Entry("ageB"),
-                new Entry(EntryType.IMAGE, "foodPreferenceBIcon"));
+                new Entry(EntryType.IMAGE, "foodPreferenceBIcon")
+        );
+
+        List<Entry> metrics = List.of(
+                new Entry("ageDifference"),
+                new Entry("genderDiversity"),
+                new Entry("preferenceDeviation")
+        );
 
         //List<String> pairData = List.of("preMatched");
         //List<String> metrics = List.of("ageDifference", "genderDiversity", "preferenceDeviation");
@@ -28,7 +36,7 @@ public record PairMatchedProperty(PairMatched pairMatched) {
         values.put("soloA", soloA);
         values.put("soloB", soloB);
         //values.put("pairData", pairData);
-        //values.put("metrics", metrics);
+        values.put("metrics", metrics);
         return values;
     }
 
@@ -61,7 +69,7 @@ public record PairMatchedProperty(PairMatched pairMatched) {
     }
 
     public ImageView getFoodPreferenceBIcon() {
-        return ViewTools.getFoodPreferenceIcon(pairMatched.getSoloA().getFoodPreference());
+        return ViewTools.getFoodPreferenceIcon(pairMatched.getSoloB().getFoodPreference());
     }
 
     public String getPreMatched() {

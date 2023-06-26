@@ -1,85 +1,87 @@
 package org.example.view.tools;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import org.example.Main;
 import org.example.logic.enums.Criteria;
 import org.example.logic.matchingalgorithms.MatchCosts;
-import org.example.view.DataTabController;
+import org.example.view.TabController;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class MatchCostChooser {
+
     @FXML
-    GridPane gridPane;
+    Text ageText, genderText, foodPreferenceText, matchCountText, pathLengthText;
     @FXML
-    Text ageText, genderText, foodPreferenceText;
-    @FXML
-    ComboBox<Integer> ageBox, genderBox, foodPreferenceBox;
+    ComboBox<Integer> ageBox, genderBox, foodPreferenceBox, matchCountBox, pathLengthBox;
     @FXML
     Button assignButton;
+    private static final int CRITERIA_COUNT = 5;
+    private static final ArrayList<Integer> BOX_VALUES = new ArrayList<>(List.of(1,2,3,4,5));
     private List<ComboBox<Integer>> comboBoxes;
-    private DataTabController dataTabController;
+    private TabController tabController;
 
-    public void setup(DataTabController dataTabController) {
-        this.dataTabController = dataTabController;
+    public void setup(TabController tabController) {
+        this.tabController = tabController;
         comboBoxes = new ArrayList<>();
         comboBoxes.add(ageBox);
         comboBoxes.add(genderBox);
         comboBoxes.add(foodPreferenceBox);
+        comboBoxes.add(matchCountBox);
+        comboBoxes.add(pathLengthBox);
 
-        List<Integer> possibleValues = new ArrayList<>(List.of(1,2,3));
         for (ComboBox<Integer> box : comboBoxes) {
-            box.setItems(FXCollections.observableList(possibleValues));
+            box.setItems(FXCollections.observableList(BOX_VALUES));
             box.setOnAction(e -> checkAssignButton());
         }
 
         checkAssignButton();
     }
 
-    public void checkAssignButton() {
+    private void checkAssignButton() {
         boolean isValid = isValidAssignment();
         assignButton.setDisable(!isValid);
     }
 
     @FXML
-    public void assign() throws IOException {
+    private void assign() {
         List<Criteria> criteria = new ArrayList<>();
-        criteria.add(getCriteria(1));
-        criteria.add(getCriteria(2));
-        criteria.add(getCriteria(3));
+
+        for (int i = 1; i <= CRITERIA_COUNT; i++) {
+            criteria.add(getCriteria(i));
+        }
 
         MatchCosts matchCosts = new MatchCosts(criteria);
-        dataTabController.closeMatchCostChooserWindow(matchCosts);
+        tabController.closeMatchCostChooserWindow(matchCosts);
     }
 
-    public Criteria getCriteria(int number) {
+    @FXML
+    private void matchWithoutPriorities() {
+        tabController.closeMatchCostChooserWindow(null);
+    }
+
+    private Criteria getCriteria(int number) {
         if (ageBox.getValue() == number) {
             return Criteria.AGE_DIFFERENCE;
         } else if (genderBox.getValue() == number) {
             return Criteria.GENDER_DIFFERENCE;
         } else if (foodPreferenceBox.getValue() == number) {
             return Criteria.IDENTICAL_FOOD_PREFERENCE;
+        } else if (matchCountBox.getValue() == number) {
+            return Criteria.MATCH_COUNT;
+        } else if (pathLengthBox.getValue() == number) {
+            return Criteria.PATH_LENGTH;
         } else {
             throw new RuntimeException("cant find criteria for value " + number);
         }
     }
 
-    public boolean isValidAssignment() {
-        int[] arr = new int[3];
+    private boolean isValidAssignment() {
+        int[] arr = new int[CRITERIA_COUNT];
         for (ComboBox<Integer> box : comboBoxes) {
             if (box.getValue() != null) {
                 arr[box.getValue() - 1]++;

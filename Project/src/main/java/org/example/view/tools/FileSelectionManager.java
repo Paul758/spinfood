@@ -37,6 +37,5 @@ public class FileSelectionManager {
         dataFiles.add(participantList);
         dataFiles.add(partyLocation);
         return dataFiles;
-
     }
 }
