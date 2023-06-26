@@ -3,15 +3,18 @@ package org.example.logic.matchingalgorithms;
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
 import org.example.data.enums.Sex;
+import org.example.data.factory.Kitchen;
 import org.example.logic.enums.MealType;
 import org.example.logic.graph.Graph;
 import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GraphGroupMatching {
+
 
 
     /**
@@ -24,23 +27,67 @@ public class GraphGroupMatching {
     public static List<GroupMatched> match(List<PairMatched> matchedPairs, MatchCosts matchCosts) {
 
         //Split pairs based on foodPreference
-        List<PairMatched> meatNonePairs = getMeatNonePairs(matchedPairs);
-        List<PairMatched> veggieVeganPairs = getVeggieVeganPairs(matchedPairs);
+        ArrayList<PairMatched> nonePairs = new ArrayList<>(getPairsByFoodPreference(matchedPairs, List.of(FoodPreference.NONE)));
+        ArrayList<PairMatched> meatPairs = new ArrayList<>(getPairsByFoodPreference(matchedPairs, List.of(FoodPreference.MEAT))) ;
+        ArrayList<PairMatched> veggieVeganPairs = new ArrayList<>(getPairsByFoodPreference(matchedPairs, List.of(FoodPreference.VEGGIE, FoodPreference.VEGAN)));
+        System.out.println("");
+        //Fill meatPairs and veggie/vegan pairs with none food preference pairs
+        while (meatPairs.size() % 9 != 0) {
+
+            if (nonePairs.size() == 0) {
+                break;
+            }
+
+            PairMatched nextNonePair = nonePairs.get(0);
+            nonePairs.remove(0);
+            meatPairs.add(nextNonePair);
+        }
+
+        while (veggieVeganPairs.size() % 9 != 0) {
+            if(nonePairs.size() == 0) {
+                break;
+            }
+
+            PairMatched nextNonePair = nonePairs.get(0);
+            nonePairs.remove(0);
+            veggieVeganPairs.add(nextNonePair);
+        }
+        System.out.println("meat pairs size " + meatPairs.size());
+        System.out.println("veggie vegan pairs size " + veggieVeganPairs.size());
 
         //Create graphs
-        Graph<PairMatched> meatGraph = createGraph(meatNonePairs, matchCosts);
+        Graph<PairMatched> meatGraph = createGraph(meatPairs, matchCosts);
         Graph<PairMatched> veganGraph = createGraph(veggieVeganPairs, matchCosts);
+        Graph<PairMatched> noneGraph = createGraph(nonePairs, matchCosts);
 
         //find superGroups (9 pairs)
         List<List<PairMatched>> superGroups = new ArrayList<>();
-        superGroups.addAll(findSuperGroups(meatNonePairs, meatGraph));
+        superGroups.addAll(findSuperGroups(meatPairs, meatGraph));
         superGroups.addAll(findSuperGroups(veggieVeganPairs, veganGraph));
+        superGroups.addAll(findSuperGroups(nonePairs, noneGraph));
+
+        System.out.println("super groups size is " + superGroups.size());
 
         //Split superGroups in corresponding dinner groups and assign cook (starters, mainCourse, dessert)
         List<GroupMatched> groupMatchedList;
         groupMatchedList = createDinnerGroupsFromSuperGroups(superGroups);
 
         return groupMatchedList;
+    }
+
+    private static List<PairMatched> getPairsByFoodPreference(List<PairMatched> matchedPairs, List<FoodPreference> foodPreferences) {
+        List<PairMatched> requestedPairs = new ArrayList<>();
+
+        for (PairMatched pair : matchedPairs) {
+            for (FoodPreference foodPreference: foodPreferences ) {
+                if(pair.getFoodPreference().equals(foodPreference)){
+                    requestedPairs.add(pair);
+
+                }
+            }
+        }
+        List<PairMatched> distinctPairs = requestedPairs.stream().distinct().toList();
+        return distinctPairs;
     }
 
 
@@ -57,24 +104,102 @@ public class GraphGroupMatching {
         int superGroupSize = 9;
         List<List<PairMatched>> superGroups = new ArrayList<>();
 
+        //Setup Hashmap to track kitchen usage
+        HashMap<Kitchen, List<MealType>> kitchenUsageHashmap = new HashMap<>();
+
         for (int i = 0; i < matchedPairs.size(); i++) {
             try {
+
                 List<PairMatched> superGroup = new ArrayList<>();
                 PairMatched currentPair = graph.getVertexWithLeastEdges(8);
-
-                for(int j = 0; j < superGroupSize; j++) {
-                    PairMatched possibleMatch = graph.getEdgeWithLeastWeight(currentPair).participant;
+                superGroup.add(currentPair);
+                for(int j = 0; j < superGroupSize - 1; j++) {
+                    //Get distinct participant with the least edge weight
+                    PairMatched possibleMatch = graph.getEdgeWithLeastWeight(currentPair, superGroup).participant;
                     superGroup.add(possibleMatch);
-                    graph.removeVertex(possibleMatch);
+                    //graph.removeVertex(possibleMatch);
                 }
-                superGroups.add(superGroup);
-                graph.removeVertex(currentPair);
+
+                //graph.removeVertex(currentPair);
+
+                //if superGroup is feasible, add it to superGroups and delete vertices
+                if(isFeasible(superGroup, kitchenUsageHashmap)) {
+                    superGroups.add(superGroup);
+                    for (PairMatched pair: superGroup) {
+                        graph.removeVertex(pair);
+                    }
+                } else {
+                    continue;
+                }
+
 
             } catch (Exception e) {
                 break;
             }
         }
         return superGroups;
+    }
+
+    private static boolean isFeasible(List<PairMatched> superGroup, HashMap<Kitchen, List<MealType>> kitchenUsageHashmap) {
+
+        //check if kitchen is already used for a meal
+        for(int i = 0; i < superGroup.size(); i++) {
+            PairMatched cookingPair = superGroup.get(i);
+            Kitchen pairKitchen = cookingPair.getKitchen();
+
+            if(!kitchenUsageHashmap.containsKey(pairKitchen)) {
+                kitchenUsageHashmap.put(pairKitchen, new ArrayList<>());
+            }
+            List<MealType> mealsCookedInKitchen = kitchenUsageHashmap.get(pairKitchen);
+            //i < 3, starter pair
+            if(i < 3) {
+                if(mealsCookedInKitchen.contains(MealType.STARTER)) {
+                    return false;
+                } else {
+                    mealsCookedInKitchen.add(MealType.STARTER);
+                    kitchenUsageHashmap.put(pairKitchen, mealsCookedInKitchen);
+                }
+            }
+            //i < 6, main pair
+            if(i < 6) {
+                if(mealsCookedInKitchen.contains(MealType.MAIN)) {
+                    return false;
+                }
+            }
+            //else, dessert pair
+            if(mealsCookedInKitchen.contains(MealType.DESSERT)) {
+                return false;
+            }
+        }
+
+        //add meals to the corresponding kitchen
+        for(int i = 0; i < superGroup.size(); i++) {
+            PairMatched cookingPair = superGroup.get(i);
+            Kitchen pairKitchen = cookingPair.getKitchen();
+
+            List<MealType> mealsCookedInKitchen = kitchenUsageHashmap.get(pairKitchen);
+            //i < 3, starter pair
+            if (i < 3) {
+                mealsCookedInKitchen.add(MealType.STARTER);
+                kitchenUsageHashmap.put(pairKitchen, mealsCookedInKitchen);
+            }
+            //i < 6, main pair
+            if (i < 6) {
+                if (mealsCookedInKitchen.contains(MealType.MAIN)) {
+                    mealsCookedInKitchen.add(MealType.MAIN);
+                    kitchenUsageHashmap.put(pairKitchen, mealsCookedInKitchen);
+                }
+            }
+            if (i > 6) {
+                //else, dessert pair
+                if (mealsCookedInKitchen.contains(MealType.DESSERT)) {
+                    mealsCookedInKitchen.add(MealType.DESSERT);
+                    kitchenUsageHashmap.put(pairKitchen, mealsCookedInKitchen);
+                }
+            }
+        }
+
+        return true;
     }
 
 
@@ -145,7 +270,7 @@ public class GraphGroupMatching {
      * @param matchedPairs a list of pairs that have been matched
      * @return the pairs that have a meat or none food preference
      */
-    private static List<PairMatched> getMeatNonePairs(List<PairMatched> matchedPairs) {
+    private static List<PairMatched> getMeatPairs(List<PairMatched> matchedPairs) {
         List<PairMatched> meatNonePairs = new ArrayList<>();
         for (PairMatched pair : matchedPairs) {
             if (pair.getFoodPreference().equals(FoodPreference.MEAT) || pair.getFoodPreference().equals(FoodPreference.NONE)) {
