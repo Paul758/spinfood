@@ -116,7 +116,7 @@ public class Main extends Application {
         fxmlLoader.setLocation(getClass().getResource("/DataTabController.fxml"));
 
         //Specify locale resources
-        ResourceBundle bundle = ResourceBundle.getBundle("DataTabBundle", Settings.getInstance().getLocale());
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements", Settings.getInstance().getLocale());
         fxmlLoader.setResources(bundle);
 
         root = fxmlLoader.load();
@@ -138,8 +138,9 @@ public class Main extends Application {
 
 
         //Specify locale resources
-        ResourceBundle bundle = ResourceBundle.getBundle("MenuBarItemsBundle", Settings.getInstance().getLocale());
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements", Settings.getInstance().getLocale());
         fxmlLoader.setResources(bundle);
+
 
         root = fxmlLoader.load();
         PairListTabController pairListTabController = fxmlLoader.getController();
@@ -156,6 +157,9 @@ public class Main extends Application {
     public void createGroupTab(MatchingRepository matchingRepository) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/GroupListTabController.fxml"));
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
         Parent root = fxmlLoader.load();
         GroupListTabController groupListTabController = fxmlLoader.getController();
         groupListTabController.setup(matchingRepository);
@@ -172,6 +176,9 @@ public class Main extends Application {
     private void openPairComparer() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(PairBuilder.class.getResource("/PairComparer.fxml"));
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
         Parent root = fxmlLoader.load();
 
         PairComparer pairComparer = fxmlLoader.getController();
@@ -187,6 +194,9 @@ public class Main extends Application {
     private void openGroupComparer() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(PairBuilder.class.getResource("/GroupComparer.fxml"));
+        //Specify locale resources
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
         Parent root = fxmlLoader.load();
 
         GroupComparer groupComparer = fxmlLoader.getController();

@@ -12,6 +12,7 @@ import org.example.view.tools.PairBuilder;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.ResourceBundle;
 
 public abstract class TabController {
 
@@ -52,6 +53,9 @@ public abstract class TabController {
     protected void openMatchCostChooserWindow() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(PairBuilder.class.getResource("/MatchCostChooser.fxml"));
+        //Specify locale
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
         Parent root = fxmlLoader.load();
 
         MatchCostChooser matchCostChooser = fxmlLoader.getController();

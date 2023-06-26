@@ -95,7 +95,7 @@ public class PairListTabController extends TabController {
         fxmlLoader.setLocation(PairBuilder.class.getResource("/PairBuilder.fxml"));
 
         //Specify locale resources
-        ResourceBundle bundle = ResourceBundle.getBundle("PairBuilderBundle", Settings.getInstance().getLocale());
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements", Settings.getInstance().getLocale());
         fxmlLoader.setResources(bundle);
 
         Parent root = fxmlLoader.load();

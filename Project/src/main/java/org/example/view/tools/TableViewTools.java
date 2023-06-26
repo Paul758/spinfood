@@ -31,7 +31,7 @@ public class TableViewTools {
                 .map(mapper)
                 .toList();
     }
-    
+
     public static <T, R> void fillTable(List<T> objects, TableView<R> tableView,
                                         Function<T,R> mapper, LinkedHashMap<String, List<Entry>> columnsMap) {
 
@@ -45,6 +45,9 @@ public class TableViewTools {
             for (Entry listEntry : entry.getValue()) {
                 TableColumn<R, ?> column = createColumn(listEntry);
                 columns.add(column);
+                System.out.println("this entry is " + listEntry.name);
+                ResourceBundle bundle = ResourceBundle.getBundle("tableViewColumns", Settings.getInstance().getLocale());
+                column.setText(bundle.getString(listEntry.name));
             }
 
             if (entry.getKey().equals("")) {

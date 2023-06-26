@@ -27,10 +27,10 @@
                </padding></AnchorPane>
         </items>
       </SplitPane>
-      <Button fx:id="defaultButton" layoutX="467.0" layoutY="40.0" mnemonicParsing="false" onAction="#loadDefaultValues" text="Load default values" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="40.0" />
-      <Button fx:id="matchPairsButton" layoutX="508.0" layoutY="15.0" mnemonicParsing="false" onAction="#showMatchCostChooserWindow" text="Match Pairs" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="15.0" />
-      <Button layoutX="14.0" layoutY="15.0" mnemonicParsing="false" onAction="#loadParticipants" text="Load Participants" />
-      <Button layoutX="14.0" layoutY="40.0" mnemonicParsing="false" onAction="#loadPartyLocation" text="Load Partylocation" />
+      <Button fx:id="defaultButton" layoutX="467.0" layoutY="40.0" mnemonicParsing="false" onAction="#loadDefaultValues" text="%LoadDefaultValues" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="40.0" />
+      <Button fx:id="matchPairsButton" layoutX="508.0" layoutY="15.0" mnemonicParsing="false" onAction="#showMatchCostChooserWindow" text="%MatchPairs" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="15.0" />
+      <Button layoutX="14.0" layoutY="15.0" mnemonicParsing="false" onAction="#loadParticipants" text="%LoadParticipants" />
+      <Button layoutX="14.0" layoutY="40.0" mnemonicParsing="false" onAction="#loadPartyLocation" text="%LoadPartylocation" />
       <Text fx:id="participantPathText" layoutX="141.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="..." />
       <Text fx:id="partyLocationPathText" layoutX="141.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="..." />
 
