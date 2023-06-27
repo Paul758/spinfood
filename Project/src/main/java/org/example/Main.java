@@ -50,12 +50,9 @@ import org.example.view.UIAction;
 import org.example.view.comparer.GroupComparer;
 import org.example.view.comparer.PairComparer;
 import org.example.view.controller.GroupListTabController;
-import org.example.view.tools.PairBuilder;
-import org.example.view.tools.SoloTable;
-import org.example.view.tools.SoloTableListener;
+import org.example.view.tools.*;
 
 import javafx.stage.Popup;
-import org.example.view.tools.ViewTools;
 
 
 import java.io.File;
@@ -64,25 +61,14 @@ import java.util.List;
 
 public class Main extends Application {
 
-    HashMap<Tab, TabController> tabControllerHashMap = new HashMap<>();
-
-    @FXML
-    private MenuBar menuBar;
-
-    @FXML
-    private AnchorPane pane;
     @FXML
     private Button defaultButton;
     @FXML
     private TabPane tabPane;
-
-    List<PairListTabController> pairListTabControllers;
-    List<GroupListTabController> groupListTabControllers;
-
-    DataManagement dataManagement;
-    Parent root;
-    SoloTable soloTable;
-
+    private final HashMap<Tab, TabController> tabControllerHashMap = new HashMap<>();
+    private List<DataTabController> dataTabControllers;
+    private List<PairListTabController> pairListTabControllers;
+    private List<GroupListTabController> groupListTabControllers;
 
     public static void main(String[] args) {
         launch();
@@ -92,7 +78,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/Main.fxml"));
-        root = fxmlLoader.load();
+        Parent root = fxmlLoader.load();
 
         stage.setTitle("Project");
         stage.setScene(new Scene(root));
@@ -103,91 +89,105 @@ public class Main extends Application {
     private void initialize() {
         pairListTabControllers = new ArrayList<>();
         groupListTabControllers = new ArrayList<>();
+        dataTabControllers = new ArrayList<>();
     }
 
     @FXML
     private void createDataTab() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/DataTabController.fxml"));
-        Parent root = fxmlLoader.load();
-        DataTabController dataTabController = fxmlLoader.getController();
-        dataTabController.setup(this);
+        String tabName = "Data " + ViewTools.getTimeStamp();
 
-        Tab tab = new Tab("Data " + ViewTools.getTimeStamp());
-        tab.setContent(root);
-        tabPane.getTabs().add(tab);
-        tabPane.getSelectionModel().select(tab);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DataTabController.fxml"));
+        fxmlLoader.setControllerFactory((Class<?> controllerClass) -> {
+            return new DataTabController(null, this, tabName);
+        });
+        Parent root = fxmlLoader.load();
+
+        DataTabController dataTabController = fxmlLoader.getController();
+        this.addNewTabController(dataTabController, root, tabName);
     }
 
-    public void createPairTab(DataTabController dataTabController, MatchCosts matchCosts) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("/PairListTabController.fxml"));
-        Parent root = fxmlLoader.load();
-
+    public void createPairTab(TabController parent, MatchCosts matchCosts) throws IOException {
         String tabName = "Pair " + ViewTools.getTimeStamp();
 
-        PairListTabController pairListTabController = fxmlLoader.getController();
-        pairListTabController.setup(dataTabController, this, matchCosts, tabName);
-        pairListTabControllers.add(pairListTabController);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/PairListTabController.fxml"));
+        fxmlLoader.setControllerFactory((Class<?> controllerClass) -> {
+            MatchingRepository matchingRepository = parent.getMatchingRepository().getCopy();
+            matchingRepository.matchPairs(matchCosts);
+            return new PairListTabController(matchingRepository, this, tabName);
+        });
+        Parent root = fxmlLoader.load();
 
-        Tab tab = new Tab(tabName);
-        tab.setContent(root);
-        tabPane.getTabs().add(tab);
-        tabPane.getSelectionModel().select(tab);
-        tabControllerHashMap.put(tab, pairListTabController);
+        PairListTabController pairListTabController = fxmlLoader.getController();
+        parent.addChild(pairListTabController);
+        this.addNewTabController(pairListTabController, root, tabName);
     }
 
-    public void createGroupTab(MatchingRepository matchingRepository) throws IOException {
+    public void createGroupTab(TabController parent, MatchCosts matchCosts) throws IOException {
+        String tabName = "Group " + ViewTools.getTimeStamp();
+
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/GroupListTabController.fxml"));
+        fxmlLoader.setControllerFactory((Class<?> controllerClass) -> {
+            MatchingRepository matchingRepository = parent.getMatchingRepository().getCopy() ;
+            matchingRepository.matchGroups(matchCosts);
+            return new GroupListTabController(matchingRepository, this, tabName);
+        });
         Parent root = fxmlLoader.load();
-        GroupListTabController groupListTabController = fxmlLoader.getController();
-        groupListTabController.setup(matchingRepository);
-        groupListTabControllers.add(groupListTabController);
 
-        Tab tab = new Tab("Group " + ViewTools.getTimeStamp());
-        tab.setContent(root);
-        tabPane.getTabs().add(tab);
-        tabPane.getSelectionModel().select(tab);
-        tabControllerHashMap.put(tab, groupListTabController);
+        GroupListTabController groupListTabController = fxmlLoader.getController();
+        parent.addChild(groupListTabController);
+        addNewTabController(groupListTabController, root, tabName);
     }
 
     @FXML
     private void openPairComparer() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(PairBuilder.class.getResource("/PairComparer.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/PairComparer.fxml"));
         Parent root = fxmlLoader.load();
 
         PairComparer pairComparer = fxmlLoader.getController();
         pairComparer.update(pairListTabControllers);
 
-        Stage stage = new Stage();
-        stage.setTitle("Pair Comparer");
-        stage.setScene(new Scene(root));
-        stage.show();
+        this.openNewWindow(root, "Pair Comparer");
     }
 
     @FXML
     private void openGroupComparer() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(PairBuilder.class.getResource("/GroupComparer.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GroupComparer.fxml"));
         Parent root = fxmlLoader.load();
 
         GroupComparer groupComparer = fxmlLoader.getController();
         groupComparer.update(groupListTabControllers);
 
+        this.openNewWindow(root, "Group Comparer");
+    }
+
+    private void openNewWindow(Parent root, String title) {
         Stage stage = new Stage();
-        stage.setTitle("Pair Comparer");
+        stage.setTitle(title);
         stage.setScene(new Scene(root));
         stage.show();
     }
 
+    public void addNewTabController(TabController tabController, Parent root, String name) {
+        Tab tab = new Tab(name);
+        tab.setContent(root);
+        tabPane.getTabs().add(tab);
+        tabPane.getSelectionModel().select(tab);
+        tabControllerHashMap.put(tab, tabController);
+
+        if (tabController instanceof DataTabController) {
+            dataTabControllers.add((DataTabController) tabController);
+        } else if (tabController instanceof PairListTabController) {
+            pairListTabControllers.add((PairListTabController) tabController);
+        } else if (tabController instanceof GroupListTabController) {
+            groupListTabControllers.add((GroupListTabController) tabController);
+        }
+    }
 
     @FXML
     public void undo(){
         Tab tab = tabPane.getSelectionModel().getSelectedItem();
         TabController selectedTab = tabControllerHashMap.get(tab);
-        System.out.println("called");
         selectedTab.undo();
     }
 
@@ -195,7 +195,6 @@ public class Main extends Application {
     public void redo(){
         Tab tab = tabPane.getSelectionModel().getSelectedItem();
         TabController selectedTab = tabControllerHashMap.get(tab);
-        System.out.println("called");
         selectedTab.redo();
     }
 

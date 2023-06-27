@@ -5,6 +5,7 @@ import org.example.data.enums.FoodPreference;
 import org.example.data.enums.KitchenType;
 import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
+import org.example.logic.matchingalgorithms.GraphGroupMatching;
 import org.example.logic.matchingalgorithms.GraphPairMatching;
 import org.example.logic.matchingalgorithms.MatchCosts;
 import org.example.logic.tools.MatchingSystem;
@@ -73,6 +74,21 @@ public class MatchingRepository {
         UpdatePairSuccessors();
     }
 
+    public void matchGroups(MatchCosts matchCosts) {
+        if (matchCosts == null) {
+            matchGroups();
+            return;
+        }
+
+        setDistanceToPartyLocationForPairs();
+        List<PairMatched> pairsToMatch = (List<PairMatched>) this.getMatchedPairsCollection();
+        Collection<GroupMatched> matchedGroups = GraphGroupMatching.match(pairsToMatch, matchCosts);
+        this.addMatchedGroupsCollection(matchedGroups);
+        UpdatePairSuccessors();
+    }
+
+
+
     /**
      * The pairs from the DataManagement object are transferred into PairMatched objects
      * @author Paul Groß
@@ -136,6 +152,15 @@ public class MatchingRepository {
 
     //Code for handling the un-registration of EventParticipants
 
+    public void removeSoloData(Solo solo) {
+        soloDataCollection.remove(solo);
+    }
+
+    public void removePairData(Pair pair) {
+        pairDataCollection.remove(pair);
+    }
+
+
     /**
      * Removes a solo and tries to find a successor
      * @param solo a solo that unregistered from the event
@@ -149,7 +174,17 @@ public class MatchingRepository {
         }
 
         //Find the pair that is affected by the removing of a solo
-        PairMatched affectedPair = getMatchedPairsCollection().stream().filter(p -> p.contains(solo)).toList().get(0);
+        PairMatched affectedPair = null;
+        for (PairMatched pairMatched : getMatchedPairsCollection()) {
+            if (pairMatched.contains(solo)) {
+                affectedPair = pairMatched;
+            }
+        }
+
+        if (affectedPair == null) {
+            System.out.println("no affected pair found");
+            return;
+        }
 
         //Find a replacement
         Solo newSolo = findReplacement(affectedPair, solo);
@@ -162,6 +197,8 @@ public class MatchingRepository {
                 affectedPair.setSoloB(newSolo);
             }
             affectedPair.updatePairMatchedData();
+            this.UpdateSoloSuccessors();
+            System.out.println("replacement found");
             return;
         }
 
@@ -178,6 +215,8 @@ public class MatchingRepository {
 
         //remove the pair
         removePair(affectedPair);
+
+        System.out.println("no replacement found");
     }
 
     /**
@@ -347,9 +386,35 @@ public class MatchingRepository {
         return matchedGroupsCollection;
     }
 
+    public void setSoloDataCollection(Collection<Solo> solos) {
+        soloDataCollection = solos;
+    }
+
+    public void setPairDataCollection(Collection<Pair> pairs) {
+        pairDataCollection = pairs;
+    }
+
 
     public void printPairSuccessorList(){
         pairSuccessors.forEach(x -> System.out.println(x.getFoodPreference()));
+    }
+
+    public MatchingRepository getCopy() {
+        MatchingRepository copy = new MatchingRepository(this.dataManagement);
+
+        copy.setSoloDataCollection(new ArrayList<>(this.soloDataCollection));
+        copy.setPairDataCollection(new ArrayList<>(this.pairDataCollection));
+
+        List<PairMatched> pairMatched = new ArrayList<>(this.matchedPairsCollection);
+        copy.addMatchedPairsCollection(pairMatched);
+
+        List<GroupMatched> groupMatched = new ArrayList<>(this.matchedGroupsCollection);
+        copy.addMatchedGroupsCollection(groupMatched);
+
+        copy.UpdateSoloSuccessors();
+        copy.UpdatePairSuccessors();
+
+        return copy;
     }
 
 

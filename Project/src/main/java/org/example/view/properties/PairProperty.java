@@ -4,17 +4,10 @@ import javafx.scene.image.ImageView;
 import org.example.data.structures.Pair;
 import org.example.view.tools.ViewTools;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
-public class PairProperty {
-    private final Pair pair;
-
-    public PairProperty(Pair pair) {
-        this.pair = pair;
-    }
+public record PairProperty(Pair pair) {
 
     public static LinkedHashMap<String, List<Entry>> getColumnNames() {
         List<Entry> soloA = List.of(
@@ -46,7 +39,7 @@ public class PairProperty {
     }
 
     public String getAgeA() {
-        return  String.valueOf(pair.soloA.person.age());
+        return String.valueOf(pair.soloA.person.age());
     }
 
     public String getSexA() {
@@ -58,7 +51,7 @@ public class PairProperty {
     }
 
     public String getAgeB() {
-        return  String.valueOf(pair.soloB.person.age());
+        return String.valueOf(pair.soloB.person.age());
     }
 
     public String getSexB() {
@@ -68,6 +61,7 @@ public class PairProperty {
     public String getFoodPreference() {
         return pair.getFoodPreference().toString();
     }
+
     public ImageView getFoodPreferenceIcon() {
         return ViewTools.getFoodPreferenceIcon(pair.getFoodPreference());
     }

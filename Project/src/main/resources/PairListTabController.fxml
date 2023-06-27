@@ -25,7 +25,7 @@
                      <contextMenu>
                         <ContextMenu>
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#dissolvePair" text="Dissolve pair" />
+                            <MenuItem mnemonicParsing="false" onAction="#disbandPair" text="Dissolve pair" />
                           </items>
                         </ContextMenu>
                      </contextMenu>

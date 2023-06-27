@@ -5,21 +5,36 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.example.Main;
+import org.example.data.structures.Pair;
+import org.example.data.structures.Solo;
 import org.example.logic.matchingalgorithms.MatchCosts;
 import org.example.logic.structures.MatchingRepository;
+import org.example.logic.structures.PairMatched;
 import org.example.view.tools.MatchCostChooser;
 import org.example.view.tools.PairBuilder;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class TabController {
 
     ArrayDeque<UIAction> undoHistory = new ArrayDeque<>();
     ArrayDeque<UIAction> redoHistory = new ArrayDeque<>();
-    private String name;
+    protected Main parent;
+    private final String name;
     protected MatchingRepository matchingRepository;
+    protected List<TabController> children = new ArrayList<>();
     private Stage matchCostStage;
+    private Stage popupStage;
+
+    public TabController(MatchingRepository matchingRepository, Main parent, String name) {
+        this.matchingRepository = matchingRepository;
+        this.parent = parent;
+        this.name = name;
+    }
 
     public void undo(){
 
@@ -49,6 +64,42 @@ public abstract class TabController {
 
     public abstract void updateUI();
 
+    public void addChild(TabController tabController) {
+        children.add(tabController);
+    }
+
+    public void removeSolo(Solo soloToRemove) {
+        System.out.println("called on " + name);
+        System.out.println(matchingRepository.getSoloDataCollection().contains(soloToRemove));
+        matchingRepository.removeSoloData(soloToRemove);
+        matchingRepository.removeSolo(soloToRemove);
+
+        children.forEach(c -> c.removeSolo(soloToRemove));
+        updateUI();
+    }
+
+    public void removePair(PairMatched pairMatchedToRemove, Pair pairToRemove) {
+        System.out.println("called on " + name);
+        System.out.println(matchingRepository.getMatchedPairsCollection().contains(pairMatchedToRemove));
+        matchingRepository.removePairData(pairToRemove);
+        matchingRepository.removePair(pairMatchedToRemove);
+
+        children.forEach(c -> c.removePair(pairMatchedToRemove, pairToRemove));
+        updateUI();
+    }
+
+    protected void openPopupWindow(Parent root, String title) {
+        popupStage = new Stage();
+        popupStage.setTitle(title);
+        popupStage.setScene(new Scene(root));
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.showAndWait();
+    }
+
+    public void closePopupWindow() {
+        popupStage.close();
+    }
+
     protected void openMatchCostChooserWindow() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(PairBuilder.class.getResource("/MatchCostChooser.fxml"));
@@ -69,7 +120,9 @@ public abstract class TabController {
         closeMatchCost(matchCosts);
     }
 
-    public abstract void closeMatchCost(MatchCosts matchCosts);
+    protected void closeMatchCost(MatchCosts matchCosts) {
+
+    }
 
     public MatchingRepository getMatchingRepository() {
         return matchingRepository;

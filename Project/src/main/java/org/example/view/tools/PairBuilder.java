@@ -3,18 +3,14 @@ package org.example.view.tools;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import org.example.data.structures.Solo;
 import org.example.logic.metrics.PairMetrics;
-import org.example.logic.structures.PairMatched;
+import org.example.logic.structures.MatchingRepository;
 import org.example.view.PairListTabController;
-import org.example.view.SoloDetailView;
+import org.example.view.commands.CreatePairCommand;
 import org.example.view.properties.SoloProperty;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,47 +22,28 @@ public class PairBuilder {
     @FXML
     private Button buildPairButton;
 
-    PairListTabController pairListTabController;
-    Solo selectedSoloA;
-    Solo selectedSoloB;
+    private final List<Solo> soloList;
+    private final PairListTabController controller;
+    private Solo selectedSoloA;
+    private Solo selectedSoloB;
 
-    private List<Solo> soloList;
-
-    public void setup(List<Solo> soloList, PairListTabController pairListTabController) {
-        this.soloList = new ArrayList<>(soloList);
-        this.pairListTabController = pairListTabController;
-        List<Solo> emptyList = new ArrayList<>();
-
-        TableViewTools.fillTable(soloList, tableViewA, SoloProperty::new, SoloProperty.getColumnNames());
-        TableViewTools.fillTable(emptyList, tableViewB, SoloProperty::new, SoloProperty.getColumnNames());
-
-        setupMouseEvents();
-        checkBuildPairButton();
+    public PairBuilder(List<Solo> successors, PairListTabController controller) {
+        this.soloList = new ArrayList<>(successors);
+        this.controller = controller;
     }
 
-    private void setupMouseEvents() {
-        tableViewA.setOnMouseClicked((MouseEvent e) -> {
-            if (e.getButton().equals(MouseButton.PRIMARY)) {
-                System.out.println("called left click a");
-                SoloProperty soloProperty = tableViewA.getSelectionModel().getSelectedItem();
-                Solo solo = soloProperty.getSolo();
-                setSoloA(solo);
-            }
-        });
-
-        tableViewB.setOnMouseClicked((MouseEvent e) -> {
-            if (e.getButton().equals(MouseButton.PRIMARY)) {
-                System.out.println("called left click b");
-                SoloProperty soloProperty = tableViewB.getSelectionModel().getSelectedItem();
-                Solo solo = soloProperty.getSolo();
-                setSoloB(solo);
-            }
-        });
+    @FXML
+    private void initialize() {
+        TableViewTools.fillTable(soloList, tableViewA, SoloProperty::new, SoloProperty.getColumnNames());
+        checkBuildPairButton();
     }
 
     @FXML
     private void buildPair() {
-        pairListTabController.closePairBuilder(selectedSoloA, selectedSoloB);
+        MatchingRepository matchingRepository = controller.getMatchingRepository();
+        CreatePairCommand command = new CreatePairCommand(selectedSoloA, selectedSoloB, matchingRepository);
+        controller.run(command);
+        controller.closePopupWindow();
     }
 
     public void showPossibleMatches(Solo solo) {
@@ -74,29 +51,30 @@ public class PairBuilder {
                 .filter(s -> PairMetrics.isValid(s, solo))
                 .toList();
 
-        tableViewB.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-        tableViewB.getItems().clear();
-        tableViewB.getColumns().clear();
         TableViewTools.fillTable(possibleMatches, tableViewB, SoloProperty::new, SoloProperty.getColumnNames());
-        tableViewB.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
     }
 
     public void checkBuildPairButton() {
         boolean isDisabled = selectedSoloA == null || selectedSoloB == null;
-        System.out.println("can build pair: " + !isDisabled);
         buildPairButton.setDisable(isDisabled);
     }
 
-    public void setSoloA(Solo solo) {
-        selectedSoloA = solo;
-        showPossibleMatches(solo);
+    @FXML
+    public void selectSoloA() {
+        SoloProperty soloProperty = tableViewA.getSelectionModel().getSelectedItem();
+        selectedSoloA = soloProperty.getSolo();
+        showPossibleMatches(selectedSoloA);
         checkBuildPairButton();
-        textA.setText(ViewTools.getSoloData(solo));
+
+        textA.setText(ViewTools.getSoloData(selectedSoloA));
     }
 
-    public void setSoloB(Solo solo) {
-        selectedSoloB = solo;
+    @FXML
+    public void selectSoloB() {
+        SoloProperty soloProperty = tableViewB.getSelectionModel().getSelectedItem();
+        selectedSoloB = soloProperty.getSolo();
         checkBuildPairButton();
-        textB.setText(ViewTools.getSoloData(solo));
+
+        textB.setText(ViewTools.getSoloData(selectedSoloB));
     }
 }
