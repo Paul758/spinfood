@@ -40,7 +40,6 @@ public abstract class TabController {
     }
 
     public void undo(){
-
         if(undoHistory.isEmpty()) {
             return;
         }
@@ -70,10 +69,10 @@ public abstract class TabController {
     public void addChild(TabController tabController) {
         children.add(tabController);
     }
-    public void removeAllChildren() {
-        children.forEach(TabController::removeAllChildren);
-        children.clear();
+
+    public void delete() {
         parent.closeTab(this);
+        children.forEach(TabController::delete);
     }
 
     public void removeSolo(Solo soloToRemove) {

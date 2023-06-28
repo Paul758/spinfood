@@ -1,61 +1,26 @@
-
 package org.example;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import org.example.data.*;
 import org.example.data.json.Serializer;
-import org.example.data.structures.Solo;
 import org.example.logic.matchingalgorithms.MatchCosts;
-import org.example.logic.matchingalgorithms.RandomGroupMatching;
-import org.example.logic.metrics.GroupListMetrics;
-import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.MatchingRepository;
-import org.example.logic.structures.PairMatched;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
-import org.example.data.DataManagement;
-import org.example.data.enums.Sex;
-import org.example.data.factory.Person;
-import org.example.data.structures.EventParticipant;
-import org.example.data.structures.Pair;
-import org.example.data.structures.Solo;
 import org.example.view.DataTabController;
 import org.example.view.PairListTabController;
 import org.example.view.TabController;
-import org.example.view.UIAction;
 import org.example.view.comparer.GroupComparer;
 import org.example.view.comparer.PairComparer;
 import org.example.view.controller.GroupListTabController;
 import org.example.view.tools.*;
-
-import javafx.stage.Popup;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -64,18 +29,14 @@ import java.util.List;
 public class Main extends Application {
 
     @FXML
-    private Button defaultButton;
-    @FXML
     private TabPane tabPane;
     private final HashMap<Tab, TabController> tabControllerHashMap = new HashMap<>();
-    private List<DataTabController> dataTabControllers;
-    private List<PairListTabController> pairListTabControllers;
-    private List<GroupListTabController> groupListTabControllers;
+    private List<TabController> tabControllers;
 
     public static void main(String[] args) {
         launch();
     }
-
+ 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
@@ -89,9 +50,7 @@ public class Main extends Application {
 
     @FXML
     private void initialize() {
-        pairListTabControllers = new ArrayList<>();
-        groupListTabControllers = new ArrayList<>();
-        dataTabControllers = new ArrayList<>();
+        tabControllers = new ArrayList<>();
     }
 
     @FXML
@@ -147,7 +106,7 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
 
         PairComparer pairComparer = fxmlLoader.getController();
-        pairComparer.update(pairListTabControllers);
+        pairComparer.update(getPairListTabControllers());
 
         this.openNewWindow(root, "Pair Comparer");
     }
@@ -158,7 +117,7 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
 
         GroupComparer groupComparer = fxmlLoader.getController();
-        groupComparer.update(groupListTabControllers);
+        groupComparer.update(getGroupListTabControllers());
 
         this.openNewWindow(root, "Group Comparer");
     }
@@ -175,16 +134,10 @@ public class Main extends Application {
         tab.setContent(root);
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
+
         tabControllerHashMap.put(tab, tabController);
         tabController.setTab(tab);
-
-        if (tabController instanceof DataTabController) {
-            dataTabControllers.add((DataTabController) tabController);
-        } else if (tabController instanceof PairListTabController) {
-            pairListTabControllers.add((PairListTabController) tabController);
-        } else if (tabController instanceof GroupListTabController) {
-            groupListTabControllers.add((GroupListTabController) tabController);
-        }
+        tabControllers.add(tabController);
     }
 
     @FXML
@@ -220,19 +173,33 @@ public class Main extends Application {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @FXML
     public void closeTab() {
         Tab tab = tabPane.getSelectionModel().getSelectedItem();
-        closeTab(tabControllerHashMap.get(tab));
+        TabController tabController = tabControllerHashMap.get(tab);
+        tabController.delete();
     }
 
     public void closeTab(TabController tabController) {
         Tab tab = tabController.getTab();
-        tab.getTabPane().getTabs().remove(tab);
-        tabController.removeAllChildren();
+        tabControllers.remove(tabController);
+        tabControllerHashMap.remove(tab);
+        tabPane.getTabs().remove(tab);
     }
 
+    private List<PairListTabController> getPairListTabControllers() {
+        return tabControllers.stream()
+                .filter(t -> t instanceof PairListTabController)
+                .map(t -> (PairListTabController) t)
+                .toList();
+    }
+
+    private List<GroupListTabController> getGroupListTabControllers() {
+        return tabControllers.stream()
+                .filter(t -> t instanceof GroupListTabController)
+                .map(t -> (GroupListTabController) t)
+                .toList();
+    }
 }
