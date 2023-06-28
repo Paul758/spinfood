@@ -2,6 +2,7 @@ package org.example.view;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;

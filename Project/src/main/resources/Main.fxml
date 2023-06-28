@@ -17,12 +17,12 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" onAction="#closeTab" text="Close Tab" />
                   <MenuItem mnemonicParsing="false" onAction="#createDataTab" text="New" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <Menu mnemonicParsing="false" text="Export">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="JSON" />
+                        <MenuItem mnemonicParsing="false" onAction="#exportToJSON" text="JSON" />
                     </items>
                   </Menu>
             </items>

@@ -3,6 +3,7 @@ package org.example.view;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.Main;
@@ -29,6 +30,8 @@ public abstract class TabController {
     protected List<TabController> children = new ArrayList<>();
     private Stage matchCostStage;
     private Stage popupStage;
+
+    private Tab tab;
 
     public TabController(MatchingRepository matchingRepository, Main parent, String name) {
         this.matchingRepository = matchingRepository;
@@ -66,6 +69,11 @@ public abstract class TabController {
 
     public void addChild(TabController tabController) {
         children.add(tabController);
+    }
+    public void removeAllChildren() {
+        children.forEach(TabController::removeAllChildren);
+        children.clear();
+        parent.closeTab(this);
     }
 
     public void removeSolo(Solo soloToRemove) {
@@ -130,5 +138,17 @@ public abstract class TabController {
 
     public String getName() {
         return name;
+    }
+
+    public Tab getTab() {
+        return tab;
+    }
+
+    public void setTab(Tab tab) {
+        this.tab = tab;
+    }
+
+    public List<TabController> getChildren() {
+        return children;
     }
 }

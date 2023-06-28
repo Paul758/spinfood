@@ -2,6 +2,7 @@
 package org.example;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
@@ -11,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import org.example.data.*;
+import org.example.data.json.Serializer;
 import org.example.data.structures.Solo;
 import org.example.logic.matchingalgorithms.MatchCosts;
 import org.example.logic.matchingalgorithms.RandomGroupMatching;
@@ -174,6 +176,7 @@ public class Main extends Application {
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
         tabControllerHashMap.put(tab, tabController);
+        tabController.setTab(tab);
 
         if (tabController instanceof DataTabController) {
             dataTabControllers.add((DataTabController) tabController);
@@ -196,6 +199,40 @@ public class Main extends Application {
         Tab tab = tabPane.getSelectionModel().getSelectedItem();
         TabController selectedTab = tabControllerHashMap.get(tab);
         selectedTab.redo();
+    }
+
+    @FXML
+    public void exportToJSON() {
+        TabController tabController = tabControllerHashMap.get(tabPane.getSelectionModel().getSelectedItem());
+        MatchingRepository repository = tabController.getMatchingRepository();
+
+        try {
+            String data = Serializer.serializeMatchingRepository(repository);
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON doc(*.json)", "*.json"));
+            File file = fileChooser.showSaveDialog(new Stage());
+
+            if(!file.getName().contains(".")) {
+                file = new File(file.getAbsolutePath() + ".json");
+            }
+
+            Serializer.writeToFile(data, file.getPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @FXML
+    public void closeTab() {
+        Tab tab = tabPane.getSelectionModel().getSelectedItem();
+        closeTab(tabControllerHashMap.get(tab));
+    }
+
+    public void closeTab(TabController tabController) {
+        Tab tab = tabController.getTab();
+        tab.getTabPane().getTabs().remove(tab);
+        tabController.removeAllChildren();
     }
 
 }

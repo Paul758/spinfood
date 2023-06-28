@@ -417,5 +417,11 @@ public class MatchingRepository {
         return copy;
     }
 
+    public Collection<Solo> getSoloSuccessors() {
+        return soloSuccessors;
+    }
 
+    public Collection<PairMatched> getPairSuccessors() {
+        return pairSuccessors;
+    }
 }
