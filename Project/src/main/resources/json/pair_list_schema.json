@@ -1,0 +1,156 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "premade": {
+        "type": "boolean"
+      },
+      "foodPreference": {
+        "enum": [
+          "meat",
+          "veggie",
+          "vegan",
+          "none"
+        ]
+      },
+      "firstParticipant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "foodPreference": {
+            "enum": [
+              "meat",
+              "veggie",
+              "vegan",
+              "none"
+            ]
+          },
+          "age": {
+            "type": "integer"
+          },
+          "gender": {
+            "enum": [
+              "female",
+              "male",
+              "other"
+            ]
+          },
+          "kitchen": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "emergencyKitchen": {
+                "type": "boolean"
+              },
+              "story": {
+                "type": "integer"
+              },
+              "longitude": {
+                "type": "number"
+              },
+              "latitude": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "emergencyKitchen",
+              "story",
+              "longitude",
+              "latitude"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "foodPreference",
+          "age",
+          "gender",
+          "kitchen"
+        ]
+      },
+      "secondParticipant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "foodPreference": {
+            "enum": [
+              "meat",
+              "veggie",
+              "vegan",
+              "none"
+            ]
+          },
+          "age": {
+            "type": "integer"
+          },
+          "gender": {
+            "enum": [
+              "female",
+              "male",
+              "other"
+            ]
+          },
+          "kitchen": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "emergencyKitchen": {
+                "type": "boolean"
+              },
+              "story": {
+                "type": "integer"
+              },
+              "longitude": {
+                "type": "number"
+              },
+              "latitude": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "emergencyKitchen",
+              "story",
+              "longitude",
+              "latitude"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "foodPreference",
+          "age",
+          "gender",
+          "kitchen"
+        ]
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "premade",
+      "foodPreference",
+      "firstParticipant",
+      "secondParticipant"
+    ]
+  }
+}
