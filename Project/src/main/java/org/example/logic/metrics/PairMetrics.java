@@ -61,8 +61,8 @@ public class PairMetrics {
      * @return the path length of the pair
      */
     public static double calcPathLength(PairMatched pair, Coordinate partyLocation) {
-        if (pair.getStarterLocation() == null || pair.getMainLocation() == null || pair.getDessertLocation() == null) {
-            throw new IllegalArgumentException("The pair is not in all necessary groups");
+        if (pair.getStarterGroup() == null || pair.getMainGroup() == null || pair.getDessertGroup() == null) {
+            return 0;
         }
 
         if (partyLocation == null) {

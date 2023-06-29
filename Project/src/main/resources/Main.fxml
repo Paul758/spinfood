@@ -3,10 +3,11 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Main">
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Main">
    <children>
       <AnchorPane fx:id="pane" layoutY="25.0" prefHeight="554.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
          <children>
@@ -16,8 +17,15 @@
         <menus>
           <Menu mnemonicParsing="false" text="%menuBarFile">
             <items>
-              <MenuItem mnemonicParsing="false" text="%menuBarFileClose" />
-                  <MenuItem mnemonicParsing="false" onAction="#createDataTab" text="%menuBarFileNew" />
+
+              <MenuItem mnemonicParsing="false" onAction="#closeTab" text="%menuBarFileClose" />
+                  <MenuItem mnemonicParsing="false" onAction="#createDataTab" text="New" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <Menu mnemonicParsing="false" text="Export">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#exportToJSON" text="JSON" />
+                    </items>
+                  </Menu>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="%menuBarEdit">

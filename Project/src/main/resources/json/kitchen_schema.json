@@ -1,0 +1,27 @@
+{
+  "type": [
+    "object",
+    "null"
+  ],
+  "properties": {
+    "emergencyKitchen": {
+      "type": "boolean"
+    },
+    "story": {
+      "type": "integer"
+    },
+    "longitude": {
+      "type": "number"
+    },
+    "latitude": {
+      "type": "number"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "emergencyKitchen",
+    "story",
+    "longitude",
+    "latitude"
+  ]
+}

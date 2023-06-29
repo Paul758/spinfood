@@ -6,16 +6,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.File;
 import java.io.IOException;
+
 import java.util.Locale;
 
 public class Settings {
     private static Settings instance;
-
-
     private double fontSize;
-
     private Locale locale;
-
 
     private Settings() {
         fontSize = 20;
@@ -32,7 +29,6 @@ public class Settings {
     public double getFontsize() {
         return fontSize;
     }
-
 
     public Locale getLocale() {
         return this.locale;

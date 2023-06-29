@@ -1,19 +1,11 @@
 package org.example.view;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.Main;
 import org.example.data.DataManagement;
@@ -21,19 +13,15 @@ import org.example.data.structures.Pair;
 import org.example.data.structures.Solo;
 import org.example.logic.matchingalgorithms.MatchCosts;
 import org.example.logic.structures.MatchingRepository;
+import org.example.logic.structures.PairMatched;
 import org.example.view.properties.PairProperty;
 import org.example.view.properties.SoloProperty;
-import org.example.view.tools.MatchCostChooser;
-import org.example.view.tools.PairBuilder;
 import org.example.view.tools.TableViewTools;
-import org.example.view.tools.ViewTools;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DataTabController extends TabController {
 
@@ -45,15 +33,14 @@ public class DataTabController extends TabController {
     private Text participantPathText, partyLocationPathText;
     @FXML
     private Button loadParticipantsButton, loadPartyLocationButton, matchPairsButton;
+    private String participantFilePath, partyLocationFilePath;
 
-    String participantFilePath, partyLocationFilePath;
-    private DataManagement dataManagement;
-    private Main main;
-    private Stage matchCostStage;
-    private List<PairListTabController> children;
+    public DataTabController(MatchingRepository matchingRepository, Main parent, String name) {
+        super(matchingRepository, parent, name);
+    }
 
-    public void setup(Main main) {
-        this.main = main;
+    @FXML
+    private void initialize() {
         checkMatchPairsButton();
     }
 
@@ -67,8 +54,18 @@ public class DataTabController extends TabController {
     }
 
     @FXML
-    public void createPairList() throws IOException {
-        main.createPairTab(this, null);
+    private void deleteSolo() {
+        SoloProperty soloProperty = soloTableView.getSelectionModel().getSelectedItem();
+        Solo soloToDelete = soloProperty.getSolo();
+        this.removeSolo(soloToDelete);
+    }
+
+    @FXML
+    private void deletePair() {
+        PairProperty pairProperty = pairTableView.getSelectionModel().getSelectedItem();
+        Pair pairToDelete = pairProperty.pair();
+        PairMatched pairMatchedToDelete = new PairMatched(pairToDelete);
+        this.removePair(pairMatchedToDelete, pairToDelete);
     }
 
     @FXML
@@ -116,17 +113,19 @@ public class DataTabController extends TabController {
 
     @Override
     public void updateUI() {
-        List<Solo> solos = new ArrayList<>(matchingRepository.dataManagement.soloParticipants);
+        List<Solo> solos = new ArrayList<>(matchingRepository.getSoloDataCollection());
         TableViewTools.fillTable(solos, soloTableView, SoloProperty::new, SoloProperty.getColumnNames());
-        List<Pair> pairs = new ArrayList<>(matchingRepository.dataManagement.pairParticipants);
+
+        List<Pair> pairs = new ArrayList<>(matchingRepository.getPairDataCollection());
         TableViewTools.fillTable(pairs, pairTableView, PairProperty::new, PairProperty.getColumnNames());
+
         checkMatchPairsButton();
     }
 
     @Override
     public void closeMatchCost(MatchCosts matchCosts) {
         try {
-            main.createPairTab(this, matchCosts);
+            parent.createPairTab(this, matchCosts);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
