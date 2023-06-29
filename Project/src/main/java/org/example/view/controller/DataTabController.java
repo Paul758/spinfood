@@ -1,8 +1,7 @@
-package org.example.view;
+package org.example.view.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -70,7 +69,7 @@ public class DataTabController extends TabController {
 
     @FXML
     public void showMatchCostChooserWindow() throws IOException {
-        this.openMatchCostChooserWindow();
+        this.openMatchCostChooserWindow(this::closeMatchCostChooserWindow);
     }
 
     private void checkMatchPairsButton() {
@@ -122,8 +121,7 @@ public class DataTabController extends TabController {
         checkMatchPairsButton();
     }
 
-    @Override
-    public void closeMatchCost(MatchCosts matchCosts) {
+    public void closeMatchCostChooserWindow(MatchCosts matchCosts) {
         try {
             parent.createPairTab(this, matchCosts);
         } catch (IOException e) {

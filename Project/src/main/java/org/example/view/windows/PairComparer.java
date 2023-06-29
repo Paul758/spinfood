@@ -1,9 +1,8 @@
-package org.example.view.comparer;
+package org.example.view.windows;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import org.example.view.PairListTabController;
+import org.example.view.controller.PairListTabController;
 import org.example.view.properties.PairListProperty;
 import org.example.view.tools.TableViewTools;
 

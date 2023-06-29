@@ -1,4 +1,4 @@
-package org.example.view;
+package org.example.view.controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,14 +12,17 @@ import org.example.data.structures.Solo;
 import org.example.logic.matchingalgorithms.MatchCosts;
 import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
-import org.example.view.tools.MatchCostChooser;
-import org.example.view.tools.PairBuilder;
+import org.example.view.tools.Settings;
+import org.example.view.commands.UIAction;
+import org.example.view.windows.MatchCostChooser;
+import org.example.view.windows.PairBuilder;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public abstract class TabController {
 
@@ -28,8 +31,7 @@ public abstract class TabController {
     protected Main parent;
     private final String name;
     protected MatchingRepository matchingRepository;
-    protected List<TabController> children = new ArrayList<>();
-    private Stage matchCostStage;
+    private final List<TabController> children = new ArrayList<>();
     private Stage popupStage;
 
     private Tab tab;
@@ -55,12 +57,14 @@ public abstract class TabController {
             return;
         }
         UIAction lastAction = redoHistory.removeLast();
-        run(lastAction);
+        undoHistory.addLast(lastAction);
+        lastAction.redo();
         updateUI();
     }
 
     public void run(UIAction action) {
         undoHistory.addLast(action);
+        redoHistory.clear();
         action.run();
         updateUI();
     }
@@ -108,31 +112,15 @@ public abstract class TabController {
         popupStage.close();
     }
 
-    protected void openMatchCostChooserWindow() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(PairBuilder.class.getResource("/MatchCostChooser.fxml"));
+    protected void openMatchCostChooserWindow(Consumer<MatchCosts> onClose) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(PairBuilder.class.getResource("/MatchCostChooser.fxml"));
+        fxmlLoader.setControllerFactory((Class<?> controllerClass) -> new MatchCostChooser(this, onClose));
         //Specify locale
         ResourceBundle bundle = ResourceBundle.getBundle("uiElements", Settings.getInstance().getLocale());
         fxmlLoader.setResources(bundle);
         Parent root = fxmlLoader.load();
 
-        MatchCostChooser matchCostChooser = fxmlLoader.getController();
-        matchCostChooser.setup(this);
-
-        matchCostStage = new Stage();
-        matchCostStage.setTitle("Pair Builder");
-        matchCostStage.setScene(new Scene(root));
-        matchCostStage.initModality(Modality.APPLICATION_MODAL);
-        matchCostStage.show();
-    }
-
-    public void closeMatchCostChooserWindow(MatchCosts matchCosts) {
-        matchCostStage.close();
-        closeMatchCost(matchCosts);
-    }
-
-    protected void closeMatchCost(MatchCosts matchCosts) {
-
+        openPopupWindow(root, "Match Cost Chooser");
     }
 
     public MatchingRepository getMatchingRepository() {

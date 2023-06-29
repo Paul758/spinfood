@@ -1,4 +1,4 @@
-package org.example.view.tools;
+package org.example.view.windows;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +12,7 @@ import org.example.logic.structures.PairMatched;
 import org.example.view.commands.CreateGroupCommand;
 import org.example.view.controller.GroupListTabController;
 import org.example.view.properties.PairMatchedProperty;
+import org.example.view.tools.TableViewTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class GroupBuilder {
     }
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         TableViewTools.fillTable(successors, cookTableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());
         TableViewTools.fillTable(successors, pairATableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());
         TableViewTools.fillTable(successors, pairBTableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());

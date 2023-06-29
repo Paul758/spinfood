@@ -1,6 +1,5 @@
-package org.example.view;
+package org.example.view.tools;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 

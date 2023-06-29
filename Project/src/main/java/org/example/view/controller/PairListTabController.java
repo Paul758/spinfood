@@ -1,10 +1,9 @@
-package org.example.view;
+package org.example.view.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import org.example.Main;
 import org.example.data.structures.Solo;
@@ -14,8 +13,9 @@ import org.example.logic.structures.PairMatched;
 import org.example.view.properties.PairListProperty;
 import org.example.view.properties.PairMatchedProperty;
 import org.example.view.properties.SoloProperty;
-import org.example.view.commands.DisbandPair;
-import org.example.view.tools.PairBuilder;
+import org.example.view.commands.DisbandPairCommand;
+import org.example.view.tools.Settings;
+import org.example.view.windows.PairBuilder;
 import org.example.view.tools.TableViewTools;
 
 import java.io.IOException;
@@ -49,8 +49,8 @@ public class PairListTabController extends TabController {
     public void disbandPair() {
         PairMatchedProperty pairMatchedProperty = matchedPairsTableView.getSelectionModel().getSelectedItem();
         PairMatched pairMatched = pairMatchedProperty.pairMatched();
-        DisbandPair disbandPair = new DisbandPair(matchingRepository, pairMatched);
-        run(disbandPair);
+        DisbandPairCommand disbandPairCommand = new DisbandPairCommand(matchingRepository, pairMatched);
+        run(disbandPairCommand);
     }
 
     @Override
@@ -67,11 +67,10 @@ public class PairListTabController extends TabController {
 
     @FXML
     public void createGroupTab() throws IOException {
-        this.openMatchCostChooserWindow();
+        this.openMatchCostChooserWindow(this::closeMatchCostChooserWindow);
     }
 
-    @Override
-    public void closeMatchCost(MatchCosts matchCosts) {
+    public void closeMatchCostChooserWindow(MatchCosts matchCosts) {
         try {
             parent.createGroupTab(this, matchCosts);
         } catch (IOException e) {
@@ -87,9 +86,10 @@ public class PairListTabController extends TabController {
             return new PairBuilder(successors, this);
         });
 
+        ResourceBundle bundle = ResourceBundle.getBundle("PairBuilderBundle", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
+
         Parent root = fxmlLoader.load();
         openPopupWindow(root, "Pair Builder");
     }
-
-
 }

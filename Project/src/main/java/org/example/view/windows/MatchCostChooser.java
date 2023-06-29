@@ -1,32 +1,37 @@
-package org.example.view.tools;
+package org.example.view.windows;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.text.Text;
 import org.example.logic.enums.Criteria;
 import org.example.logic.matchingalgorithms.MatchCosts;
-import org.example.view.TabController;
+import org.example.view.controller.TabController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MatchCostChooser {
 
     @FXML
-    Text ageText, genderText, foodPreferenceText, matchCountText, pathLengthText;
+    private ComboBox<Integer> ageBox, genderBox, foodPreferenceBox, matchCountBox, pathLengthBox;
     @FXML
-    ComboBox<Integer> ageBox, genderBox, foodPreferenceBox, matchCountBox, pathLengthBox;
-    @FXML
-    Button assignButton;
+    private Button assignButton;
+
     private static final int CRITERIA_COUNT = 5;
     private static final ArrayList<Integer> BOX_VALUES = new ArrayList<>(List.of(1,2,3,4,5));
     private List<ComboBox<Integer>> comboBoxes;
-    private TabController tabController;
+    private final TabController tabController;
+    private final Consumer<MatchCosts> consumer;
 
-    public void setup(TabController tabController) {
+    public MatchCostChooser(TabController tabController, Consumer<MatchCosts> consumer) {
         this.tabController = tabController;
+        this.consumer = consumer;
+    }
+
+    @FXML
+    private void initialize() {
         comboBoxes = new ArrayList<>();
         comboBoxes.add(ageBox);
         comboBoxes.add(genderBox);
@@ -56,12 +61,14 @@ public class MatchCostChooser {
         }
 
         MatchCosts matchCosts = new MatchCosts(criteria);
-        tabController.closeMatchCostChooserWindow(matchCosts);
+        tabController.closePopupWindow();
+        consumer.accept(matchCosts);
     }
 
     @FXML
     private void matchWithoutPriorities() {
-        tabController.closeMatchCostChooserWindow(null);
+        tabController.closePopupWindow();
+        consumer.accept(null);
     }
 
     private Criteria getCriteria(int number) {

@@ -1,15 +1,15 @@
-package org.example.view.tools;
+package org.example.view.windows;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
-import javafx.scene.text.Text;
 import org.example.data.structures.Solo;
 import org.example.logic.metrics.PairMetrics;
 import org.example.logic.structures.MatchingRepository;
-import org.example.view.PairListTabController;
+import org.example.view.controller.PairListTabController;
 import org.example.view.commands.CreatePairCommand;
 import org.example.view.properties.SoloProperty;
+import org.example.view.tools.TableViewTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +17,6 @@ import java.util.List;
 public class PairBuilder {
     @FXML
     private TableView<SoloProperty> tableViewA, tableViewB;
-    @FXML
-    private Text textA, textB;
     @FXML
     private Button buildPairButton;
 
@@ -39,6 +37,25 @@ public class PairBuilder {
     }
 
     @FXML
+    private void selectSoloA() {
+        SoloProperty soloProperty = tableViewA.getSelectionModel().getSelectedItem();
+        if (soloProperty != null) {
+            selectedSoloA = soloProperty.getSolo();
+            showPossibleMatches(selectedSoloA);
+            checkBuildPairButton();
+        }
+    }
+
+    @FXML
+    private void selectSoloB() {
+        SoloProperty soloProperty = tableViewB.getSelectionModel().getSelectedItem();
+        if (soloProperty != null) {
+            selectedSoloB = soloProperty.getSolo();
+            checkBuildPairButton();
+        }
+    }
+
+    @FXML
     private void buildPair() {
         MatchingRepository matchingRepository = controller.getMatchingRepository();
         CreatePairCommand command = new CreatePairCommand(selectedSoloA, selectedSoloB, matchingRepository);
@@ -46,7 +63,7 @@ public class PairBuilder {
         controller.closePopupWindow();
     }
 
-    public void showPossibleMatches(Solo solo) {
+    private void showPossibleMatches(Solo solo) {
         List<Solo> possibleMatches = soloList.stream()
                 .filter(s -> PairMetrics.isValid(s, solo))
                 .toList();
@@ -54,27 +71,8 @@ public class PairBuilder {
         TableViewTools.fillTable(possibleMatches, tableViewB, SoloProperty::new, SoloProperty.getColumnNames());
     }
 
-    public void checkBuildPairButton() {
+    private void checkBuildPairButton() {
         boolean isDisabled = selectedSoloA == null || selectedSoloB == null;
         buildPairButton.setDisable(isDisabled);
-    }
-
-    @FXML
-    public void selectSoloA() {
-        SoloProperty soloProperty = tableViewA.getSelectionModel().getSelectedItem();
-        selectedSoloA = soloProperty.getSolo();
-        showPossibleMatches(selectedSoloA);
-        checkBuildPairButton();
-
-        textA.setText(ViewTools.getSoloData(selectedSoloA));
-    }
-
-    @FXML
-    public void selectSoloB() {
-        SoloProperty soloProperty = tableViewB.getSelectionModel().getSelectedItem();
-        selectedSoloB = soloProperty.getSolo();
-        checkBuildPairButton();
-
-        textB.setText(ViewTools.getSoloData(selectedSoloB));
     }
 }

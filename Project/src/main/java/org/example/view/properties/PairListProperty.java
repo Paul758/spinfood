@@ -4,7 +4,7 @@ import org.example.logic.metrics.MetricTools;
 import org.example.logic.metrics.PairListMetrics;
 import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
-import org.example.view.PairListTabController;
+import org.example.view.controller.PairListTabController;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

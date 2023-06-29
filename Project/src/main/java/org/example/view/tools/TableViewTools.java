@@ -1,27 +1,17 @@
 package org.example.view.tools;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
-import org.example.data.structures.Pair;
-import org.example.data.structures.Solo;
-import org.example.logic.structures.PairMatched;
 
 import org.example.view.properties.*;
 
 import java.util.*;
 import java.util.function.Function;
-
-import org.example.view.Settings;
-import org.example.view.properties.PairMatchedProperty;
-import org.example.view.properties.PairProperty;
-import org.example.view.properties.SoloProperty;
-
-import java.util.*;
 
 
 public class TableViewTools {
@@ -84,7 +74,6 @@ public class TableViewTools {
         column.setComparator(Comparator.comparing(imageView -> imageView.getUserData().toString()));
         return column;
     }
-
 
     private static <T> void clearTable(TableView<T> tableView) {
         tableView.getItems().clear();
