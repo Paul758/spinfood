@@ -45,7 +45,8 @@ public class Main extends Application {
         fxmlLoader.setLocation(getClass().getResource("/Main.fxml"));
 
         //Specify locale resources
-        ResourceBundle bundle = ResourceBundle.getBundle("MenuBarItemsBundle", Settings.getInstance().getLocale());
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements",
+                Settings.getInstance().getLocale());
         fxmlLoader.setResources(bundle);
 
         Parent root = fxmlLoader.load();
@@ -122,7 +123,7 @@ public class Main extends Application {
         PairComparer pairComparer = fxmlLoader.getController();
         pairComparer.update(getPairListTabControllers());
 
-        this.openNewWindow(root, "Pair Comparer");
+        this.openNewWindow(root, "pairComparer");
     }
 
     @FXML
@@ -135,12 +136,15 @@ public class Main extends Application {
         GroupComparer groupComparer = fxmlLoader.getController();
         groupComparer.update(getGroupListTabControllers());
 
-        this.openNewWindow(root, "Group Comparer");
+        this.openNewWindow(root, "groupComparer");
     }
 
     private void openNewWindow(Parent root, String title) {
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements",
+                Settings.getInstance().getLocale());
+
         Stage stage = new Stage();
-        stage.setTitle(title);
+        stage.setTitle(bundle.getString(title));
         stage.setScene(new Scene(root));
         stage.show();
     }

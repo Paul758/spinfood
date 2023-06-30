@@ -1,34 +1,37 @@
 package org.example.view.properties;
 
 import javafx.scene.image.ImageView;
-import org.example.data.enums.FoodPreference;
 import org.example.data.structures.Solo;
+import org.example.logic.metrics.MetricTools;
 import org.example.view.tools.ViewTools;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class SoloProperty {
-    private Solo solo;
-    private final String gender;
-    private final String age;
-    private final FoodPreference foodPreference;
-    private final String kitchenType;
+@SuppressWarnings("unused")
+public record SoloProperty(Solo solo) {
 
-    public SoloProperty(Solo solo) {
-        this.solo = solo;
-        this.gender = solo.getPerson().sex().toString();
-        this.age = String.valueOf(solo.getPerson().age());
-        this.foodPreference = solo.getFoodPreference();
-        this.kitchenType = solo.kitchen.getKitchenType().toString();
+    public static LinkedHashMap<String, List<Entry>> getDetailViewColumns() {
+        List<Entry> data = List.of(
+                new Entry("name"),
+                new Entry("gender"),
+                new Entry("age"),
+                new Entry("foodPreferenceIcon"),
+                new Entry("kitchenType"),
+                new Entry("kitchenStory"),
+                new Entry("longitude"),
+                new Entry("latitude")
+        );
+
+        LinkedHashMap<String, List<Entry>> map = new LinkedHashMap<>();
+        map.put("", data);
+        return map;
     }
 
-    public static LinkedHashMap<String, List<Entry>> getColumnNames() {
+    public static LinkedHashMap<String, List<Entry>> getSummaryViewColumns() {
         List<Entry> data = List.of(
                 new Entry("gender"),
                 new Entry("age"),
-                new Entry("foodPreference"),
                 new Entry("foodPreferenceIcon"),
                 new Entry("kitchenType"));
 
@@ -37,26 +40,39 @@ public class SoloProperty {
         return map;
     }
 
-    public Solo getSolo() {
-        return solo;
+    public String getName() {
+        return solo.getPerson().name();
     }
+
     public String getGender() {
-        return gender;
+        return solo.getPerson().sex().toString();
     }
 
     public String getAge() {
-        return age;
+        return String.valueOf(solo.getPerson().age());
     }
 
     public String getFoodPreference() {
-        return foodPreference.toString();
+        return solo.getFoodPreference().toString();
     }
 
     public ImageView getFoodPreferenceIcon() {
-        return ViewTools.getFoodPreferenceIcon(foodPreference);
+        return ViewTools.getFoodPreferenceIcon(solo.getFoodPreference());
     }
 
     public String getKitchenType() {
-        return kitchenType;
+        return solo.getKitchen().getKitchenType().toString();
+    }
+
+    public String getKitchenStory() {
+        return String.valueOf(solo.getKitchen().story);
+    }
+
+    public String getLongitude() {
+        return String.valueOf(MetricTools.round(solo.getKitchen().coordinate.longitude, 4));
+    }
+
+    public String getLatitude() {
+        return String.valueOf(MetricTools.round(solo.getKitchen().coordinate.latitude, 4));
     }
 }

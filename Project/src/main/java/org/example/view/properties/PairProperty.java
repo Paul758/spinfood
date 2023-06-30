@@ -2,14 +2,16 @@ package org.example.view.properties;
 
 import javafx.scene.image.ImageView;
 import org.example.data.structures.Pair;
+import org.example.logic.metrics.MetricTools;
 import org.example.view.tools.ViewTools;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public record PairProperty(Pair pair) {
 
-    public static LinkedHashMap<String, List<Entry>> getColumnNames() {
+    public static LinkedHashMap<String, List<Entry>> getDetailViewColumns() {
         List<Entry> soloA = List.of(
                 new Entry("nameA"),
                 new Entry("sexA"),
@@ -24,13 +26,16 @@ public record PairProperty(Pair pair) {
 
         List<Entry> pairData = List.of(
                 new Entry("foodPreferenceIcon"),
-                new Entry("kitchenType")
+                new Entry("kitchenType"),
+                new Entry("kitchenStory"),
+                new Entry("longitude"),
+                new Entry("latitude")
         );
 
         LinkedHashMap<String, List<Entry>> map = new LinkedHashMap<>();
         map.put("soloA", soloA);
         map.put("soloB", soloB);
-        map.put("pairData", pairData);
+        map.put("", pairData);
         return map;
     }
 
@@ -68,5 +73,16 @@ public record PairProperty(Pair pair) {
 
     public String getKitchenType() {
         return pair.getKitchen().getKitchenType().toString();
+    }
+    public String getKitchenStory() {
+        return String.valueOf(pair.getKitchen().story);
+    }
+
+    public String getLongitude() {
+        return String.valueOf(MetricTools.round(pair.getKitchen().coordinate.longitude, 4));
+    }
+
+    public String getLatitude() {
+        return String.valueOf(MetricTools.round(pair.getKitchen().coordinate.latitude, 4));
     }
 }

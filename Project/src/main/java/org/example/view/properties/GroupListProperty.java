@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class GroupListProperty {
     private final GroupListTabController controller;
     private final MatchingRepository matchingRepository;
@@ -23,7 +24,24 @@ public class GroupListProperty {
         this.groups = new ArrayList<>(matchingRepository.getMatchedGroupsCollection());
     }
 
-    public static LinkedHashMap<String, List<Entry>> getColumnNames2() {
+    public static LinkedHashMap<String, List<Entry>> getTabColumns() {
+        List<Entry> metrics = List.of(
+                new Entry("groupCount"),
+                new Entry("successorCount"),
+                new Entry("ageDifference"),
+                new Entry("genderDiversity"),
+                new Entry("foodPreferenceDeviation"),
+                new Entry("totalScore"),
+                new Entry("pathLength"),
+                new Entry("isValid")
+        );
+
+        LinkedHashMap<String, List<Entry>> map = new LinkedHashMap<>();
+        map.put("", metrics);
+        return map;
+    }
+
+    public static LinkedHashMap<String, List<Entry>> getComparerColumns() {
         List<Entry> metrics = List.of(
                 new Entry("name"),
                 new Entry("groupCount"),
@@ -31,8 +49,8 @@ public class GroupListProperty {
                 new Entry("ageDifference"),
                 new Entry("genderDiversity"),
                 new Entry("foodPreferenceDeviation"),
-                new Entry("pathLength"),
                 new Entry("totalScore"),
+                new Entry("pathLength"),
                 new Entry("isValid")
         );
 
@@ -82,8 +100,7 @@ public class GroupListProperty {
     public String getTotalScore() {
         double totalScore = GroupListMetrics.calcAgeDifference(groups)
                 + GroupListMetrics.calcGenderDiversity(groups)
-                + GroupListMetrics.calcPreferenceDeviation(groups)
-                + GroupListMetrics.calcPathLength(groups, matchingRepository.dataManagement.partyLocation);
+                + GroupListMetrics.calcPreferenceDeviation(groups);
         return String.valueOf(MetricTools.round(totalScore, DECIMAL_PLACES));
     }
 }

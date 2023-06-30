@@ -36,9 +36,9 @@ public class GroupBuilder {
 
     @FXML
     private void initialize() {
-        TableViewTools.fillTable(successors, cookTableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());
-        TableViewTools.fillTable(successors, pairATableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());
-        TableViewTools.fillTable(successors, pairBTableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());
+        TableViewTools.fillTable(successors, cookTableView, PairMatchedProperty::new, PairMatchedProperty.getSummaryViewColumns());
+        TableViewTools.fillTable(successors, pairATableView, PairMatchedProperty::new, PairMatchedProperty.getSummaryViewColumns());
+        TableViewTools.fillTable(successors, pairBTableView, PairMatchedProperty::new, PairMatchedProperty.getSummaryViewColumns());
 
         ArrayList<MealType> mealTypes = new ArrayList<>(List.of(MealType.STARTER, MealType.MAIN, MealType.DESSERT));
         ObservableList<MealType> boxList = FXCollections.observableArrayList(mealTypes);

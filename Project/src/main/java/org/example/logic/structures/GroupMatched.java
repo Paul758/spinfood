@@ -2,7 +2,6 @@ package org.example.logic.structures;
 
 import org.example.data.Coordinate;
 import org.example.data.enums.FoodPreference;
-import org.example.data.factory.Kitchen;
 import org.example.logic.tools.MatchingTools;
 import org.example.logic.enums.MealType;
 
@@ -14,17 +13,18 @@ import java.util.List;
  */
 public class GroupMatched {
     public static final int groupSize = 3;
-    private PairMatched cook;
     MealType mealType;
+    PairMatched cook;
     PairMatched pairA;
     PairMatched pairB;
-    PairMatched pairC;
     private final List<PairMatched> pairs;
     FoodPreference groupFoodPreference;
 
 
     public GroupMatched(PairMatched cook, PairMatched guestA, PairMatched guestB, MealType mealType) {
         this.cook = cook;
+        this.pairA = guestA;
+        this.pairB = guestB;
         this.cook.cooksMealType = mealType;
         this.mealType = mealType;
 
@@ -32,10 +32,6 @@ public class GroupMatched {
         this.pairs.add(cook);
         this.pairs.add(guestA);
         this.pairs.add(guestB);
-
-        this.pairA = cook;
-        this.pairB = guestA;
-        this.pairC = guestB;
 
         this.groupFoodPreference = calculateFoodPreference();
 
@@ -46,6 +42,13 @@ public class GroupMatched {
 
     public PairMatched getCook() {
         return cook;
+    }
+    public PairMatched getPairA() {
+        return pairA;
+    }
+
+    public PairMatched getPairB() {
+        return pairB;
     }
 
     public MealType getMealType() {
@@ -63,9 +66,9 @@ public class GroupMatched {
      * @return the food preference of the group
      */
     protected FoodPreference calculateFoodPreference() {
-        int foodPreferencePairA = MatchingTools.getIntValueFoodPreference(pairA.getFoodPreference());
-        int foodPreferencePairB = MatchingTools.getIntValueFoodPreference(pairB.getFoodPreference());
-        int foodPreferencePairC = MatchingTools.getIntValueFoodPreference(pairC.getFoodPreference());
+        int foodPreferencePairA = MatchingTools.getIntValueFoodPreference(cook.getFoodPreference());
+        int foodPreferencePairB = MatchingTools.getIntValueFoodPreference(pairA.getFoodPreference());
+        int foodPreferencePairC = MatchingTools.getIntValueFoodPreference(pairB.getFoodPreference());
         return FoodPreference.parseFoodPreference(Math.max(foodPreferencePairA, Math.max(foodPreferencePairB, foodPreferencePairC)));
         //throw new IllegalStateException("not implemented yet");
     }
@@ -83,16 +86,16 @@ public class GroupMatched {
      * @param newPair the new pair
      */
     public void switchPairs(PairMatched thisPair, PairMatched newPair) {
-        if(thisPair.equals(pairA)){
-            pairA = newPair;
+        if(thisPair.equals(cook)){
+            cook = newPair;
             System.out.println("switched pair A");
+        }
+        else if(thisPair.equals(pairA)){
+            pairA = newPair;
+            System.out.println("switched pair B");
         }
         else if(thisPair.equals(pairB)){
             pairB = newPair;
-            System.out.println("switched pair B");
-        }
-        else if(thisPair.equals(pairC)){
-            pairC = newPair;
             System.out.println("switched pair C");
         }
 

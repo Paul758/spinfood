@@ -101,8 +101,11 @@ public abstract class TabController {
     }
 
     protected void openPopupWindow(Parent root, String title) {
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements",
+                Settings.getInstance().getLocale());
+
         popupStage = new Stage();
-        popupStage.setTitle(title);
+        popupStage.setTitle(bundle.getString(title));
         popupStage.setScene(new Scene(root));
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.showAndWait();
@@ -120,7 +123,7 @@ public abstract class TabController {
         fxmlLoader.setResources(bundle);
         Parent root = fxmlLoader.load();
 
-        openPopupWindow(root, "Match Cost Chooser");
+        openPopupWindow(root, "matchCostChooser");
     }
 
     public MatchingRepository getMatchingRepository() {

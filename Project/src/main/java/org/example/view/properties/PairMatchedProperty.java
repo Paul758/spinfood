@@ -7,9 +7,8 @@ import org.example.view.tools.ViewTools;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
+@SuppressWarnings("unused")
 public record PairMatchedProperty(PairMatched pairMatched) {
 
     public static LinkedHashMap<String, List<Entry>> getColumnNames() {
@@ -25,20 +24,36 @@ public record PairMatchedProperty(PairMatched pairMatched) {
                 new Entry(EntryType.IMAGE, "foodPreferenceBIcon")
         );
 
+        List<Entry> pairData = List.of(
+                new Entry("preMatched"),
+                new Entry("foodPreferenceIcon")
+
+        );
+
         List<Entry> metrics = List.of(
                 new Entry("ageDifference"),
                 new Entry("genderDiversity"),
-                new Entry("preferenceDeviation")
+                new Entry("preferenceDeviation"),
+                new Entry("isValid")
         );
-
-        //List<String> pairData = List.of("preMatched");
-        //List<String> metrics = List.of("ageDifference", "genderDiversity", "preferenceDeviation");
 
         LinkedHashMap<String, List<Entry>> values = new LinkedHashMap<>();
         values.put("soloA", soloA);
         values.put("soloB", soloB);
-        //values.put("pairData", pairData);
+        values.put("", pairData);
         values.put("metrics", metrics);
+        return values;
+    }
+
+    public static LinkedHashMap<String, List<Entry>> getSummaryViewColumns() {
+        List<Entry> data = List.of(
+                new Entry("genderCombined"),
+                new Entry("ageCombined"),
+                new Entry(EntryType.IMAGE, "foodPreferenceIcon")
+        );
+
+        LinkedHashMap<String, List<Entry>> values = new LinkedHashMap<>();
+        values.put("", data);
         return values;
     }
 
@@ -78,6 +93,10 @@ public record PairMatchedProperty(PairMatched pairMatched) {
         return String.valueOf(pairMatched.isPreMatched());
     }
 
+    public ImageView getFoodPreferenceIcon() {
+        return ViewTools.getFoodPreferenceIcon(pairMatched.getFoodPreference());
+    }
+
     public String getAgeDifference() {
         return String.valueOf(PairMetrics.calcAgeDifference(pairMatched));
     }
@@ -88,5 +107,21 @@ public record PairMatchedProperty(PairMatched pairMatched) {
 
     public String getPreferenceDeviation() {
         return String.valueOf(PairMetrics.calcPreferenceDeviation(pairMatched));
+    }
+
+    public String getIsValid() {
+        return String.valueOf(PairMetrics.isValid(pairMatched));
+    }
+
+    public String getGenderCombined() {
+        return pairMatched.getSoloA().getPerson().sex().toString()
+                + ", "
+                + pairMatched.getSoloB().getPerson().sex().toString();
+    }
+
+    public String getAgeCombined() {
+        return pairMatched.getSoloA().getPerson().age()
+                + ", "
+                + pairMatched.getSoloA().getPerson().age();
     }
 }

@@ -56,7 +56,7 @@ public class PairListTabController extends TabController {
     @Override
     public void updateUI() {
         List<Solo> soloSuccessors = new ArrayList<>(matchingRepository.soloSuccessors);
-        TableViewTools.fillTable(soloSuccessors, successorTableView, SoloProperty::new, SoloProperty.getColumnNames());
+        TableViewTools.fillTable(soloSuccessors, successorTableView, SoloProperty::new, SoloProperty.getSummaryViewColumns());
 
         List<PairMatched> pairs = new ArrayList<>(matchingRepository.getMatchedPairsCollection());
         TableViewTools.fillTable(pairs, matchedPairsTableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());
@@ -86,10 +86,10 @@ public class PairListTabController extends TabController {
             return new PairBuilder(successors, this);
         });
 
-        ResourceBundle bundle = ResourceBundle.getBundle("PairBuilderBundle", Settings.getInstance().getLocale());
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements", Settings.getInstance().getLocale());
         fxmlLoader.setResources(bundle);
 
         Parent root = fxmlLoader.load();
-        openPopupWindow(root, "Pair Builder");
+        openPopupWindow(root, "pairBuilder");
     }
 }

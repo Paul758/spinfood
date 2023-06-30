@@ -55,7 +55,7 @@ public class DataTabController extends TabController {
     @FXML
     private void deleteSolo() {
         SoloProperty soloProperty = soloTableView.getSelectionModel().getSelectedItem();
-        Solo soloToDelete = soloProperty.getSolo();
+        Solo soloToDelete = soloProperty.solo();
         this.removeSolo(soloToDelete);
     }
 
@@ -113,10 +113,10 @@ public class DataTabController extends TabController {
     @Override
     public void updateUI() {
         List<Solo> solos = new ArrayList<>(matchingRepository.getSoloDataCollection());
-        TableViewTools.fillTable(solos, soloTableView, SoloProperty::new, SoloProperty.getColumnNames());
+        TableViewTools.fillTable(solos, soloTableView, SoloProperty::new, SoloProperty.getDetailViewColumns());
 
         List<Pair> pairs = new ArrayList<>(matchingRepository.getPairDataCollection());
-        TableViewTools.fillTable(pairs, pairTableView, PairProperty::new, PairProperty.getColumnNames());
+        TableViewTools.fillTable(pairs, pairTableView, PairProperty::new, PairProperty.getDetailViewColumns());
 
         checkMatchPairsButton();
     }

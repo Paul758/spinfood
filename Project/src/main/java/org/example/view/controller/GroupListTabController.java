@@ -12,12 +12,14 @@ import org.example.view.commands.DisbandGroupCommand;
 import org.example.view.properties.GroupListProperty;
 import org.example.view.properties.GroupMatchedProperty;
 import org.example.view.properties.PairMatchedProperty;
+import org.example.view.tools.Settings;
 import org.example.view.windows.GroupBuilder;
 import org.example.view.tools.TableViewTools;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class GroupListTabController extends TabController {
 
@@ -55,19 +57,21 @@ public class GroupListTabController extends TabController {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GroupBuilder.fxml"));
         fxmlLoader.setControllerFactory((Class<?> controllerClass) -> new GroupBuilder(successors, this));
+        ResourceBundle bundle = ResourceBundle.getBundle("uiElements", Settings.getInstance().getLocale());
+        fxmlLoader.setResources(bundle);
         Parent root = fxmlLoader.load();
-        this.openPopupWindow(root, "Group Builder");
+        this.openPopupWindow(root, "groupBuilder");
     }
 
     @Override
     public void updateUI() {
         List<PairMatched> pairSuccessors = new ArrayList<>(matchingRepository.pairSuccessors);
-        TableViewTools.fillTable(pairSuccessors, pairTableView, PairMatchedProperty::new, PairMatchedProperty.getColumnNames());
+        TableViewTools.fillTable(pairSuccessors, pairTableView, PairMatchedProperty::new, PairMatchedProperty.getSummaryViewColumns());
 
         List<GroupMatched> groups = new ArrayList<>(matchingRepository.getMatchedGroupsCollection());
         TableViewTools.fillTable(groups, groupTableView, GroupMatchedProperty::new, GroupMatchedProperty.getColumnNames());
 
         List<GroupListTabController> controllers = List.of(this);
-        TableViewTools.fillTable(controllers, metricsTableView, GroupListProperty::new, GroupListProperty.getColumnNames2());
+        TableViewTools.fillTable(controllers, metricsTableView, GroupListProperty::new, GroupListProperty.getTabColumns());
     }
 }

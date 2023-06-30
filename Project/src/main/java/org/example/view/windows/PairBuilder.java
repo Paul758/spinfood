@@ -32,7 +32,7 @@ public class PairBuilder {
 
     @FXML
     private void initialize() {
-        TableViewTools.fillTable(soloList, tableViewA, SoloProperty::new, SoloProperty.getColumnNames());
+        TableViewTools.fillTable(soloList, tableViewA, SoloProperty::new, SoloProperty.getSummaryViewColumns());
         checkBuildPairButton();
     }
 
@@ -40,7 +40,7 @@ public class PairBuilder {
     private void selectSoloA() {
         SoloProperty soloProperty = tableViewA.getSelectionModel().getSelectedItem();
         if (soloProperty != null) {
-            selectedSoloA = soloProperty.getSolo();
+            selectedSoloA = soloProperty.solo();
             showPossibleMatches(selectedSoloA);
             checkBuildPairButton();
         }
@@ -50,7 +50,7 @@ public class PairBuilder {
     private void selectSoloB() {
         SoloProperty soloProperty = tableViewB.getSelectionModel().getSelectedItem();
         if (soloProperty != null) {
-            selectedSoloB = soloProperty.getSolo();
+            selectedSoloB = soloProperty.solo();
             checkBuildPairButton();
         }
     }
@@ -68,7 +68,7 @@ public class PairBuilder {
                 .filter(s -> PairMetrics.isValid(s, solo))
                 .toList();
 
-        TableViewTools.fillTable(possibleMatches, tableViewB, SoloProperty::new, SoloProperty.getColumnNames());
+        TableViewTools.fillTable(possibleMatches, tableViewB, SoloProperty::new, SoloProperty.getSummaryViewColumns());
     }
 
     private void checkBuildPairButton() {

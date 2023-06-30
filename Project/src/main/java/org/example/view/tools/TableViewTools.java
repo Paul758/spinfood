@@ -28,6 +28,7 @@ public class TableViewTools {
         clearTable(tableView);
         List<R> properties = map(objects,mapper);
         ObservableList<R> data = FXCollections.observableArrayList(properties);
+        ResourceBundle bundle = ResourceBundle.getBundle("tableViewColumns", Settings.getInstance().getLocale());
 
         for (Map.Entry<String, List<Entry>> entry : columnsMap.entrySet()) {
             List<TableColumn<R, ?>> columns = new ArrayList<>();
@@ -35,8 +36,6 @@ public class TableViewTools {
             for (Entry listEntry : entry.getValue()) {
                 TableColumn<R, ?> column = createColumn(listEntry);
                 columns.add(column);
-                System.out.println("this entry is " + listEntry.name);
-                ResourceBundle bundle = ResourceBundle.getBundle("tableViewColumns", Settings.getInstance().getLocale());
                 column.setText(bundle.getString(listEntry.name));
             }
 
@@ -46,6 +45,7 @@ public class TableViewTools {
                 TableColumn<R, String> topColumn = new TableColumn<>(entry.getKey());
                 topColumn.getColumns().addAll(columns);
                 tableView.getColumns().add(topColumn);
+                topColumn.setText(bundle.getString(entry.getKey()));
             }
 
         }

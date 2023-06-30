@@ -9,11 +9,8 @@ import org.example.data.structures.Solo;
 import org.example.view.properties.SoloProperty;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class TableViewToolsTest {
 
@@ -26,6 +23,6 @@ class TableViewToolsTest {
 
         List<Solo> soloList = List.of(solo);
         List<SoloProperty> propertyList = TableViewTools.map(soloList, SoloProperty::new);
-        Assertions.assertEquals(soloList.get(0), propertyList.get(0).getSolo());
+        Assertions.assertEquals(soloList.get(0), propertyList.get(0).solo());
     }
 }

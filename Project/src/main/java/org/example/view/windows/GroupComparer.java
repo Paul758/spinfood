@@ -13,6 +13,6 @@ public class GroupComparer {
     private TableView<GroupListProperty> tableView;
 
     public void update(List<GroupListTabController> controllers) {
-        TableViewTools.fillTable(controllers, tableView, GroupListProperty::new, GroupListProperty.getColumnNames2());
+        TableViewTools.fillTable(controllers, tableView, GroupListProperty::new, GroupListProperty.getComparerColumns());
     }
 }

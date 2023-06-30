@@ -10,11 +10,9 @@ import java.util.Locale;
 
 public class Settings {
     private static Settings instance;
-    private double fontSize;
     private Locale locale;
 
     private Settings() {
-        fontSize = 20;
         this.locale = Locale.US;
     }
 
@@ -25,14 +23,9 @@ public class Settings {
         return instance;
     }
 
-    public double getFontsize() {
-        return fontSize;
-    }
-
     public Locale getLocale() {
         return this.locale;
     }
-
 
     public void saveLanguage(Locale locale) {
         ObjectMapper objectMapper = new ObjectMapper();
