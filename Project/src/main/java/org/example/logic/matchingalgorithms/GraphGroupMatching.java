@@ -43,7 +43,7 @@ public class GraphGroupMatching {
             meatPairs.add(nextNonePair);
         }
 
-        while (veggieVeganPairs.size() % 9 != 0) {
+        /*while (veggieVeganPairs.size() % 9 != 0) {
             if(nonePairs.size() == 0) {
                 break;
             }
@@ -51,7 +51,7 @@ public class GraphGroupMatching {
             PairMatched nextNonePair = nonePairs.get(0);
             nonePairs.remove(0);
             veggieVeganPairs.add(nextNonePair);
-        }
+        }*/
         System.out.println("meat pairs size " + meatPairs.size());
         System.out.println("veggie vegan pairs size " + veggieVeganPairs.size());
 
