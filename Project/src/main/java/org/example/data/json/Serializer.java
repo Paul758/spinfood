@@ -16,9 +16,29 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * This class is responsible for serializing the data to JSON format.
+ * It uses the Jackson library to do so and contains several methods for serializing different types of data.
+ * It also contains a method for writing the serialized data to a file.
+ * The Class uses instances of the wrapper classes in the same package to serialize the data.
+ * @version 1.0
+ * @see KitchenWrapper
+ * @see SoloWrapper
+ * @see PairWrapper
+ * @see GroupWrapper
+ * @see MatchingRepositoryWrapper
+ */
 public class Serializer {
     private static final SerializationFeature feature = SerializationFeature.INDENT_OUTPUT;
 
+    /**
+     * Mhis method writes the serialized data to a file.
+     * @param data The data to be serialized
+     * @param filepath The path to the file to which the data will be written
+     * @throws IOException If there is a problem with the filepath
+     * @see ObjectMapper
+     * @see DefaultPrettyPrinter
+     */
     public static void writeToFile(String data, String filepath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode jsonNode = mapper.readTree(data);

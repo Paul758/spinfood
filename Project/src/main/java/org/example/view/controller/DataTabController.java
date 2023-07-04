@@ -45,8 +45,8 @@ public class DataTabController extends TabController {
 
     @FXML
     public void loadDefaultValues() {
-        String participants = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        String party = "src/main/java/org/example/artifacts/partylocation.csv";
+        String participants = "Project/src/main/java/org/example/artifacts/teilnehmerliste.csv";
+        String party = "Project/src/main/java/org/example/artifacts/partylocation.csv";
         DataManagement dataManagement = new DataManagement(participants, party);
         this.matchingRepository = new MatchingRepository(dataManagement);
         updateUI();

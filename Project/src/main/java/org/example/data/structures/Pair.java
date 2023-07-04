@@ -28,6 +28,12 @@ public class Pair extends EventParticipant{
         super.kitchen = kitchen;
     }
 
+    /**
+     * Checks if two pairs contain the same people, regardless of order.
+     * Is implemented as general as possible to allow for future extension to more than two people.
+     * @param obj Pair to compare to
+     * @return true if the two pairs contain the same people, false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {

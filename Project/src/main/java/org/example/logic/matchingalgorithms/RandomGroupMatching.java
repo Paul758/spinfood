@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Class used for Testing-purposes only
+ * Cretes a random matching of groups, for use of benchmarking
+ */
 public class RandomGroupMatching {
     public static List<GroupMatched> match(List<PairMatched> pairs) {
         List<GroupMatched> groups = new ArrayList<>();

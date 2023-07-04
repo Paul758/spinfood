@@ -6,6 +6,12 @@ import org.example.logic.structures.PairMatched;
 
 import java.util.List;
 
+/**
+ * This class represents a command to disband a group.
+ * @see org.example.logic.structures.PairMatched
+ * @see org.example.logic.structures.MatchingRepository
+ * @see org.example.view.commands.UIAction
+ */
 public class DisbandGroupCommand implements UIAction {
 
     private final MatchingRepository matchingRepository;

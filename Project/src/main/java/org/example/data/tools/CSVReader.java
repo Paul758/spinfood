@@ -8,8 +8,12 @@ import java.util.*;
 /**
  * This class reads in a csv file and returns a list of lists of strings.
  * Can be used to read all sorts of csv-files, not only given one, however filepath should be changed.
+ * New Version: 1.3 This Class now contains a method to check if a file is a party location file.
+ * Also contains a method to create a map of keywords and their given index in the csv file.
  * @author David Riemer
  * @version 1.2
+ *
+
  */
 public class CSVReader {
 
@@ -31,6 +35,11 @@ public class CSVReader {
         }
     }
 
+    /**
+     * This method creates a map, in which every String keyword is mapped to its index in the csv file.
+     * @param line the line of the csv file that contains the keywords
+     * @return a map of keywords and their index in the csv file
+     */
     public static Map<String, Integer> createKeyWordMap(List<String> line) {
         Map<String, Integer> keyWordMap = new HashMap<>();
         for (int i = 0; i < line.size(); i++) {

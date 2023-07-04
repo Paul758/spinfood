@@ -8,7 +8,8 @@ import org.example.logic.structures.PairMatched;
 
 /**
  * Data holding class for a single person. Contains a person and their food preference and kitchen.
- *
+ * @author David Riemer
+ * @see EventParticipant
  */
 public class Solo extends EventParticipant{
 
@@ -26,6 +27,11 @@ public class Solo extends EventParticipant{
         return person;
     }
 
+    /**
+     * Checks if the Person is equal to this object.
+     * @param obj object to compare to
+     * @return true if the objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {
