@@ -17,20 +17,19 @@ import java.io.IOException;
  */
 public class GenerateSolutions {
 
+    String filePathParticipants = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
+    String filePathPartylocation = "src/main/java/org/example/artifacts/partylocation.csv";
+    String projectPath = System.getProperty("user.dir");
+    String parentPath = new File(projectPath).getParent();
+    String directory = parentPath + "/Loesungen/";
+
     /**
      * Weighted criteria: 5 > 8 > 6 > 7 > 9
      */
     @Test
     public void generateSolutionA() {
-        String projectPath = System.getProperty("user.dir");
-        String parentPath = new File(projectPath).getParent();
-        String directory = parentPath + "/Loesungen/";
         String fileName = "solutionA.json";
 
-        String filePathParticipants = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        String filePathPartylocation = "src/main/java/org/example/artifacts/partylocation.csv";
-        //String exportPath = "src/main/java/org/example/artifacts/solution1.json";
-        //String exportPath = "solution.json";
         DataManagement dataManagement = new DataManagement(filePathParticipants, filePathPartylocation);
         MatchingRepository matchingRepository = new MatchingRepository(dataManagement);
 
@@ -66,14 +65,8 @@ public class GenerateSolutions {
      */
     @Test
     public void generateSolutionB() {
-       // String projectPath = System.getProperty("user.dir");
-        String projectPath = System.getProperty("user.dir");
-        String parentPath = new File(projectPath).getParent();
-        String directory = parentPath + "/Loesungen/";
         String fileName = "solutionB.json";
-        String filePathParticipants = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        String filePathPartylocation = "src/main/java/org/example/artifacts/partylocation.csv";
-        //String exportPath = "src/main/java/org/example/artifacts/solution2.json";
+
         DataManagement dataManagement = new DataManagement(filePathParticipants, filePathPartylocation);
         MatchingRepository matchingRepository = new MatchingRepository(dataManagement);
 
@@ -110,14 +103,8 @@ public class GenerateSolutions {
      */
     @Test
     public void generateSolutionC() {
-        //String projectPath = System.getProperty("user.dir");
-        String projectPath = System.getProperty("user.dir");
-        String parentPath = new File(projectPath).getParent();
-        String directory = parentPath + "/Loesungen/";
         String fileName = "solutionC.json";
-        String filePathParticipants = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
-        String filePathPartylocation = "src/main/java/org/example/artifacts/partylocation.csv";
-        //String exportPath = "src/main/java/org/example/artifacts/solution3.json";
+
         DataManagement dataManagement = new DataManagement(filePathParticipants, filePathPartylocation);
         MatchingRepository matchingRepository = new MatchingRepository(dataManagement);
 
