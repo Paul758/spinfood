@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
+/**
+ * The parent class from which the various tab controller classes inherit
+ */
 public abstract class TabController {
 
     ArrayDeque<UIAction> undoHistory = new ArrayDeque<>();
@@ -33,7 +36,6 @@ public abstract class TabController {
     protected MatchingRepository matchingRepository;
     private final List<TabController> children = new ArrayList<>();
     private Stage popupStage;
-
     private Tab tab;
 
     public TabController(MatchingRepository matchingRepository, Main parent, String name) {
@@ -42,6 +44,9 @@ public abstract class TabController {
         this.name = name;
     }
 
+    /**
+     * Implements the functionality to undo commands
+     */
     public void undo(){
         if(undoHistory.isEmpty()) {
             return;
@@ -52,6 +57,9 @@ public abstract class TabController {
         updateUI();
     }
 
+    /**
+     * Implements the functionality to redo commands
+     */
     public void redo() {
         if(redoHistory.isEmpty()) {
             return;
@@ -62,6 +70,9 @@ public abstract class TabController {
         updateUI();
     }
 
+    /**
+     * Implements the functionality to run commands
+     */
     public void run(UIAction action) {
         undoHistory.addLast(action);
         redoHistory.clear();
@@ -69,17 +80,32 @@ public abstract class TabController {
         updateUI();
     }
 
+    /**
+     * Is used to update all ui elements after a command is executed, undone or redone
+     */
     public abstract void updateUI();
 
+
+    /**
+     * Adds another TabController to the children of this TabController
+     * @param tabController the child TabController
+     */
     public void addChild(TabController tabController) {
         children.add(tabController);
     }
 
+    /**
+     * Deletes this TabController and all its children
+     */
     public void delete() {
         parent.closeTab(this);
         children.forEach(TabController::delete);
     }
 
+    /**
+     * Removes a Solo object from the matching repository of this TabController
+     * @param soloToRemove the Solo object to remove
+     */
     public void removeSolo(Solo soloToRemove) {
         System.out.println("called on " + name);
         System.out.println(matchingRepository.getSoloDataCollection().contains(soloToRemove));
@@ -90,6 +116,12 @@ public abstract class TabController {
         updateUI();
     }
 
+    /**
+     * Removes a Pair Object and the corresponding PairMatched Object
+     * from the matching repository of this TabController
+     * @param pairToRemove the Solo object to remove
+     * @param pairMatchedToRemove the pairMatched Object to remove
+     */
     public void removePair(PairMatched pairMatchedToRemove, Pair pairToRemove) {
         System.out.println("called on " + name);
         System.out.println(matchingRepository.getMatchedPairsCollection().contains(pairMatchedToRemove));
@@ -100,6 +132,11 @@ public abstract class TabController {
         updateUI();
     }
 
+    /**
+     * opens a new window that must be closed before the user can continue using the main window
+     * @param root the content of the window
+     * @param title the title of the window
+     */
     protected void openPopupWindow(Parent root, String title) {
         ResourceBundle bundle = ResourceBundle.getBundle("uiElements",
                 Settings.getInstance().getLocale());
@@ -111,10 +148,18 @@ public abstract class TabController {
         popupStage.showAndWait();
     }
 
+    /**
+     * closes the new window
+     */
     public void closePopupWindow() {
         popupStage.close();
     }
 
+    /**
+     * Opens a window where the user can choose the priorities of a MatchCostObject
+     * which is used in the Matching Algorithms
+     * @param onClose a function that is called when the window is closed
+     */
     protected void openMatchCostChooserWindow(Consumer<MatchCosts> onClose) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(PairBuilder.class.getResource("/MatchCostChooser.fxml"));
         fxmlLoader.setControllerFactory((Class<?> controllerClass) -> new MatchCostChooser(this, onClose));

@@ -23,6 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * The pair-list TabController handles the following tasks:
+ * 1. matches solo participants to pairs
+ * 2. displays the list of all pairs
+ * 3. displays the solo participants successor list
+ * 4. displays the pair-list metrics
+ * 4. disbandment of pairs
+ * 5. creation of pairs
+ * 6. creation of a group-list TabController
+ */
 public class PairListTabController extends TabController {
 
     @FXML
@@ -45,6 +55,9 @@ public class PairListTabController extends TabController {
         updateUI();
     }
 
+    /**
+     * Disbands the pair that the user has selected
+     */
     @FXML
     public void disbandPair() {
         PairMatchedProperty pairMatchedProperty = matchedPairsTableView.getSelectionModel().getSelectedItem();
@@ -53,6 +66,9 @@ public class PairListTabController extends TabController {
         run(disbandPairCommand);
     }
 
+    /**
+     * Updates the pair-list, solo successor and metrics table
+     */
     @Override
     public void updateUI() {
         List<Solo> soloSuccessors = new ArrayList<>(matchingRepository.soloSuccessors);
@@ -65,11 +81,17 @@ public class PairListTabController extends TabController {
         TableViewTools.fillTable(controllers, metricsTableView, PairListProperty::new, PairListProperty.getColumnNames());
     }
 
+    /**
+     * Opens the match cost chooser window
+     */
     @FXML
     public void createGroupTab() throws IOException {
         this.openMatchCostChooserWindow(this::closeMatchCostChooserWindow);
     }
 
+    /**
+     * Creates a new group-list TabController
+     */
     public void closeMatchCostChooserWindow(MatchCosts matchCosts) {
         try {
             parent.createGroupTab(this, matchCosts);
@@ -78,6 +100,9 @@ public class PairListTabController extends TabController {
         }
     }
 
+    /**
+     * Opens the pair builder window
+     */
     @FXML
     public void openPairBuilder() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/PairBuilder.fxml"));

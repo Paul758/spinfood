@@ -22,6 +22,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The DataTabController handles the following tasks:
+ * 1. import of the csv files
+ * 2. displays all participants
+ * 3. deletion of participants
+ * 4. creation of  pair-list tabs
+ */
 public class DataTabController extends TabController {
 
     @FXML
@@ -43,6 +50,9 @@ public class DataTabController extends TabController {
         checkMatchPairsButton();
     }
 
+    /**
+     * Loads the default participants and party location
+     */
     @FXML
     public void loadDefaultValues() {
         String participants = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
@@ -52,6 +62,9 @@ public class DataTabController extends TabController {
         updateUI();
     }
 
+    /**
+     * Deletes a selected solo object from the matching repository
+     */
     @FXML
     private void deleteSolo() {
         SoloProperty soloProperty = soloTableView.getSelectionModel().getSelectedItem();
@@ -59,6 +72,9 @@ public class DataTabController extends TabController {
         this.removeSolo(soloToDelete);
     }
 
+    /**
+     * Deletes a selected pair object from the matching repository
+     */
     @FXML
     private void deletePair() {
         PairProperty pairProperty = pairTableView.getSelectionModel().getSelectedItem();
@@ -67,11 +83,17 @@ public class DataTabController extends TabController {
         this.removePair(pairMatchedToDelete, pairToDelete);
     }
 
+    /**
+     * Opens the Match Cost Chooser Window
+     */
     @FXML
     public void showMatchCostChooserWindow() throws IOException {
         this.openMatchCostChooserWindow(this::closeMatchCostChooserWindow);
     }
 
+    /**
+     * Checks if all conditions are met so that a pair-list tab can be created
+     */
     private void checkMatchPairsButton() {
         boolean notActive = matchingRepository == null
                 || matchingRepository.dataManagement == null
@@ -80,6 +102,9 @@ public class DataTabController extends TabController {
         matchPairsButton.setDisable(notActive);
     }
 
+    /**
+     * Shows the window to select and open a participant list csv file
+     */
     @FXML
     private void loadParticipants() {
         participantFilePath = getFilePath();
@@ -87,6 +112,9 @@ public class DataTabController extends TabController {
         checkFilesReady();
     }
 
+    /**
+     * Shows the window to select and open a party location csv file
+     */
     @FXML
     private void loadPartyLocation() {
         partyLocationFilePath = getFilePath();
@@ -94,6 +122,10 @@ public class DataTabController extends TabController {
         checkFilesReady();
     }
 
+    /**
+     * Opens the file chooser and gets the file path of a selected csv file
+     * @return the absolut path to a csv file
+     */
     private String getFilePath() {
         Stage fileChooserStage = new Stage();
         FileChooser fileChooser = new FileChooser();
@@ -102,6 +134,10 @@ public class DataTabController extends TabController {
         return file.getAbsolutePath();
     }
 
+    /**
+     * Checks if a participant list csv file and party location csv file were loaded into this controller.
+     * If that's the case, a DataManagement and MatchingRepository Object with the data from the files is created.
+     */
     private void checkFilesReady() {
         if (participantFilePath != null && partyLocationFilePath != null) {
             DataManagement dataManagement = new DataManagement(participantFilePath, partyLocationFilePath);
@@ -110,6 +146,9 @@ public class DataTabController extends TabController {
         }
     }
 
+    /**
+     * Updates the tables that display the solo and pair participants
+     */
     @Override
     public void updateUI() {
         List<Solo> solos = new ArrayList<>(matchingRepository.getSoloDataCollection());
@@ -121,6 +160,10 @@ public class DataTabController extends TabController {
         checkMatchPairsButton();
     }
 
+    /**
+     * Creates a pair-list tab
+     * @param matchCosts a MatchCost object
+     */
     public void closeMatchCostChooserWindow(MatchCosts matchCosts) {
         try {
             parent.createPairTab(this, matchCosts);

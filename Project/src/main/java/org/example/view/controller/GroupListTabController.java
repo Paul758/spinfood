@@ -21,6 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * The group-list TabController handles the following tasks:
+ * 1. matches pairs to groups
+ * 2. displays all groups
+ * 3. displays the pair successors
+ * 4. displays the group-list metrics
+ * 5. disbandment of groups
+ * 6. creation of groups
+ */
 public class GroupListTabController extends TabController {
 
     @FXML
@@ -39,10 +48,9 @@ public class GroupListTabController extends TabController {
         updateUI();
     }
 
-    public void setup(MatchingRepository matchingRepository) {
-        this.matchingRepository = matchingRepository;
-    }
-
+    /**
+     * disbands a group that the user has selected
+     */
     @FXML
     public void disbandGroup() {
         GroupMatchedProperty groupMatchedProperty = groupTableView.getSelectionModel().getSelectedItem();
@@ -51,6 +59,9 @@ public class GroupListTabController extends TabController {
         run(command);
     }
 
+    /**
+     * opens the group builder window
+     */
     @FXML
     public void openGroupBuilder() throws IOException {
         List<PairMatched> successors = new ArrayList<>(matchingRepository.pairSuccessors);
@@ -63,6 +74,9 @@ public class GroupListTabController extends TabController {
         this.openPopupWindow(root, "groupBuilder");
     }
 
+    /**
+     * Updates the group-list, pair successor and metrics table view
+     */
     @Override
     public void updateUI() {
         List<PairMatched> pairSuccessors = new ArrayList<>(matchingRepository.pairSuccessors);
