@@ -61,23 +61,23 @@ public class PairMetrics {
      * @return the path length of the pair
      */
     public static double calcPathLength(PairMatched pair, Coordinate partyLocation) {
-        if (pair.getStarterGroup() == null || pair.getMainGroup() == null || pair.getDessertGroup() == null) {
-            return 0;
-        }
-
         if (partyLocation == null) {
             throw new IllegalArgumentException("No valid party location");
         }
 
-        Coordinate starter = pair.getStarterLocation();
-        Coordinate main = pair.getMainLocation();
-        Coordinate dessert = pair.getDessertLocation();
+        try {
+            Coordinate starter = pair.getStarterLocation();
+            Coordinate main = pair.getMainLocation();
+            Coordinate dessert = pair.getDessertLocation();
 
-        double distanceStarterToMain = Coordinate.getDistance(starter, main);
-        double distanceMainToDessert = Coordinate.getDistance(main, dessert);
-        double distanceDessertToParty = Coordinate.getDistance(dessert, partyLocation);
+            double distanceStarterToMain = Coordinate.getDistance(starter, main);
+            double distanceMainToDessert = Coordinate.getDistance(main, dessert);
+            double distanceDessertToParty = Coordinate.getDistance(dessert, partyLocation);
 
-        return  distanceStarterToMain + distanceMainToDessert + distanceDessertToParty;
+            return  distanceStarterToMain + distanceMainToDessert + distanceDessertToParty;
+        } catch (NullPointerException e) {
+            return 0;
+        }
     }
 
     /**

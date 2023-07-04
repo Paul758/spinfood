@@ -7,6 +7,7 @@ import org.example.data.enums.Sex;
 import org.example.data.factory.Kitchen;
 import org.example.data.factory.Person;
 import org.example.data.structures.Solo;
+import org.example.logic.structures.GroupMatched;
 import org.example.logic.structures.PairMatched;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -167,13 +168,14 @@ class PairMetricsTest {
     }
 
     @Test
-    void calcPathLength_ExceptionThrownInvalidGroupLocation() {
+    void calcPathLength_ALocationIsNull() {
         Mockito.when(mockPair.getStarterLocation()).thenReturn(new Coordinate(0,0));
         Mockito.when(mockPair.getMainLocation()).thenReturn(null);
         Mockito.when(mockPair.getDessertLocation()).thenReturn(new Coordinate(0, 0));
         Coordinate partyLocation = new Coordinate(0, 0);
 
-        assertThrows(IllegalArgumentException.class, () -> PairMetrics.calcPathLength(mockPair, partyLocation));
+        double actual = PairMetrics.calcPathLength(mockPair, partyLocation);
+        Assertions.assertEquals(0, actual);
     }
 
     @Test
