@@ -1,6 +1,5 @@
 package org.example.logic.metrics;
 
-import org.example.Main;
 import org.example.data.enums.FoodPreference;
 
 public class MetricTools {

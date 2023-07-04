@@ -1,5 +1,6 @@
 package org.example.logic.metrics;
 
+import org.example.data.enums.FoodPreference;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -8,8 +9,23 @@ import static org.junit.jupiter.api.Assertions.*;
 class MetricToolsTest {
 
     @Test
-    void getPreferenceValue() {
+    void getPreferenceValue_MeatPreference() {
+        Assertions.assertEquals(0, MetricTools.getPreferenceValue(FoodPreference.MEAT));
+    }
 
+    @Test
+    void getPreferenceValue_NonePreference() {
+        Assertions.assertEquals(0, MetricTools.getPreferenceValue(FoodPreference.NONE));
+    }
+
+    @Test
+    void getPreferenceValue_VeggiePreference() {
+        Assertions.assertEquals(1, MetricTools.getPreferenceValue(FoodPreference.VEGGIE));
+    }
+
+    @Test
+    void getPreferenceValue_VeganPreference() {
+        Assertions.assertEquals(2, MetricTools.getPreferenceValue(FoodPreference.VEGAN));
     }
 
     @Test
