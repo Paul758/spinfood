@@ -1,0 +1,42 @@
+\documentclass{book}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+\title{PseudoCode for PairMatch}
+
+\begin{document}
+\maketitle
+    \begin{algorithm}
+        \caption{PairMatch}
+        \label{euclid}
+        \begin{algorithmic}[1]
+            \Procedure{Algorithmus~um~Paare~zu~erstellen}{}
+                \State $ \text{Erstelle~einen~ungerichteten~Graphen \textit{G$\{$V,E$\}$},~mit~Teilnehmnern~als~Knoten}$
+                \For{\textit{alle~Kombinationen~an~Knoten~V~in~G}}
+                    \State \text{überprüfe~ob}~\textit{fullfillsHardCriteria=true}
+                    \If {\textit{fullfillsHardCriteria=true}}
+                        \State \text{berechne~Kosten~der~jeweiligen~Kriterien}
+                        \State \text{Füge~Kante~zwischen~den~Solo-Paaren~hinzu,~mit~den~Kosten~als~Gewicht}
+                    \EndIf
+                \EndFor
+                \For{\textit{alle~Knoten~V~in~G}}
+                    \If {\textit{noch~Solos~in~V~enthalten}}
+                        \State \text{Solo~mit~geringster~Anzahl~an~Kanten~wird~gewählt}
+                        \State\text{Finde~Kante~mit~niedrigstem~Gewicht~welche~von~diesem~Solo~ausgeht}
+                        \State\text{Ein~Paar~Objekt~wird~aus~diesen~beiden~Solos~erstellt~und~in~eine}
+\State \text{Liste~PairMatched~hinzugefügt}
+                        \State\text{Entferne~beide~Solos~aus~$V$~und~deren~Kante~aus~$E$}
+                    \EndIf
+                \EndFor
+                \State \Return \text{PairMatched}
+            \EndProcedure
+        \end{algorithmic}
+    \end{algorithm}
+\end{document}
+
+
+   

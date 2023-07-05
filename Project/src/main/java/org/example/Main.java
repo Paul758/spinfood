@@ -40,7 +40,7 @@ public class Main extends Application {
  
     @Override
     public void start(Stage stage) throws IOException {
-        Settings.getInstance().setPreferences();
+         Settings.getInstance().setPreferences();
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/Main.fxml"));
 

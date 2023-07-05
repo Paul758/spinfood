@@ -4,6 +4,12 @@ import org.example.data.structures.Solo;
 import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
 
+/**
+ * This class represents a command to disband a pair.
+ * @see org.example.logic.structures.PairMatched
+ * @see org.example.logic.structures.MatchingRepository
+ * @see org.example.view.commands.UIAction
+ */
 public class DisbandPairCommand implements UIAction {
 
     MatchingRepository matchingRepository;
