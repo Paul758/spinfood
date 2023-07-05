@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Handles the functionality for the window where the user can choose the priorities of the different criteria
+ * for a matching algorithm
+ */
 public class MatchCostChooser {
 
     @FXML
@@ -47,11 +51,18 @@ public class MatchCostChooser {
         checkAssignButton();
     }
 
+    /**
+     * Activates the button when the assigned priorities are valid, deactivates the button if not
+     */
     private void checkAssignButton() {
         boolean isValid = isValidAssignment();
         assignButton.setDisable(!isValid);
     }
 
+    /**
+     * Creates a MatchCost Object with the priorities the user has chosen, closes the window and
+     * calls the given consumer function for the MatchCost Object
+     */
     @FXML
     private void assign() {
         List<Criteria> criteria = new ArrayList<>();
@@ -65,12 +76,20 @@ public class MatchCostChooser {
         consumer.accept(matchCosts);
     }
 
+    /**
+     * Closes the window and calls the given consumer function with null for the MatchCost Objects
+     */
     @FXML
     private void matchWithoutPriorities() {
         tabController.closePopupWindow();
         consumer.accept(null);
     }
 
+    /**
+     * gets the different criteria in the priority order that the user has selected
+     * @param number the priority value
+     * @return the Criteria for the given value
+     */
     private Criteria getCriteria(int number) {
         if (ageBox.getValue() == number) {
             return Criteria.AGE_DIFFERENCE;
@@ -87,6 +106,11 @@ public class MatchCostChooser {
         }
     }
 
+    /**
+     * checks if an assignment is valid, its valid when a value is selected in each combo box each value is
+     * only selected one
+     * @return true if the assignment is valid, otherwise false
+     */
     private boolean isValidAssignment() {
         int[] arr = new int[CRITERIA_COUNT];
         for (ComboBox<Integer> box : comboBoxes) {

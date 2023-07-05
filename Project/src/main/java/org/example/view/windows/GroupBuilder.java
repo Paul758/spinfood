@@ -17,6 +17,9 @@ import org.example.view.tools.TableViewTools;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Functionality for a window where the user can select three pairs and create a group from them
+ */
 public class GroupBuilder {
 
     @FXML
@@ -48,6 +51,9 @@ public class GroupBuilder {
         checkAssignButton();
     }
 
+    /**
+     * checks if three pairs are selected and the selected pairs are three different pairs
+     */
     private void checkAssignButton() {
         boolean isActive = selectedCook != null && selectedPairA != null && selectedPairB != null
                 && selectedCook != selectedPairA && selectedCook != selectedPairB && selectedPairA != selectedPairB
@@ -55,6 +61,9 @@ public class GroupBuilder {
         createGroupButton.setDisable(!isActive);
     }
 
+    /**
+     * creates a group from the selected pairs
+     */
     @FXML
     private void createGroup() {
         MealType mealType = mealTypeComboBox.getValue();
@@ -64,6 +73,9 @@ public class GroupBuilder {
         controller.closePopupWindow();
     }
 
+    /**
+     * Gets the pair which is selected in the cook table view
+     */
     @FXML
     private void selectCook() {
         PairMatchedProperty property = cookTableView.getSelectionModel().getSelectedItem();
@@ -71,6 +83,9 @@ public class GroupBuilder {
         checkAssignButton();
     }
 
+    /**
+     * Gets the pair which is selected in the pair a table view
+     */
     @FXML
     private void selectPairA() {
         PairMatchedProperty property = pairATableView.getSelectionModel().getSelectedItem();
@@ -78,6 +93,9 @@ public class GroupBuilder {
         checkAssignButton();
     }
 
+    /**
+     * Gets the pair which is selected in the pair b table view
+     */
     @FXML
     private void selectPairB() {
         PairMatchedProperty property = pairBTableView.getSelectionModel().getSelectedItem();
