@@ -31,7 +31,7 @@ class GraphGroupMatchingTest {
 
     @BeforeEach
     void setup() {
-        String filePathParticipants = "src/main/java/org/example/artifacts/solo-2000.csv";
+        String filePathParticipants = "src/main/java/org/example/artifacts/teilnehmerliste.csv";
         String filePathLocation = "src/main/java/org/example/artifacts/partylocation.csv";
         DataManagement dataManagement = new DataManagement(filePathParticipants, filePathLocation);
         matchingRepository = new MatchingRepository(dataManagement);
