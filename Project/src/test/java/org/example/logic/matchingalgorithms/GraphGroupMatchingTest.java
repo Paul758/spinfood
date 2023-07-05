@@ -22,6 +22,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Test class to check if correct group matchings are produced
+ */
 class GraphGroupMatchingTest {
 
     static MatchingRepository matchingRepository;
@@ -32,6 +35,8 @@ class GraphGroupMatchingTest {
         String filePathLocation = "src/main/java/org/example/artifacts/partylocation.csv";
         DataManagement dataManagement = new DataManagement(filePathParticipants, filePathLocation);
         matchingRepository = new MatchingRepository(dataManagement);
+        matchingRepository.matchPairs();
+        matchingRepository.matchGroups();
     }
 
 
@@ -40,7 +45,7 @@ class GraphGroupMatchingTest {
         List<GroupMatched> groupMatchedList = new ArrayList<>(matchingRepository.getMatchedGroupsCollection());
         HashMap<Kitchen, List<MealType>> kitchenUsageHashmap = new HashMap<>();
         boolean isFeasible = true;
-
+        System.out.println("Groupmatched list size " + groupMatchedList.size());
         for (GroupMatched group : groupMatchedList) {
 
             isFeasible = checkFoodPreference(group);

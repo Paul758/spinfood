@@ -8,7 +8,6 @@ import org.example.data.structures.Solo;
 import org.example.logic.matchingalgorithms.GraphGroupMatching;
 import org.example.logic.matchingalgorithms.GraphPairMatching;
 import org.example.logic.matchingalgorithms.MatchCosts;
-import org.example.logic.tools.MatchingSystem;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,7 +48,8 @@ public class MatchingRepository {
 
     public void matchPairs() {
         createAndAddPrematchedPairs();
-        Collection<PairMatched> matchedPairs = MatchingSystem.matchPairs((List<Solo>) this.getSoloDataCollection());
+        List<Solo> solosToMatch = (List<Solo>) this.getSoloDataCollection();
+        List<PairMatched> matchedPairs = GraphPairMatching.match(solosToMatch);
         this.addMatchedPairsCollection(matchedPairs);
         UpdateSoloSuccessors();
     }
@@ -69,7 +69,8 @@ public class MatchingRepository {
 
     public void matchGroups() {
         setDistanceToPartyLocationForPairs();
-        Collection<GroupMatched> matchedGroups = MatchingSystem.matchGroups((List<PairMatched>) this.getMatchedPairsCollection());
+        List<PairMatched> pairsToMatch = (List<PairMatched>) this.getMatchedPairsCollection();
+        Collection<GroupMatched> matchedGroups = GraphGroupMatching.match(pairsToMatch, new MatchCosts());
         this.addMatchedGroupsCollection(matchedGroups);
         UpdatePairSuccessors();
     }

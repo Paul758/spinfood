@@ -12,6 +12,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class to check if correct pair matchings are produced
+ */
 class GraphPairMatchingTest {
     private static MatchingRepository matchingRepository;
 
