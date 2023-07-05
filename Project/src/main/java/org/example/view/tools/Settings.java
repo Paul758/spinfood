@@ -40,7 +40,7 @@ public class Settings {
     public void setPreferences() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String localeTag = objectMapper.readValue(new File("Project/settings.json"), String.class);
+            String localeTag = objectMapper.readValue(new File("settings.json"), String.class);
             locale = Locale.forLanguageTag(localeTag);
 
         } catch (IOException e) {

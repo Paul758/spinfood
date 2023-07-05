@@ -48,6 +48,7 @@ public class PairBuilder {
         SoloProperty soloProperty = tableViewA.getSelectionModel().getSelectedItem();
         if (soloProperty != null) {
             selectedSoloA = soloProperty.solo();
+            selectedSoloB = null;
             showPossibleMatches(selectedSoloA);
             checkBuildPairButton();
         }
