@@ -12,6 +12,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ViewTools {
+
+    /**
+     * Gets the associated image of a given food preference
+     * @param foodPreference a food preference
+     * @return the image that represents the food preference
+     */
     public static ImageView getFoodPreferenceIcon(FoodPreference foodPreference) {
         return switch (foodPreference) {
             case MEAT -> ImageLoader.getInstance().getMeatIcon();
@@ -21,6 +27,10 @@ public class ViewTools {
         };
     }
 
+    /**
+     * Get the current time in the HH:mm:ss format
+     * @return the current time as string
+     */
     public static String getTimeStamp() {
         LocalDateTime timestamp = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
