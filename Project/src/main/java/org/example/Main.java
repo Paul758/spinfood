@@ -1,6 +1,7 @@
 package org.example;
 
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import org.example.data.json.Serializer;
 import org.example.logic.matchingalgorithms.MatchCosts;
 import org.example.logic.structures.MatchingRepository;
@@ -51,7 +52,8 @@ public class Main extends Application {
 
         Parent root = fxmlLoader.load();
 
-        stage.setTitle("Project");
+        stage.setTitle("FoodSpin-Matching Software V1.0");
+        stage.getIcons().add(new Image("spinfood_icon.jpg"));
         stage.setScene(new Scene(root));
         stage.show();
     }
