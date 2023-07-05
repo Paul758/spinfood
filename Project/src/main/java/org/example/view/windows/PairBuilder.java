@@ -14,6 +14,10 @@ import org.example.view.tools.TableViewTools;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The functionality for the window where the user can select to solo participants and can create
+ * a new pair from them
+ */
 public class PairBuilder {
     @FXML
     private TableView<SoloProperty> tableViewA, tableViewB;
@@ -36,6 +40,9 @@ public class PairBuilder {
         checkBuildPairButton();
     }
 
+    /**
+     * gets the solo participant which the user has selected in the solo a table view
+     */
     @FXML
     private void selectSoloA() {
         SoloProperty soloProperty = tableViewA.getSelectionModel().getSelectedItem();
@@ -46,6 +53,9 @@ public class PairBuilder {
         }
     }
 
+    /**
+     * gets the solo participant which the user has selected in the solo b table view
+     */
     @FXML
     private void selectSoloB() {
         SoloProperty soloProperty = tableViewB.getSelectionModel().getSelectedItem();
@@ -55,6 +65,9 @@ public class PairBuilder {
         }
     }
 
+    /**
+     * creates a new pair from the selected solo participants and closes the window
+     */
     @FXML
     private void buildPair() {
         MatchingRepository matchingRepository = controller.getMatchingRepository();
@@ -63,6 +76,10 @@ public class PairBuilder {
         controller.closePopupWindow();
     }
 
+    /**
+     * Shows in table view b only the valid matches for the given solo participant
+     * @param solo a Solo Object
+     */
     private void showPossibleMatches(Solo solo) {
         List<Solo> possibleMatches = soloList.stream()
                 .filter(s -> PairMetrics.isValid(s, solo))
@@ -71,6 +88,9 @@ public class PairBuilder {
         TableViewTools.fillTable(possibleMatches, tableViewB, SoloProperty::new, SoloProperty.getSummaryViewColumns());
     }
 
+    /**
+     * Checks if two solo objects are selected
+     */
     private void checkBuildPairButton() {
         boolean isDisabled = selectedSoloA == null || selectedSoloB == null;
         buildPairButton.setDisable(isDisabled);
