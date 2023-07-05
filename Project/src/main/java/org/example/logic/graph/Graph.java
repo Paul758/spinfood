@@ -10,7 +10,7 @@ import java.util.List;
  * A graph data structure that can be used to find the best matching pairs and groups.
  * Vertices are participants and edges are the weight between two participants.
  * To represent the graph in Java an adjacency list is used, which is stored in a HashMap.
- * We use a
+ * We use a HashMap because it is the most efficient way to store the adjacency list.
  * @author David Riemer
  * @version 1.1
  * @param <T> made Generic to be used for both Pair and Group matching
