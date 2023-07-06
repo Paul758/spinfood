@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class GraphGroupMatching {
-    
+
     /**
      * Matches the pairs into groups via a graph solution based on the given importance of matching criteria
      * @author Paul Groß
@@ -73,7 +73,6 @@ public class GraphGroupMatching {
         List<PairMatched> distinctPairs = requestedPairs.stream().distinct().toList();
         return distinctPairs;
     }
-
 
     /**
      * Performs the actual matching of the pairs into groups via a graph

@@ -55,7 +55,7 @@ public class Main extends Application {
 
         Parent root = fxmlLoader.load();
 
-        stage.setTitle("FoodSpin-Matching Software V1.0");
+        stage.setTitle("SpinFood-Matching Software V1.0");
         stage.getIcons().add(new Image("spinfood_icon.jpg"));
         stage.setScene(new Scene(root));
         stage.show();
