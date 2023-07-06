@@ -28,6 +28,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The main window of the application that contains the menu bar and the tab pane that displays all TabController
+ */
 public class Main extends Application {
 
     @FXML
@@ -52,7 +55,7 @@ public class Main extends Application {
 
         Parent root = fxmlLoader.load();
 
-        stage.setTitle("FoodSpin-Matching Software V1.0");
+        stage.setTitle("SpinFood-Matching Software V1.0");
         stage.getIcons().add(new Image("spinfood_icon.jpg"));
         stage.setScene(new Scene(root));
         stage.show();
@@ -63,6 +66,9 @@ public class Main extends Application {
         tabControllers = new ArrayList<>();
     }
 
+    /**
+     * Creates a new DataTabController
+     */
     @FXML
     private void createDataTab() throws IOException {
         String tabName = "Data " + ViewTools.getTimeStamp();
@@ -79,6 +85,12 @@ public class Main extends Application {
         this.addNewTabController(dataTabController, root, tabName);
     }
 
+    /**
+     * Creates a new PairTabController. Gets the matching repository from a parent TabController and runs the pair
+     * matching algorithm on this matching repository.
+     * @param parent a DataTabController object
+     * @param matchCosts a MatchCost Object that contains the priorities for the pair matching algorithm
+     */
     public void createPairTab(TabController parent, MatchCosts matchCosts) throws IOException {
         String tabName = "Pair " + ViewTools.getTimeStamp();
 
@@ -97,6 +109,12 @@ public class Main extends Application {
         this.addNewTabController(pairListTabController, root, tabName);
     }
 
+    /**
+     * Creates a new GroupListTabController. Gets the matching repository from a parent TabController and runs the group
+     * matching algorithm on this matching repository.
+     * @param parent a PairListTabController Object
+     * @param matchCosts a MatchCost Object that contains the priorities for the group matching algorithm
+     */
     public void createGroupTab(TabController parent, MatchCosts matchCosts) throws IOException {
         String tabName = "Group " + ViewTools.getTimeStamp();
 
@@ -115,6 +133,9 @@ public class Main extends Application {
         addNewTabController(groupListTabController, root, tabName);
     }
 
+    /**
+     * opens the pair comparer in a new window
+     */
     @FXML
     private void openPairComparer() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/PairComparer.fxml"));
@@ -128,6 +149,9 @@ public class Main extends Application {
         this.openNewWindow(root, "pairComparer");
     }
 
+    /**
+     * opens the group comparer in a new window
+     */
     @FXML
     private void openGroupComparer() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/GroupComparer.fxml"));
@@ -141,6 +165,11 @@ public class Main extends Application {
         this.openNewWindow(root, "groupComparer");
     }
 
+    /**
+     * opens a new window
+     * @param root the content of the new window
+     * @param title the title of the new window
+     */
     private void openNewWindow(Parent root, String title) {
         ResourceBundle bundle = ResourceBundle.getBundle("uiElements",
                 Settings.getInstance().getLocale());
@@ -151,6 +180,13 @@ public class Main extends Application {
         stage.show();
     }
 
+    /**
+     * Creates a new tab for a TabController, sets the content of the tab to the content of the TabController and
+     * add the TabController to the list and hashmap
+     * @param tabController a TabController Object
+     * @param root the content of the tab
+     * @param name the name of the tab
+     */
     public void addNewTabController(TabController tabController, Parent root, String name) {
         Tab tab = new Tab(name);
         tab.setContent(root);
@@ -163,17 +199,26 @@ public class Main extends Application {
     }
 
 
+    /**
+     * Changes the selected language to english
+     */
     @FXML
     public void handleEnglishItemClicked() {
         Settings.getInstance().saveLanguage(Locale.US);
     }
 
+    /**
+     * Changes the selected language to german
+     */
     @FXML
     public void handleGermanItemClicked() {
         Settings.getInstance().saveLanguage(Locale.GERMAN);
     }
 
 
+    /**
+     * Undoes the last command of the selected TabController
+     */
     @FXML
     public void undo(){
         Tab tab = tabPane.getSelectionModel().getSelectedItem();
@@ -181,6 +226,9 @@ public class Main extends Application {
         selectedTab.undo();
     }
 
+    /**
+     * Redoes the last command of the selected TabController
+     */
     @FXML
     public void redo(){
         Tab tab = tabPane.getSelectionModel().getSelectedItem();
@@ -188,6 +236,9 @@ public class Main extends Application {
         selectedTab.redo();
     }
 
+    /**
+     * Exports the matching repository of the selected TabController as json file
+     */
     @FXML
     public void exportToJSON() {
         TabController tabController = tabControllerHashMap.get(tabPane.getSelectionModel().getSelectedItem());
@@ -209,6 +260,9 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Calls the delete function of the currently selected TabController
+     */
     @FXML
     public void closeTab() {
         Tab tab = tabPane.getSelectionModel().getSelectedItem();
@@ -216,6 +270,11 @@ public class Main extends Application {
         tabController.delete();
     }
 
+    /**
+     * Removes the tab of a given TabController from the tab pane, the list that contains all tap panes and the
+     * hashmap that maps tabs to TabController
+     * @param tabController a TabController object that should be removed
+     */
     public void closeTab(TabController tabController) {
         Tab tab = tabController.getTab();
         tabControllers.remove(tabController);
@@ -223,6 +282,10 @@ public class Main extends Application {
         tabPane.getTabs().remove(tab);
     }
 
+    /**
+     * Filters all pair-list TabControllers from the TabController list
+     * @return all pair-list TabController
+     */
     private List<PairListTabController> getPairListTabControllers() {
         return tabControllers.stream()
                 .filter(t -> t instanceof PairListTabController)
@@ -230,6 +293,10 @@ public class Main extends Application {
                 .toList();
     }
 
+    /**
+     * Filters all group-list TabControllers from the TabController list
+     * @return all group-list TabController
+     */
     private List<GroupListTabController> getGroupListTabControllers() {
         return tabControllers.stream()
                 .filter(t -> t instanceof GroupListTabController)

@@ -6,6 +6,10 @@ import javafx.scene.image.ImageView;
 
 import java.util.HashMap;
 
+/**
+ * Loads images from the resources and saves them into a hashmap to improve the time needed to get an image.
+ * Uses the singleton pattern.
+ */
 public class ImageLoader {
     private static ImageLoader instance;
     HashMap<String, Image> map;

@@ -15,8 +15,6 @@ import java.util.List;
 
 public class GraphGroupMatching {
 
-
-
     /**
      * Matches the pairs into groups via a graph solution based on the given importance of matching criteria
      * @author Paul Groß
@@ -30,7 +28,7 @@ public class GraphGroupMatching {
         ArrayList<PairMatched> nonePairs = new ArrayList<>(getPairsByFoodPreference(matchedPairs, List.of(FoodPreference.NONE)));
         ArrayList<PairMatched> meatPairs = new ArrayList<>(getPairsByFoodPreference(matchedPairs, List.of(FoodPreference.MEAT))) ;
         ArrayList<PairMatched> veggieVeganPairs = new ArrayList<>(getPairsByFoodPreference(matchedPairs, List.of(FoodPreference.VEGGIE, FoodPreference.VEGAN)));
-        System.out.println("");
+
         //Fill meatPairs and veggie/vegan pairs with none food preference pairs
         while (meatPairs.size() % 9 != 0) {
 
@@ -43,18 +41,6 @@ public class GraphGroupMatching {
             meatPairs.add(nextNonePair);
         }
 
-        /*while (veggieVeganPairs.size() % 9 != 0) {
-            if(nonePairs.size() == 0) {
-                break;
-            }
-
-            PairMatched nextNonePair = nonePairs.get(0);
-            nonePairs.remove(0);
-            veggieVeganPairs.add(nextNonePair);
-        }*/
-        System.out.println("meat pairs size " + meatPairs.size());
-        System.out.println("veggie vegan pairs size " + veggieVeganPairs.size());
-
         //Create graphs
         Graph<PairMatched> meatGraph = createGraph(meatPairs, matchCosts);
         Graph<PairMatched> veganGraph = createGraph(veggieVeganPairs, matchCosts);
@@ -65,8 +51,6 @@ public class GraphGroupMatching {
         superGroups.addAll(findSuperGroups(meatPairs, meatGraph));
         superGroups.addAll(findSuperGroups(veggieVeganPairs, veganGraph));
         superGroups.addAll(findSuperGroups(nonePairs, noneGraph));
-
-        System.out.println("super groups size is " + superGroups.size());
 
         //Split superGroups in corresponding dinner groups and assign cook (starters, mainCourse, dessert)
         List<GroupMatched> groupMatchedList;
@@ -90,7 +74,6 @@ public class GraphGroupMatching {
         return distinctPairs;
     }
 
-
     /**
      * Performs the actual matching of the pairs into groups via a graph
      * @author Paul Groß
@@ -109,11 +92,12 @@ public class GraphGroupMatching {
 
         for (int i = 0; i < matchedPairs.size(); i++) {
             try {
-
+                //Create new supergroup and find first pair
                 List<PairMatched> superGroup = new ArrayList<>();
                 PairMatched currentPair = graph.getVertexWithLeastEdges(8);
                 superGroup.add(currentPair);
-                for(int j = 0; j < superGroupSize - 1; j++) {
+
+                for (int j = 0; j < superGroupSize - 1; j++) {
                     //Get distinct participant with the least edge weight
                     PairMatched possibleMatch = graph.getEdgeWithLeastWeight(currentPair, superGroup).participant;
                     superGroup.add(possibleMatch);
@@ -129,7 +113,6 @@ public class GraphGroupMatching {
                     continue;
                 }
 
-
             } catch (Exception e) {
                 break;
             }
@@ -137,6 +120,12 @@ public class GraphGroupMatching {
         return superGroups;
     }
 
+    /**
+     * Checks if a kitchen is used more than one time for a Meal type
+     * @param superGroup a group consisting of nine pairs
+     * @param kitchenUsageHashmap a map which stores information about the dinners which are cooked in each kitchen
+     * @return true if the supergroup is feasible, false if not
+     */
     private static boolean isFeasible(List<PairMatched> superGroup, HashMap<Kitchen, List<MealType>> kitchenUsageHashmap) {
 
         //check if kitchen is already used for a meal
