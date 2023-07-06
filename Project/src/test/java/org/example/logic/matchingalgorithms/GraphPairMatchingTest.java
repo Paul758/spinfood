@@ -2,15 +2,15 @@ package org.example.logic.matchingalgorithms;
 
 import org.example.data.DataManagement;
 import org.example.data.enums.FoodPreference;
+import org.example.data.structures.Solo;
 import org.example.logic.structures.MatchingRepository;
 import org.example.logic.structures.PairMatched;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import javax.security.auth.SubjectDomainCombiner;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class to check if correct pair matchings are produced
@@ -67,4 +67,36 @@ class GraphPairMatchingTest {
 
         return !(personAIsMeat && (personBIsVeggie || personBisVegan));
     }
-}
+
+    @Test
+    void checkMatchingWithOnlyMeat() {
+        List<PairMatched> matchedPairs = (List<PairMatched>) matchingRepository.getMatchedPairsCollection();
+
+        for (PairMatched pair : matchedPairs) {
+            if (pair.getFoodPreference()==FoodPreference.MEAT){
+                matchedPairs.remove(pair);
+            }
+        }
+        boolean pairsAreFeasible = true;
+        for (PairMatched pair : matchedPairs) {
+            if (!IsFeasible(pair)) {
+                pairsAreFeasible = false;
+            }
+        }
+        Assertions.assertTrue(pairsAreFeasible);
+    }
+
+    @Test
+    void checkMatchingWithOnlyOneSolo() {
+        List<Solo> Solos = (List<Solo>) matchingRepository.getSoloDataCollection();
+        while (Solos.size()>1){
+            Solos.remove(0);
+        }
+        List<PairMatched> matchedPairs = GraphPairMatching.match(Solos);
+        Assertions.assertTrue(matchedPairs.isEmpty());
+    }
+
+    }
+
+
+

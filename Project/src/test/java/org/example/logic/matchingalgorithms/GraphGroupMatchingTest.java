@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * Test class to check if correct group matchings are produced
  */
@@ -49,15 +51,15 @@ class GraphGroupMatchingTest {
         for (GroupMatched group : groupMatchedList) {
 
             isFeasible = checkFoodPreference(group);
-            Assertions.assertTrue(isFeasible);
+            assertTrue(isFeasible);
             isFeasible = checkGroupHasCook(group);
-            Assertions.assertTrue(isFeasible);
+            assertTrue(isFeasible);
             isFeasible = ckeckEveryKitchenIsOnlyUsedOnce(group, kitchenUsageHashmap);
-            Assertions.assertTrue(isFeasible);
+            assertTrue(isFeasible);
         }
 
         isFeasible = checkEveryPairIsCookingOnlyOnce();
-        Assertions.assertTrue(isFeasible);
+        assertTrue(isFeasible);
     }
 
     private boolean ckeckEveryKitchenIsOnlyUsedOnce(GroupMatched group, HashMap<Kitchen, List<MealType>> kitchenUsageHashmap) {
@@ -133,7 +135,7 @@ class GraphGroupMatchingTest {
 
         testMatchingRepository.removePair(pairMatchedA);
 
-        Assertions.assertTrue(testGroup.containsPair(pairMatchedD));
+        assertTrue(testGroup.containsPair(pairMatchedD));
     }
 
     private MatchingRepository createTestRepository() {
@@ -198,14 +200,14 @@ class GraphGroupMatchingTest {
         PairMatched pairMatchedD = pairSuccessorList.get(0);
 
 
-        Assertions.assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedD));
+        assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedD));
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedB));
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedC));
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedA));
 
         testMatchingRepository.removePair(pairMatchedA);
 
-        Assertions.assertTrue(matchingRepository.getMatchedGroupsCollection().isEmpty() &&
+        assertTrue(matchingRepository.getMatchedGroupsCollection().isEmpty() &&
                 testMatchingRepository.pairSuccessors.contains(pairMatchedB) &&
                 testMatchingRepository.pairSuccessors.contains(pairMatchedC));
 
@@ -277,8 +279,8 @@ class GraphGroupMatchingTest {
         List<PairMatched> pairSuccessorList = (List<PairMatched>) testMatchingRepository.pairSuccessors;
         PairMatched pairMatchedD = pairSuccessorList.get(0);
 
-        Assertions.assertTrue(testMatchingRepository.soloSuccessors.contains(replacementSolo));
-        Assertions.assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedD));
+        assertTrue(testMatchingRepository.soloSuccessors.contains(replacementSolo));
+        assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedD));
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedA));
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedB));
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedC));
@@ -291,7 +293,7 @@ class GraphGroupMatchingTest {
         PairMatched pairMatchedAafter = testGroupAfter.getPairList().get(0);
 
         Assertions.assertEquals(pairMatchedAafter.getSoloA(), replacementSolo);
-        Assertions.assertTrue(matchingRepository.getMatchedGroupsCollection().size() > 0);
+        assertTrue(matchingRepository.getMatchedGroupsCollection().size() > 0);
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedA));
     }
 
@@ -361,7 +363,7 @@ class GraphGroupMatchingTest {
         List<PairMatched> pairSuccessorList = (List<PairMatched>) testMatchingRepository.pairSuccessors;
         PairMatched pairMatchedD = pairSuccessorList.get(0);
 
-        Assertions.assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedD));
+        assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedD));
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedA));
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedB));
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedC));
@@ -369,11 +371,11 @@ class GraphGroupMatchingTest {
 
         testMatchingRepository.removeSolo(soloRemove);
 
-        Assertions.assertTrue(matchingRepository.getMatchedGroupsCollection().isEmpty());
+        assertTrue(matchingRepository.getMatchedGroupsCollection().isEmpty());
         Assertions.assertFalse(testMatchingRepository.pairSuccessors.contains(pairMatchedA));
-        Assertions.assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedB));
-        Assertions.assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedC));
-        Assertions.assertTrue(testMatchingRepository.soloSuccessors.contains(soloRemaining));
+        assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedB));
+        assertTrue(testMatchingRepository.pairSuccessors.contains(pairMatchedC));
+        assertTrue(testMatchingRepository.soloSuccessors.contains(soloRemaining));
     }
 
     private MatchingRepository createTestRepositoryWithOutSoloFiller() {
@@ -423,6 +425,88 @@ class GraphGroupMatchingTest {
         matchingRepository.addMatchedGroupsCollection(List.of(testGroup));
         matchingRepository.UpdatePairSuccessors();
         return matchingRepository;
+    }
+
+    @Test
+    public void testGroupMatchingWith8Veggie1Meat(){
+        matchingRepository.pairSuccessors.clear();
+        matchingRepository.soloSuccessors.clear();
+        matchingRepository.getSoloDataCollection().clear();
+        matchingRepository.getMatchedPairsCollection().clear();
+        matchingRepository.getMatchedGroupsCollection().clear();
+        Pair testPairA = new Pair(
+                new Person("1", "Person1",22, Sex.MALE),
+                new Person("2", "Personx1", 23, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedA = new PairMatched(testPairA);
+        Pair testPairB = new Pair(
+                new Person("3", "Person2",24, Sex.MALE),
+                new Person("4", "Personx2", 25, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedB = new PairMatched(testPairB);
+        Pair testPairC = new Pair(
+                new Person("5", "Person3",26, Sex.MALE),
+                new Person("6", "Personx3", 27, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedC = new PairMatched(testPairC);
+        Pair testPairD = new Pair(
+                new Person("7", "Person4",27, Sex.MALE),
+                new Person("8", "Personx4", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedD = new PairMatched(testPairD);
+        Pair testPairE = new Pair(
+                new Person("9", "Person5",27, Sex.MALE),
+                new Person("10", "Personx5", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedE = new PairMatched(testPairE);
+        Pair testPairF = new Pair(
+                new Person("11", "Person6",27, Sex.MALE),
+                new Person("12", "Personx6", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedF = new PairMatched(testPairF);
+        Pair testPairG = new Pair(
+                new Person("13", "Person7",27, Sex.MALE),
+                new Person("14", "Personx7", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedG = new PairMatched(testPairG);
+        Pair testPairH = new Pair(
+                new Person("15", "Person8",27, Sex.MALE),
+                new Person("16", "Personx8", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedH = new PairMatched(testPairH);
+        Pair testPairI = new Pair(
+                new Person("17", "Person4",27, Sex.MALE),
+                new Person("18", "Personx4", 28, Sex.FEMALE),
+                FoodPreference.MEAT,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedI = new PairMatched(testPairI);
+        matchingRepository.addMatchedPairsCollection(List.of(pairMatchedA, pairMatchedB, pairMatchedC, pairMatchedD));
+        matchingRepository.addMatchedPairsCollection(List.of(pairMatchedE, pairMatchedF, pairMatchedG, pairMatchedH));
+        matchingRepository.addMatchedPairsCollection(List.of(pairMatchedI));
+        List<GroupMatched> groupMatchedList = (List<GroupMatched>) matchingRepository.getMatchedGroupsCollection();
+        System.out.printf("GroupMatchedList size: %d\n", groupMatchedList.size());
+        if (groupMatchedList.isEmpty()) {
+            System.out.printf("No SuperGroup could be made");
+        }
+        assertTrue(groupMatchedList.size() == 0);
+
     }
 
 }
