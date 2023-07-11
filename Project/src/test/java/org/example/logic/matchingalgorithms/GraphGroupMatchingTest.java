@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -509,4 +510,104 @@ class GraphGroupMatchingTest {
 
     }
 
+    @Test
+    public void testGroupMatchingOnEmptyList() {
+        List<PairMatched> empty = new ArrayList<>();
+        List<GroupMatched> groups = GraphGroupMatching.match(empty, new MatchCosts());
+        Assertions.assertEquals(0, groups.size());
+    }
+
+    @Test
+    public void testGroupMatchingOnListWithOnPair() {
+        Pair pair = new Pair(
+                new Person("1", "Person1",22, Sex.MALE),
+                new Person("2", "Personx1", 23, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatched = new PairMatched(pair);
+
+        List<PairMatched> pairMatchedList = List.of(pairMatched);
+        List<GroupMatched> groups = GraphGroupMatching.match(pairMatchedList, new MatchCosts());
+        Assertions.assertEquals(0, groups.size());
+    }
+
+    @Test
+    public void testGroupMatchingWithNinePairs(){
+        matchingRepository.pairSuccessors.clear();
+        matchingRepository.soloSuccessors.clear();
+        matchingRepository.getSoloDataCollection().clear();
+        matchingRepository.getMatchedPairsCollection().clear();
+        matchingRepository.getMatchedGroupsCollection().clear();
+
+        Pair testPairA = new Pair(
+                new Person("1", "Person1",22, Sex.MALE),
+                new Person("2", "Personx1", 23, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedA = new PairMatched(testPairA);
+        Pair testPairB = new Pair(
+                new Person("3", "Person2",24, Sex.MALE),
+                new Person("4", "Personx2", 25, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedB = new PairMatched(testPairB);
+        Pair testPairC = new Pair(
+                new Person("5", "Person3",26, Sex.MALE),
+                new Person("6", "Personx3", 27, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedC = new PairMatched(testPairC);
+        Pair testPairD = new Pair(
+                new Person("7", "Person4",27, Sex.MALE),
+                new Person("8", "Personx4", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedD = new PairMatched(testPairD);
+        Pair testPairE = new Pair(
+                new Person("9", "Person5",27, Sex.MALE),
+                new Person("10", "Personx5", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedE = new PairMatched(testPairE);
+        Pair testPairF = new Pair(
+                new Person("11", "Person6",27, Sex.MALE),
+                new Person("12", "Personx6", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedF = new PairMatched(testPairF);
+        Pair testPairG = new Pair(
+                new Person("13", "Person7",27, Sex.MALE),
+                new Person("14", "Personx7", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedG = new PairMatched(testPairG);
+        Pair testPairH = new Pair(
+                new Person("15", "Person8",27, Sex.MALE),
+                new Person("16", "Personx8", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedH = new PairMatched(testPairH);
+        Pair testPairI = new Pair(
+                new Person("17", "Person4",27, Sex.MALE),
+                new Person("18", "Personx4", 28, Sex.FEMALE),
+                FoodPreference.VEGAN,
+                new Kitchen(KitchenType.YES,0,8.681372017093311,50.5820794170933)
+        );
+        PairMatched pairMatchedI = new PairMatched(testPairI);
+        matchingRepository.addMatchedPairsCollection(List.of(pairMatchedA, pairMatchedB, pairMatchedC, pairMatchedD));
+        matchingRepository.addMatchedPairsCollection(List.of(pairMatchedE, pairMatchedF, pairMatchedG, pairMatchedH));
+        matchingRepository.addMatchedPairsCollection(List.of(pairMatchedI));
+        matchingRepository.matchGroups();
+        List<GroupMatched> groupMatchedList = (List<GroupMatched>) matchingRepository.getMatchedGroupsCollection();
+        assertEquals(0, groupMatchedList.size());
+    }
 }

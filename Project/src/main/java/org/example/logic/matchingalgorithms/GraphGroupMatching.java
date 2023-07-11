@@ -23,6 +23,9 @@ public class GraphGroupMatching {
      * @return returns a list of the matched groups
      */
     public static List<GroupMatched> match(List<PairMatched> matchedPairs, MatchCosts matchCosts) {
+        if (matchedPairs.size() < 9) {
+            return new ArrayList<>();
+        }
 
         //Split pairs based on foodPreference
         ArrayList<PairMatched> nonePairs = new ArrayList<>(getPairsByFoodPreference(matchedPairs, List.of(FoodPreference.NONE)));
@@ -41,18 +44,23 @@ public class GraphGroupMatching {
             meatPairs.add(nextNonePair);
         }
 
-        //Create graphs
-        Graph<PairMatched> meatGraph = createGraph(meatPairs, matchCosts);
-        Graph<PairMatched> veganGraph = createGraph(veggieVeganPairs, matchCosts);
-        Graph<PairMatched> noneGraph = createGraph(nonePairs, matchCosts);
-
-        //find superGroups (9 pairs)
         List<List<PairMatched>> superGroups = new ArrayList<>();
-        superGroups.addAll(findSuperGroups(meatPairs, meatGraph));
-        superGroups.addAll(findSuperGroups(veggieVeganPairs, veganGraph));
-        superGroups.addAll(findSuperGroups(nonePairs, noneGraph));
 
-        //Split superGroups in corresponding dinner groups and assign cook (starters, mainCourse, dessert)
+        if (meatPairs.size() >= 9) {
+            Graph<PairMatched> meatGraph = createGraph(meatPairs, matchCosts);
+            superGroups.addAll(findSuperGroups(meatPairs, meatGraph));
+        }
+
+        if (veggieVeganPairs.size() >= 9) {
+            Graph<PairMatched> veganGraph = createGraph(veggieVeganPairs, matchCosts);
+            superGroups.addAll(findSuperGroups(veggieVeganPairs, veganGraph));
+        }
+
+        if (nonePairs.size() >= 9) {
+            Graph<PairMatched> noneGraph = createGraph(nonePairs, matchCosts);
+            superGroups.addAll(findSuperGroups(nonePairs, noneGraph));
+        }
+
         List<GroupMatched> groupMatchedList;
         groupMatchedList = createDinnerGroupsFromSuperGroups(superGroups);
 
